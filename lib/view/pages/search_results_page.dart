@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as badges;
+import 'dart:async';
 import 'package:recipe_box/model/recipe_search.dart';
 import 'package:recipe_box/view/pages/recipe_page.dart';
-import 'package:recipe_box/view/pages/results_pagination.dart';
 import 'home_page.dart';
 import 'package:recipe_box/view/widgets/search_field.dart';
 import 'search_page.dart';
@@ -10,11 +11,10 @@ class SearchResultsPage extends StatefulWidget {
   const SearchResultsPage({super.key});
 
   @override
-  _SearchResultsPageState createState() => _SearchResultsPageState();
+  SearchResultsPageState createState() => SearchResultsPageState();
 }
 
-class _SearchResultsPageState extends State<SearchResultsPage> {
-  List<String> _hrefList = [];
+class SearchResultsPageState extends State<SearchResultsPage> {
   List<String> _imageList = [];
 
   @override
@@ -24,11 +24,8 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
   }
 
   Future<void> _loadData() async {
-    // Fetch data here, like calling `fetchRecipes`.
-    // For example purposes, we mock some data loading.
-    await Future.delayed(Duration(seconds: 1)); // Simulate network delay
+    await recipeSearchNotifi.future; // waits till recipeSearch is done
     setState(() {
-      _hrefList = hrefList;
       _imageList = imageList;
     });
   }
@@ -37,35 +34,44 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 100,
+        leadingWidth: 0,
+        leading: const SizedBox(),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Spacer(),
+            // Search Button
             Container(
-              height: 75,
-              width: 250,
-              child: SearchTextField(
-                controller: searchController,
-                focusNode: FocusNode(),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchPage(
-                        searchController: searchController,
+              padding: const EdgeInsets.only(left: 10),
+              height: 45,
+              width: 300,
+              child: Hero(
+                tag: 'SearchBar',
+                child: SearchTextField(
+                  controller: searchController,
+                  focusNode: FocusNode(),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        transitionDuration: const Duration(milliseconds: 800),
+                        pageBuilder: (_, __, ___) => SearchPage(
+                          searchController: searchController,
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
+            // Home Button
             IconButton(
-                onPressed: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomePage())),
-                icon: Icon(Icons.home))
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomePage())),
+              icon: const Icon(Icons.home),
+            ),
+            const Spacer(),
           ],
         ),
       ),
@@ -74,10 +80,10 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Recipe List'),
+            // generate recipe cards
             Expanded(
-              child: _hrefList.isEmpty || _imageList.isEmpty
-                  ? Center(child: CircularProgressIndicator())
+              child: _imageList.isEmpty
+                  ? const Center(child: CircularProgressIndicator())
                   : SingleChildScrollView(
                       scrollDirection: Axis.vertical,
                       child: Row(
@@ -87,17 +93,11 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                             width: 175,
                             child: Column(
                               children: List.generate(
-                                _hrefList.length,
+                                _imageList.length,
                                 (index) {
                                   if (index.isEven) {
                                     return RecipeCard(
-                                      calories: calorieList[index],
-                                      cuisineType: cuisineList[index],
-                                      dishType: dishList[index],
-                                      time: timeList[index],
-                                      label: labelList[index],
-                                      imageurl: _imageList[index],
-                                      hrefurl: _hrefList[index],
+                                      index: index,
                                     );
                                   } else {
                                     return const SizedBox();
@@ -111,17 +111,11 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                             width: 175,
                             child: Column(
                               children: List.generate(
-                                _hrefList.length,
+                                imageList.length,
                                 (index) {
                                   if (index.isOdd) {
                                     return RecipeCard(
-                                      calories: calorieList[index],
-                                      cuisineType: cuisineList[index],
-                                      dishType: dishList[index],
-                                      time: timeList[index],
-                                      label: labelList[index],
-                                      imageurl: _imageList[index],
-                                      hrefurl: _hrefList[index],
+                                      index: index,
                                     );
                                   } else {
                                     return const SizedBox();
@@ -135,14 +129,6 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                       ),
                     ),
             ),
-            FilledButton(
-              onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          paginationResultsPage(paginationHref: nextHref))),
-              child: Text('Next'),
-            ),
           ],
         ),
       ),
@@ -151,22 +137,10 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
 }
 
 class RecipeCard extends StatelessWidget {
-  final String cuisineType;
-  final String label;
-  final String dishType;
-  final String imageurl;
-  final String hrefurl;
-  final String time;
-  final String calories;
+  final int index;
 
   const RecipeCard({
-    required this.dishType,
-    required this.calories,
-    required this.time,
-    required this.cuisineType,
-    required this.label,
-    required this.imageurl,
-    required this.hrefurl,
+    required this.index,
     super.key,
   });
 
@@ -174,12 +148,14 @@ class RecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 175,
-      height: 300,
+      height: 290,
       child: GestureDetector(
-        onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => RecipePage(hrefurl: hrefurl))),
+        onTap: () async => await Navigator.push(
+          context,
+          PageRouteBuilder(
+              transitionDuration: const Duration(milliseconds: 800),
+              pageBuilder: (_, __, ___) => RecipePage(index: index)),
+        ),
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -189,65 +165,113 @@ class RecipeCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(10.0), // Adjust the radius as needed
+                borderRadius: BorderRadius.circular(10.0),
                 child: SizedBox(
                   width: 175,
-                  child: Stack(
-                    children: [
-                      Image.network(imageurl),
-                      Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.cyan, // Set background color
-                          borderRadius: BorderRadius.only(
-                            // Rounded only on the right side
-                            topRight: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                        ),
-                        padding: const EdgeInsets.only(
-                            left: 6, right: 8, bottom: 8, top: 8),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.access_time,
-                              size: 20,
-                              color: Colors.white, // Icon color
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              '${time}m',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: RecipeImageGraphic(index: index),
                 ),
               ),
               Text(
-                label,
+                labelList[index],
                 maxLines: 2,
                 style: TextStyle(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              const Spacer(),
-              if (dishType.isNotEmpty) Text('Dish Type: $dishType'),
-              const Spacer(),
-              if (cuisineType.isNotEmpty) Text('Cuisine Type: $cuisineType'),
-              const Spacer(),
-              if (calories.isNotEmpty) Text('Calories: $calories'),
-              const Spacer(),
+              const Divider(),
+              if (servingsList[index] > 1) ...[
+                Text('${servingsList[index].toString()} Servings:'),
+                const Spacer(),
+                Text(' ${calorieList[index]} per srv.'),
+                Text(' ${proteinList[index]} per srv.'),
+                Text(' ${fatList[index]} per srv.'),
+                const Spacer(),
+              ] else ...[
+                Text('${servingsList[index].toString()} Serving:'),
+                const Spacer(),
+                Text(' ${calorieList[index]} '),
+                Text(' ${proteinList[index]} '),
+                Text(' ${fatList[index]} '),
+                const Spacer(),
+              ],
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class RecipeImageGraphic extends StatelessWidget {
+  final int index;
+  const RecipeImageGraphic({required this.index, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Image.network(imageList[index]),
+
+        // Time Banner
+        Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.tertiaryContainer,
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+          ),
+          padding: const EdgeInsets.only(left: 6, right: 8, bottom: 8, top: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.access_time,
+                size: 20,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                '${timeList[index]}m',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Popular Badge
+        if (popularList[index] == true &&
+            popularList.where((item) => item).length < 5) ...[
+          Padding(
+            padding: const EdgeInsets.only(left: 120),
+            child: badges.Badge(
+              position: badges.BadgePosition.topEnd(end: 52),
+              stackFit: StackFit.expand,
+              badgeStyle: const badges.BadgeStyle(
+                shape: badges.BadgeShape.instagram,
+                badgeGradient: badges.BadgeGradient.linear(
+                  colors: [Colors.deepPurpleAccent, Colors.redAccent],
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                ),
+              ),
+              badgeContent: const SizedBox(
+                width: 45,
+                height: 45,
+                child: Center(
+                  child: Text(
+                    'Highly \n Popular',
+                    style: TextStyle(
+                        fontSize: 10, fontWeight: FontWeight.bold, height: 0.5),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

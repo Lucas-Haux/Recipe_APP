@@ -7,7 +7,7 @@ TextEditingController searchController = TextEditingController();
 final FocusNode searchFocusNode = FocusNode();
 
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,23 +19,27 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 90),
             Container(
               height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: SearchTextField(
-                controller: searchController,
-                focusNode: FocusNode(),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchPage(
-                        searchController: searchController,
-                      ),
-                    ),
-                  );
-                },
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+
+              // Search Bar
+              child: Hero(
+                tag: 'SearchBar',
+                child: SearchTextField(
+                  controller: searchController,
+                  focusNode: FocusNode(),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                            transitionDuration:
+                                const Duration(milliseconds: 800),
+                            pageBuilder: (_, __, ___) => SearchPage(
+                                searchController: searchController)));
+                  },
+                ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 20), // Space between Search and Fav
             const FavoriteSection(),
             const Spacer(),
           ],

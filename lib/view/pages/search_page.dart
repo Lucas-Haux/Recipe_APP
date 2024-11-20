@@ -6,7 +6,7 @@ import 'package:recipe_box/view/pages/search_results_page.dart';
 
 final FocusNode _focusNode = FocusNode();
 
-enum MealType { dinner, lunch, breakfast, snack } // no teatim to fit width
+enum MealType { dinner, lunch, breakfast, snack }
 
 List<MealType?> selectedMealTypes = [];
 
@@ -51,9 +51,7 @@ class SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Request focus only if the widget is still part of the widget tree
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
   }
 
   @override
@@ -64,6 +62,7 @@ class SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //Search home Button
       floatingActionButton: Align(
         alignment: Alignment.bottomRight,
         child: Column(
@@ -71,25 +70,34 @@ class SearchPageState extends State<SearchPage> {
           mainAxisAlignment: MainAxisAlignment.end,
           textDirection: TextDirection.rtl,
           children: [
+            // Home
             Padding(
-              padding: const EdgeInsets.only(
-                  bottom: 10,
-                  left:
-                      63.0), // Add some padding to position it within the screen
+              padding: const EdgeInsets.only(bottom: 10, left: 63.0),
               child: FloatingActionButton.small(
                 backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                child: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
+                child: const Icon(Icons.home),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          transitionDuration: const Duration(milliseconds: 800),
+                          pageBuilder: (_, __, ___) => const HomePage()));
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
               ),
             ),
+            //Search
             FloatingActionButton.extended(
               heroTag: 'SearchButton',
               onPressed: () {
                 fetchRecipes(searchController.text.trim());
                 Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const SearchResultsPage()));
+                    PageRouteBuilder(
+                        transitionDuration: const Duration(milliseconds: 800),
+                        pageBuilder: (_, __, ___) =>
+                            const SearchResultsPage()));
+                FocusManager.instance.primaryFocus?.unfocus();
               },
               icon: const Icon(Icons.search),
               extendedPadding: const EdgeInsets.only(left: 15, right: 15),
@@ -98,7 +106,6 @@ class SearchPageState extends State<SearchPage> {
           ],
         ),
       ),
-      // back button
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
@@ -106,8 +113,9 @@ class SearchPageState extends State<SearchPage> {
             pinned: true,
             snap: false,
             expandedHeight: 180.0,
-            leading: const SizedBox(), // hide back in bar
+            leading: const SizedBox(), // hide backbutton in bar
             flexibleSpace: FlexibleSpaceBar(
+              expandedTitleScale: 1,
               background: const Center(
                 child: Text(
                   'Search For A Recipe!',
@@ -116,20 +124,24 @@ class SearchPageState extends State<SearchPage> {
               ),
               titlePadding: const EdgeInsets.only(), // removes left padding
               title: Container(
-                padding: const EdgeInsets.only(
-                  left: 16.0,
-                  right: 16.0,
-                  bottom: 8.0,
-                ),
-                height: 40,
-                child: SearchTextField(
-                  controller: widget.searchController,
-                  focusNode: _focusNode,
-                  onTap: () {},
+                padding:
+                    const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 8.0),
+                height: 70,
+
+                // Search Field
+                child: Hero(
+                  tag: 'SearchBar',
+                  child: SearchTextField(
+                    controller: widget.searchController,
+                    focusNode: _focusNode,
+                    onTap: () {},
+                  ),
                 ),
               ),
             ),
           ),
+
+          // Search Options
           SliverFillRemaining(
             hasScrollBody: false,
             child: Center(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_box/model/recipe_search.dart';
+import 'package:recipe_box/view/pages/search_page.dart';
 import 'package:recipe_box/view/pages/search_results_page.dart';
 
 class SearchTextField extends StatefulWidget {
@@ -21,37 +22,60 @@ class SearchTextField extends StatefulWidget {
 class _SearchTextFieldState extends State<SearchTextField> {
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: 'SearchTextField',
-      child: Material(
-        color: Colors.transparent,
-        child: TextField(
-          controller: widget.controller,
-          focusNode: focusNode,
-          textAlignVertical: TextAlignVertical.top, //center verticaly
-          textAlign: TextAlign.center,
-          decoration: InputDecoration(
-            filled: true,
-            floatingLabelBehavior: FloatingLabelBehavior.never,
-            labelText: 'Search',
-            prefixIcon: const Icon(Icons.search),
-            suffix: const Icon(null),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-              borderSide: const BorderSide(color: Colors.grey),
+    return Material(
+      color: Colors.transparent,
+      child: Stack(
+        children: [
+          TextField(
+            controller: widget.controller,
+            focusNode: focusNode,
+            textAlignVertical: TextAlignVertical.bottom,
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.text,
+            onTapAlwaysCalled: true,
+            style: const TextStyle(fontSize: 25),
+            textCapitalization: TextCapitalization.words,
+            decoration: InputDecoration(
+              filled: true,
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              hintText: 'Search',
+              label: const Align(
+                alignment: AlignmentDirectional.center,
+                child: Text(
+                  'Search',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30.0),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+            ),
+            onSubmitted: (_) async {
+              fetchRecipes(widget.controller.text.trim());
+              await Navigator.push(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: Duration(milliseconds: 800),
+                  pageBuilder: (_, __, ___) => SearchResultsPage(),
+                ),
+              );
+            },
+            onTap: () {
+              widget.onTap();
+            },
+          ),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Icon(
+                Icons.search_sharp,
+                size: 33,
+              ),
             ),
           ),
-          onSubmitted: (_) async {
-            fetchRecipes(widget.controller.text.trim());
-            await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const SearchResultsPage()));
-          },
-          onTap: () {
-            widget.onTap();
-          },
-        ),
+        ],
       ),
     );
   }
