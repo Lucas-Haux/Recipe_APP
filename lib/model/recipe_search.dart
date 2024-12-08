@@ -33,7 +33,8 @@ dynamic recipeResponseData = '';
 Future<void> fetchRecipes(String query) async {
   recipeSearchNotifi = Completer<void>();
 
-  const String appKey = '';
+  const String appKey = '1f9d617ba13041859ea773423b0e6291';
+  // 1f9d617ba13041859ea773423b0e6291
   String? cookTime;
   String? calorieRange;
 

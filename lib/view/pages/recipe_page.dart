@@ -320,7 +320,7 @@ class InstructionCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 20, right: 5),
                       child: Card(
-                        color: Theme.of(context).colorScheme.tertiaryContainer,
+                        color: Theme.of(context).colorScheme.secondaryContainer,
                         child: Padding(
                           padding: const EdgeInsets.all(5),
                           child: Text(
@@ -333,7 +333,7 @@ class InstructionCard extends StatelessWidget {
                       ),
                     ),
                     Card(
-                      color: Theme.of(context).colorScheme.onTertiary,
+                      color: Theme.of(context).colorScheme.tertiaryContainer,
                       child: Text(' ${step.number} '),
                     )
                   ],

@@ -46,9 +46,21 @@ class _SearchTextFieldState extends State<SearchTextField> {
                   style: TextStyle(fontSize: 25),
                 ),
               ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(30)),
+                borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary, width: 3),
+              ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: const BorderSide(color: Colors.grey),
+                borderRadius: const BorderRadius.all(Radius.circular(30)),
+                borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary, width: 3),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(30)),
+                borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primaryFixedDim,
+                    width: 1),
               ),
             ),
             onSubmitted: (_) async {
@@ -56,8 +68,8 @@ class _SearchTextFieldState extends State<SearchTextField> {
               await Navigator.push(
                 context,
                 PageRouteBuilder(
-                  transitionDuration: Duration(milliseconds: 800),
-                  pageBuilder: (_, __, ___) => SearchResultsPage(),
+                  transitionDuration: const Duration(milliseconds: 800),
+                  pageBuilder: (_, __, ___) => const SearchResultsPage(),
                 ),
               );
             },

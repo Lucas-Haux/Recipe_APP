@@ -27,15 +27,12 @@ class HomePage extends StatelessWidget {
                 child: SearchTextField(
                   controller: searchController,
                   focusNode: FocusNode(),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                            transitionDuration:
-                                const Duration(milliseconds: 800),
-                            pageBuilder: (_, __, ___) => SearchPage(
-                                searchController: searchController)));
-                  },
+                  onTap: () => Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          transitionDuration: const Duration(milliseconds: 800),
+                          pageBuilder: (_, __, ___) =>
+                              SearchPage(searchController: searchController))),
                 ),
               ),
             ),
