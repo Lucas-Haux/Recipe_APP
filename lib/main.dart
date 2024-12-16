@@ -1,41 +1,27 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-// import 'package:firebase_core/firebase_core.dart';
-import 'package:dynamic_color/dynamic_color.dart';
-import 'package:recipe_box/view/pages/home_page.dart';
-// import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:go_router/go_router.dart';
+import 'routing/router.dart';
 
-Future main() async {
+import 'package:flutter/material.dart';
+import 'main_development.dart' as development;
+import 'data/repositories/theme_repository.dart';
+
+late ThemeData themeData;
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  // await Firebase.initializeApp();
-  runApp(const MyApp());
+  themeData = await ThemeRepository().getAppTheme();
+  development.main();
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  static final _defaultLightColorScheme = ColorScheme.fromSwatch(
-      primarySwatch: Colors.blue, brightness: Brightness.light);
-
-  static final _defaultDarkColorScheme = ColorScheme.fromSwatch(
-      primarySwatch: Colors.blue, brightness: Brightness.dark);
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
-      return MaterialApp(
-        theme: ThemeData(
-          colorScheme: lightColorScheme ?? _defaultLightColorScheme,
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData(
-          colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
-          useMaterial3: true,
-        ),
-        home: HomePage(),
-        debugShowCheckedModeBanner: false,
-      );
-    });
+    return MaterialApp.router(
+      theme: themeData,
+      darkTheme: themeData,
+      routerConfig: homeRouter,
+    );
   }
 }

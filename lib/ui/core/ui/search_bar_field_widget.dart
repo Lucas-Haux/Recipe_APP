@@ -1,24 +1,30 @@
+import 'package:go_router/go_router.dart';
+import '../../search/widgets/search_screen.dart';
+
 import 'package:flutter/material.dart';
-import 'package:recipe_box/model/recipe_search.dart';
-import 'package:recipe_box/view/pages/search_results_page.dart';
 
-FocusNode focusNode = FocusNode();
-
-class SearchTextField extends StatefulWidget {
-  final VoidCallback onTap;
+class SearchBarFieldWidget extends StatefulWidget {
+  final bool goToSearchPage;
+  final bool autofocus;
+  final void Function()? onTap;
+  final FocusNode? focusNode;
+  final VoidCallback? searchForRecipes;
   final TextEditingController controller;
 
-  const SearchTextField({
+  const SearchBarFieldWidget({
     super.key,
-    required this.onTap,
+    this.searchForRecipes,
+    this.focusNode,
+    required this.autofocus,
+    this.onTap,
+    required this.goToSearchPage,
     required this.controller,
   });
-
   @override
-  State<SearchTextField> createState() => _SearchTextFieldState();
+  State<SearchBarFieldWidget> createState() => _SearchBarFieldWidget();
 }
 
-class _SearchTextFieldState extends State<SearchTextField> {
+class _SearchBarFieldWidget extends State<SearchBarFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -26,8 +32,9 @@ class _SearchTextFieldState extends State<SearchTextField> {
       child: Stack(
         children: [
           TextField(
-            controller: TextEditingController(),
-            focusNode: focusNode,
+            controller: widget.controller,
+            focusNode: widget.focusNode,
+            autofocus: widget.autofocus,
             textAlignVertical: TextAlignVertical.bottom,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.text,
@@ -63,19 +70,27 @@ class _SearchTextFieldState extends State<SearchTextField> {
               ),
             ),
             onSubmitted: (_) async {
-              fetchRecipes(widget.controller.text.trim());
-              await Navigator.push(
-                context,
-                PageRouteBuilder(
-                  transitionDuration: const Duration(milliseconds: 800),
-                  pageBuilder: (_, __, ___) => const SearchResultsPage(),
-                ),
-              );
+              if (widget.searchForRecipes != null) {
+                widget.searchForRecipes!();
+              }
             },
-            onTap: () {
-              widget.onTap();
-            },
+            onTap: widget.onTap,
+            // if (goToSearchPage == true) {
+            // Code that works
+            // doesnt use go router due to problems
+            //Navigator.push(
+            //  context,
+            //  PageRouteBuilder(
+            //    transitionDuration: const Duration(milliseconds: 800),
+            //    pageBuilder: (_, __, ___) =>
+            //        SearchScreen(searchController: controller),
+            //  ),
+            //);
+            //    }
+            // }
           ),
+          // Search Icon
+          // Have to do it this way due to jaring scaling with the flexable space bar
           const Align(
             alignment: Alignment.centerLeft,
             child: Padding(

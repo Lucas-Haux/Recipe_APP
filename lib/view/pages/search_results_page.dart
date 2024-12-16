@@ -49,7 +49,6 @@ class SearchResultsPageState extends State<SearchResultsPage> {
                 tag: 'SearchBar',
                 child: SearchTextField(
                   controller: searchController,
-                  focusNode: FocusNode(),
                   onTap: () {
                     Navigator.push(
                       context,

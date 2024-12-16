@@ -43,7 +43,6 @@ class RecipePageState extends State<RecipePage> {
                 tag: 'SearchBar',
                 child: SearchTextField(
                   controller: searchController,
-                  focusNode: FocusNode(),
                   onTap: () => Navigator.push(
                       context,
                       PageRouteBuilder(

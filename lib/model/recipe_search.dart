@@ -6,7 +6,6 @@ import 'dart:async';
 
 import 'package:recipe_box/view/pages/search_page.dart';
 
-FocusNode focusNode = FocusNode();
 Completer<void> recipeSearchNotifi = Completer<void>();
 
 List<String> imageList = [];

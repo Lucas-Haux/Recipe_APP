@@ -35,29 +35,13 @@ enum CuisineType {
 
 List<CuisineType> selectedCuisineType = [];
 
-class SearchPage extends StatefulWidget {
+class SearchPage extends StatelessWidget {
   final TextEditingController searchController;
 
   const SearchPage({
     super.key,
     required this.searchController,
   });
-
-  @override
-  SearchPageState createState() => SearchPageState();
-}
-
-class SearchPageState extends State<SearchPage> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {});
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,8 +116,7 @@ class SearchPageState extends State<SearchPage> {
                 child: Hero(
                   tag: 'SearchBar',
                   child: SearchTextField(
-                    controller: widget.searchController,
-                    focusNode: _focusNode,
+                    controller: searchController,
                     onTap: () {},
                   ),
                 ),
@@ -164,18 +147,7 @@ class SearchPageState extends State<SearchPage> {
                               mealType.name.substring(1),
                         ),
                         selected: selectedMealTypes!.contains(mealType),
-                        onSelected: (bool selected) {
-                          setState(() {
-                            if (selected) {
-                              // Add to the list if selected
-                              selectedMealTypes!.add(mealType);
-                            } else {
-                              // Remove from the list if deselected
-                              selectedMealTypes!.remove(mealType);
-                              print('selected meal type: $selectedMealTypes');
-                            }
-                          });
-                        },
+                        onSelected: (bool selected) {},
                       );
                     }).toList(),
                   ),
@@ -194,17 +166,7 @@ class SearchPageState extends State<SearchPage> {
                               cuisineType.name.substring(1),
                         ),
                         selected: selectedCuisineType.contains(cuisineType),
-                        onSelected: (bool selected) {
-                          setState(() {
-                            if (selected) {
-                              // Add to the list if selected
-                              selectedCuisineType.add(cuisineType);
-                            } else {
-                              // Remove from the list if deselected
-                              selectedCuisineType.remove(cuisineType);
-                            }
-                          });
-                        },
+                        onSelected: (bool selected) {},
                       );
                     }).toList(),
                   ),

@@ -26,7 +26,6 @@ class HomePage extends StatelessWidget {
                 tag: 'SearchBar',
                 child: SearchTextField(
                   controller: searchController,
-                  focusNode: FocusNode(),
                   onTap: () => Navigator.push(
                       context,
                       PageRouteBuilder(
