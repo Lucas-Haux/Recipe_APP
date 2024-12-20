@@ -1,7 +1,11 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:recipe_box/domain/models/similar_recipe_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/services.dart';
+
+import '../view_model/recipe_viewmodel.dart';
 
 import 'package:recipe_box/domain/models/recipe_model.dart';
 import 'package:recipe_box/ui/core/ui/search_bar_field_widget.dart';
@@ -55,7 +59,7 @@ class RecipeScreen extends StatelessWidget {
               // Row of Serving and misc cards
               SizedBox(
                 width: 320,
-                height: 173,
+                height: 190,
                 child: Row(
                   children: [
                     _ServingsInfoCard(recipe: recipe),
@@ -65,11 +69,15 @@ class RecipeScreen extends StatelessWidget {
                 ),
               ),
 
+              const SizedBox(height: 20),
+
               // Equipment
               _EquipmentCard(recipe: recipe),
 
               //Ingredients
               _IngredentsCard(recipe: recipe),
+
+              const SizedBox(height: 20),
 
               //Instructions
               Column(
@@ -83,6 +91,8 @@ class RecipeScreen extends StatelessWidget {
                   );
                 }).toList(),
               ),
+
+              _SimilarRecipes(id: recipe.id),
             ],
           ),
         ),
@@ -110,6 +120,7 @@ class _AppBar extends StatelessWidget {
               autofocus: false,
               goToSearchPage: true,
               controller: TextEditingController(), // TODO this should change
+              readOnly: true,
             ),
           ),
         ),
@@ -134,37 +145,34 @@ class _RecipeImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
-      child: SizedBox(
-        height: 231,
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Image.network(
-              imageUrl,
-              width: 320,
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: IconButton(
-                onPressed: () {
-                  print('favorite button pressed');
-                  // change favorite state of recipe id
-                },
-                color: Colors.redAccent,
-                icon: const Icon(
-                  Icons.favorite_outline,
-                  size: 35,
-                ),
-                selectedIcon: const Icon(
-                  Icons.favorite,
-                  size: 35,
-                ),
-                isSelected:
-                    false, // need to change to favorite state of recipe id
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Image.network(
+            imageUrl,
+            width: 320,
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: IconButton(
+              onPressed: () {
+                print('favorite button pressed');
+                // change favorite state of recipe id
+              },
+              color: Colors.redAccent,
+              icon: const Icon(
+                Icons.favorite_outline,
+                size: 35,
               ),
+              selectedIcon: const Icon(
+                Icons.favorite,
+                size: 35,
+              ),
+              isSelected:
+                  false, // need to change to favorite state of recipe id
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -226,10 +234,12 @@ class _ServingsInfoCard extends StatelessWidget {
               ),
             ),
             const Divider(),
-            const Text('Per Serving: \n'),
+            const Text('Per Serving:'),
+            const SizedBox(height: 10),
             Text(' ${recipe.calories} '),
             Text(' ${recipe.protein} '),
             Text(' ${recipe.fat} '),
+            Text(' \$${recipe.pricePerServing.toStringAsPrecision(2)} USD'),
             const SizedBox(height: 10),
           ],
         ),
@@ -277,9 +287,11 @@ class _MicInfoCard extends StatelessWidget {
             const Spacer(),
             Text('Time To Cook: ${recipe.time}m'),
             const Spacer(),
-            Text('Health Score: num'),
+            Text('Total Ingredients: ${recipe.ingredients.length}'),
             const Spacer(),
-            Text('Total Ingredients: num'),
+            Text('Weight Watcher: ${recipe.weightWatcher.toString()}'),
+            const Spacer(),
+            Text('Health Score: ${recipe.healthScore.toString()}'),
             const Spacer(),
           ],
         ),
@@ -310,7 +322,7 @@ class _EquipmentCard extends StatelessWidget {
             const Text('Equipment:', style: _titleStyle),
             const Divider(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Wrap(
                 alignment: WrapAlignment.center,
                 children: equipmentList.map((equipment) {
@@ -493,7 +505,12 @@ class __StepInstructionState extends State<_StepInstruction> {
       child: Column(
         children: [
           Card(
-            color: Theme.of(context).colorScheme.secondaryContainer,
+            color: isDone
+                ? Theme.of(context)
+                    .colorScheme
+                    .secondaryContainer
+                    .withOpacity(0.6)
+                : Theme.of(context).colorScheme.secondaryContainer,
             margin: const EdgeInsets.only(left: 4, right: 4, top: 4),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -516,17 +533,6 @@ class __StepInstructionState extends State<_StepInstruction> {
             child: Row(
               children: [
                 FilledButton(
-                  onPressed: () {
-                    Clipboard.setData(
-                        ClipboardData(text: widget.step.stepInstruction));
-                    setState(() {
-                      isHidden = true;
-                    });
-                  },
-                  style: buttonStyle,
-                  child: const Icon(Icons.copy, size: 18),
-                ),
-                FilledButton(
                   onPressed: () => setState(() {
                     if (isDone == true) {
                       isDone = false;
@@ -541,10 +547,76 @@ class __StepInstructionState extends State<_StepInstruction> {
                     size: 18,
                   ),
                 ),
+                FilledButton(
+                  onPressed: () {
+                    Clipboard.setData(
+                        ClipboardData(text: widget.step.stepInstruction));
+                    setState(() {
+                      isHidden = true;
+                    });
+                  },
+                  style: buttonStyle,
+                  child: const Icon(Icons.copy, size: 18),
+                ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SimilarRecipes extends ConsumerWidget {
+  final int id;
+  const _SimilarRecipes({required this.id});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final similarList = ref.watch(recipeViewmodelProvider);
+
+    return Container(
+      constraints: const BoxConstraints(minWidth: 320, maxWidth: 320),
+      child: Card(
+        color: Theme.of(context).colorScheme.secondaryContainer,
+        child: Column(
+          children: [
+            FilledButton(
+              onPressed: () => ref
+                  .read(recipeViewmodelProvider.notifier)
+                  .searchSimilarRecipes(id),
+              child: const Text('Similar Recipes'),
+            ),
+            Row(
+              children: List.generate(
+                similarList.length,
+                (index) {
+                  return _SimilarRecipeCard(recipe: similarList[index]);
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SimilarRecipeCard extends StatelessWidget {
+  final SimilarRecipeModel recipe;
+  const _SimilarRecipeCard({required this.recipe});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 100,
+      child: Card(
+        child: Column(
+          children: [
+            _RecipeImage(imageUrl: recipe.imageUrl),
+            Text(recipe.title),
+          ],
+        ),
       ),
     );
   }

@@ -104,6 +104,7 @@ class _AppBar extends StatelessWidget {
               goToSearchPage: true,
               controller: TextEditingController(),
               onTap: null,
+              readOnly: true,
               autofocus: false,
             ),
           ),

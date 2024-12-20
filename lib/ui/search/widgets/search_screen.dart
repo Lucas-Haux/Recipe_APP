@@ -52,6 +52,7 @@ class SearchScreen extends ConsumerWidget {
                     goToSearchPage: false,
                     controller: searchController,
                     autofocus: true,
+                    readOnly: false,
                     onTap: null,
                   ),
                 ),

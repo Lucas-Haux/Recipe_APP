@@ -7,6 +7,8 @@ import '../domain/models/recipe_model.dart';
 
 import 'package:flutter/material.dart';
 
+final FocusNode focusNode1 = FocusNode();
+
 // GoRouter configuration
 final homeRouter = GoRouter(
   routes: [

@@ -1,11 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:basic_utils/basic_utils.dart';
-
-import '../../data/services/recipe_search_service.dart';
-import '../../domain/models/recipe_model.dart';
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'dart:async';
 
 class RecipeModel {
   final int id;
@@ -27,6 +20,9 @@ class RecipeModel {
   final String calories;
   final String protein;
   final String fat;
+  final int healthScore;
+  final int weightWatcher;
+  final String summary;
 
   RecipeModel({
     required this.id,
@@ -48,6 +44,9 @@ class RecipeModel {
     required this.calories,
     required this.protein,
     required this.fat,
+    required this.healthScore,
+    required this.weightWatcher,
+    required this.summary,
   });
 
   factory RecipeModel.fromJson(Map<String, dynamic> jsonData) {
@@ -59,7 +58,7 @@ class RecipeModel {
       sourceUrl: jsonData['sourceUrl'],
       time: jsonData['readyInMinutes'],
       servings: jsonData['servings'],
-      pricePerServing: jsonData['pricePerServing'],
+      pricePerServing: jsonData['pricePerServing'] / 100,
       popular: jsonData['veryPopular'],
       vegan: jsonData['vegan'],
       vegetarian: jsonData['vegetarian'],
@@ -72,6 +71,9 @@ class RecipeModel {
       calories: _getStringFromParagraph(jsonData['summary'], ' calories'),
       protein: _getStringFromParagraph(jsonData['summary'], 'g of protein'),
       fat: _getStringFromParagraph(jsonData['summary'], 'g of fat'),
+      healthScore: jsonData['healthScore'],
+      weightWatcher: jsonData['weightWatcherSmartPoints'],
+      summary: jsonData['summary'],
     );
   }
 }

@@ -3,13 +3,16 @@ import '../../search/widgets/search_screen.dart';
 
 import 'package:flutter/material.dart';
 
+final FocusNode focusNode1 = FocusNode();
+
 class SearchBarFieldWidget extends StatefulWidget {
   final bool goToSearchPage;
   final bool autofocus;
   final void Function()? onTap;
   final FocusNode? focusNode;
   final VoidCallback? searchForRecipes;
-  final TextEditingController controller;
+  final TextEditingController? controller;
+  final bool readOnly;
 
   const SearchBarFieldWidget({
     super.key,
@@ -19,7 +22,9 @@ class SearchBarFieldWidget extends StatefulWidget {
     this.onTap,
     required this.goToSearchPage,
     required this.controller,
+    required this.readOnly,
   });
+
   @override
   State<SearchBarFieldWidget> createState() => _SearchBarFieldWidget();
 }
@@ -33,8 +38,8 @@ class _SearchBarFieldWidget extends State<SearchBarFieldWidget> {
         children: [
           TextField(
             controller: widget.controller,
-            focusNode: widget.focusNode,
             autofocus: widget.autofocus,
+            readOnly: widget.readOnly,
             textAlignVertical: TextAlignVertical.bottom,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.text,

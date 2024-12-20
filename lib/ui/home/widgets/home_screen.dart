@@ -14,46 +14,48 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final favoritesList = ref.watch(homeViewModelProvider);
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      child: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 90),
-              // Search Bar
-              Container(
-                height: 50,
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Hero(
-                  tag: 'SearchBar',
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 90),
+            // Search Bar
+            Container(
+              height: 50,
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Hero(
+                tag: 'SearchBar',
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   child: SearchBarFieldWidget(
+                    focusNode: focusNode1,
                     goToSearchPage: true,
                     controller: searchController,
                     autofocus: false,
+                    readOnly: true,
                     onTap: () {
                       context.go('/search');
                     },
                   ),
                 ),
               ),
-              const Spacer(),
+            ),
+            const Spacer(),
 
-              // Favorites
-              Text('${favoritesList.length}'),
+            // Favorites
+            Text('${favoritesList.length}'),
 
-              // Test Button
-              FilledButton(
-                onPressed: () {
-                  context.go('/search');
-                  ref.read(homeViewModelProvider.notifier).addToFavorites();
-                },
-                child: const Text('test'),
-              ),
-              const Spacer(),
-            ],
-          ),
+            // Test Button
+            FilledButton(
+              onPressed: () {
+                context.go('/search');
+                ref.read(homeViewModelProvider.notifier).addToFavorites();
+              },
+              child: const Text('test'),
+            ),
+            const Spacer(),
+          ],
         ),
       ),
     );

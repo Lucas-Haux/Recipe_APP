@@ -1,5 +1,7 @@
 import '../../data/services/recipe_search_service.dart';
+import '../../data/services/similar_recipe_service.dart';
 import '../../domain/models/recipe_model.dart';
+import '../../domain/models/similar_recipe_model.dart';
 import '../../data/model/data_state_status_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,8 +11,10 @@ String query = '';
 
 class RecipeDataRepository {
   List<RecipeModel> _recipesList = [];
+  List<SimilarRecipeModel> _similarRecipesList = [];
 
   List<RecipeModel> get recipes => _recipesList;
+  List<SimilarRecipeModel> get similarRecipes => _similarRecipesList;
 
   Future<List<RecipeModel>> searchForRecipes() async {
     try {
@@ -26,6 +30,22 @@ class RecipeDataRepository {
       // make the recipelist the state of the notifier
     } catch (e) {
       throw Exception('Error searching for recipes: $e');
+    }
+  }
+
+  Future<List<SimilarRecipeModel>> searchForSimilarRecipes(int id) async {
+    try {
+      dynamic jsonResponse =
+          await SimilarRecipeService().fetchSimilarRecipes(id);
+
+      _similarRecipesList = jsonResponse
+          .map<SimilarRecipeModel>(
+              (jsonMap) => SimilarRecipeModel.fromJson(jsonMap))
+          .toList();
+
+      return _similarRecipesList;
+    } catch (e) {
+      throw e;
     }
   }
 }
