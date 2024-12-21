@@ -11,10 +11,8 @@ String query = '';
 
 class RecipeDataRepository {
   List<RecipeModel> _recipesList = [];
-  List<SimilarRecipeModel> _similarRecipesList = [];
 
   List<RecipeModel> get recipes => _recipesList;
-  List<SimilarRecipeModel> get similarRecipes => _similarRecipesList;
 
   Future<List<RecipeModel>> searchForRecipes() async {
     try {
@@ -38,12 +36,12 @@ class RecipeDataRepository {
       dynamic jsonResponse =
           await SimilarRecipeService().fetchSimilarRecipes(id);
 
-      _similarRecipesList = jsonResponse
+      List<SimilarRecipeModel> similarRecipesList = jsonResponse
           .map<SimilarRecipeModel>(
               (jsonMap) => SimilarRecipeModel.fromJson(jsonMap))
           .toList();
 
-      return _similarRecipesList;
+      return similarRecipesList;
     } catch (e) {
       throw e;
     }

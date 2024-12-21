@@ -34,7 +34,7 @@ final homeRouter = GoRouter(
       builder: (context, state) {
         final recipe =
             state.extra as RecipeModel; // Retrieve the passed recipe object
-        return RecipeScreen(recipe: recipe);
+        return RecipeScreen(recipe: recipe, key: Key(recipe.title));
       },
     ),
   ],

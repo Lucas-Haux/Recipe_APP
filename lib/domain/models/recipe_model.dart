@@ -53,7 +53,7 @@ class RecipeModel {
     return RecipeModel(
       id: jsonData['id'],
       title: jsonData['title'],
-      imageUrl: jsonData['image'],
+      imageUrl: _convertImage(jsonData['image']),
       sourceName: jsonData['sourceName'],
       sourceUrl: jsonData['sourceUrl'],
       time: jsonData['readyInMinutes'],
@@ -159,4 +159,9 @@ String _getStringFromParagraph(String summary, String searchFor) {
   } else {
     return '';
   }
+}
+
+String _convertImage(String imageUrl) {
+  final pattern = RegExp(r'\d+x\d+');
+  return imageUrl.replaceFirst(pattern, '636x393');
 }

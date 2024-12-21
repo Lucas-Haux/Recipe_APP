@@ -10,6 +10,8 @@ import '../view_model/recipe_viewmodel.dart';
 import 'package:recipe_box/domain/models/recipe_model.dart';
 import 'package:recipe_box/ui/core/ui/search_bar_field_widget.dart';
 
+double cardWidth = 360;
+
 const TextStyle _titleStyle = TextStyle(
   fontSize: 25,
   fontWeight: FontWeight.bold,
@@ -33,14 +35,15 @@ class RecipeScreen extends StatelessWidget {
           child: Column(
             children: [
               // First Card
-              Container(
-                constraints: const BoxConstraints(minWidth: 320, maxWidth: 320),
+              SizedBox(
+                width: cardWidth,
                 child: Card(
                   color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
                   child: Column(
                     children: [
                       // Image
-                      _RecipeImage(imageUrl: recipe.imageUrl),
+                      _RecipeImage(
+                          imageUrl: recipe.imageUrl, favoriteButton: true),
                       // Title
                       Text(
                         recipe.title,
@@ -58,7 +61,7 @@ class RecipeScreen extends StatelessWidget {
 
               // Row of Serving and misc cards
               SizedBox(
-                width: 320,
+                width: cardWidth,
                 height: 190,
                 child: Row(
                   children: [
@@ -139,7 +142,8 @@ class _AppBar extends StatelessWidget {
 
 class _RecipeImage extends StatelessWidget {
   final String imageUrl;
-  const _RecipeImage({required this.imageUrl});
+  final bool favoriteButton;
+  const _RecipeImage({required this.imageUrl, required this.favoriteButton});
 
   @override
   Widget build(BuildContext context) {
@@ -150,28 +154,30 @@ class _RecipeImage extends StatelessWidget {
         children: [
           Image.network(
             imageUrl,
-            width: 320,
+            width: cardWidth,
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(
-              onPressed: () {
-                print('favorite button pressed');
-                // change favorite state of recipe id
-              },
-              color: Colors.redAccent,
-              icon: const Icon(
-                Icons.favorite_outline,
-                size: 35,
+          // favorites button
+          if (favoriteButton == true)
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                onPressed: () {
+                  print('favorite button pressed');
+                  // change favorite state of recipe id
+                },
+                color: Colors.redAccent,
+                icon: const Icon(
+                  Icons.favorite_outline,
+                  size: 35,
+                ),
+                selectedIcon: const Icon(
+                  Icons.favorite,
+                  size: 35,
+                ),
+                isSelected:
+                    false, // need to change to favorite state of recipe id
               ),
-              selectedIcon: const Icon(
-                Icons.favorite,
-                size: 35,
-              ),
-              isSelected:
-                  false, // need to change to favorite state of recipe id
             ),
-          ),
         ],
       ),
     );
@@ -185,8 +191,8 @@ class _DietLabels extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints:
-          const BoxConstraints(minWidth: 320, maxWidth: 320, minHeight: 45),
+      constraints: BoxConstraints(
+          minWidth: cardWidth, maxWidth: cardWidth, minHeight: 45),
       child: Card(
         color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
         child: Center(
@@ -218,7 +224,7 @@ class _ServingsInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 155,
+      width: cardWidth / 2.05,
       child: Card(
         color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
         child: Column(
@@ -255,7 +261,7 @@ class _MicInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 155,
+      width: cardWidth / 2.05,
       child: Card(
         color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
         child: Column(
@@ -312,8 +318,8 @@ class _EquipmentCard extends StatelessWidget {
         .expand((step) => step.equipment) // Flatten equipment from steps
         .toSet();
 
-    return Container(
-      constraints: const BoxConstraints(minWidth: 320, maxWidth: 320),
+    return SizedBox(
+      width: cardWidth,
       child: Card(
         color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
         child: Column(
@@ -354,8 +360,8 @@ class _IngredentsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(minWidth: 320, maxWidth: 320),
+    return SizedBox(
+      width: cardWidth,
       child: Card(
         color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
         child: Column(
@@ -426,8 +432,8 @@ class _InstructionCard extends StatelessWidget {
         : '${order(instructionNum)} Instruction';
     print('OG: $title || New: $instructionTitle');
 
-    return Container(
-      constraints: const BoxConstraints(minWidth: 320, maxWidth: 320),
+    return SizedBox(
+      width: cardWidth,
       child: Card(
         color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
         child: Column(
@@ -515,7 +521,7 @@ class __StepInstructionState extends State<_StepInstruction> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
-                width: 227,
+                width: cardWidth / 1.41,
                 child: Text(
                   widget.step.stepInstruction,
                   style: TextStyle(
@@ -567,31 +573,42 @@ class __StepInstructionState extends State<_StepInstruction> {
   }
 }
 
-class _SimilarRecipes extends ConsumerWidget {
+class _SimilarRecipes extends StatefulWidget {
   final int id;
   const _SimilarRecipes({required this.id});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final similarList = ref.watch(recipeViewmodelProvider);
+  State<_SimilarRecipes> createState() => _SimilarRecipesState();
+}
 
-    return Container(
-      constraints: const BoxConstraints(minWidth: 320, maxWidth: 320),
+class _SimilarRecipesState extends State<_SimilarRecipes> {
+  List<SimilarRecipeModel> similarRecipes = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: cardWidth,
       child: Card(
         color: Theme.of(context).colorScheme.secondaryContainer,
         child: Column(
           children: [
             FilledButton(
-              onPressed: () => ref
-                  .read(recipeViewmodelProvider.notifier)
-                  .searchSimilarRecipes(id),
+              onPressed: () async {
+                final newList =
+                    await RecipeViewmodel().searchSimilarRecipes(widget.id);
+                setState(() {
+                  similarRecipes = newList;
+                });
+              },
               child: const Text('Similar Recipes'),
             ),
             Row(
               children: List.generate(
-                similarList.length,
+                similarRecipes.length,
                 (index) {
-                  return _SimilarRecipeCard(recipe: similarList[index]);
+                  return _SimilarRecipeCard(
+                    recipe: similarRecipes[index],
+                  );
                 },
               ),
             ),
@@ -613,7 +630,7 @@ class _SimilarRecipeCard extends StatelessWidget {
       child: Card(
         child: Column(
           children: [
-            _RecipeImage(imageUrl: recipe.imageUrl),
+            _RecipeImage(imageUrl: recipe.imageUrl, favoriteButton: false),
             Text(recipe.title),
           ],
         ),

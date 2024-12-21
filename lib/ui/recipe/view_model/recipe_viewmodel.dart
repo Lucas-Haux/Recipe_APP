@@ -2,24 +2,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/models/similar_recipe_model.dart';
 import '../../../data/repositories/recipe_data_repository.dart';
 
-class RecipeViewmodel extends StateNotifier<List<SimilarRecipeModel>> {
-  final RecipeDataRepository recipeDataRepository;
+class RecipeViewmodel {
+  final RecipeDataRepository recipeDataRepository = RecipeDataRepository();
 
-  RecipeViewmodel(this.recipeDataRepository)
-      : super(recipeDataRepository.similarRecipes);
-
-  Future<void> searchSimilarRecipes(int id) async {
+  Future<List<SimilarRecipeModel>> searchSimilarRecipes(int id) async {
     try {
-      await recipeDataRepository.searchForSimilarRecipes(id);
-      state = List.from(recipeDataRepository.similarRecipes);
+      return await recipeDataRepository.searchForSimilarRecipes(id);
     } catch (e) {
       throw e;
     }
   }
 }
-
-final recipeViewmodelProvider =
-    StateNotifierProvider<RecipeViewmodel, List<SimilarRecipeModel>>((ref) {
-  final recipeDataRepository = RecipeDataRepository();
-  return RecipeViewmodel(recipeDataRepository);
-});

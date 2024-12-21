@@ -139,7 +139,6 @@ class _RecipeInfoCard extends StatelessWidget {
       width: 175,
       child: GestureDetector(
         onTap: () {
-          print('go to recipe ${recipe.title}');
           context.pushNamed('Recipe', extra: recipe);
         },
         child: Card(
