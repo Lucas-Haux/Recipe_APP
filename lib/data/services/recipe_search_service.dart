@@ -1,4 +1,3 @@
-import '../../routing/router.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -7,7 +6,7 @@ class RecipeSearchService {
     try {
       const String appKey = '05f5c84cb98f42329f13b049c9f05f5a';
 
-      // todo grab the parameters from a differnt repository
+      // TODO grab the parameters from a differnt repository
       String queryParameters = 'query=${Uri.encodeComponent(query.trim())}&'
           'apiKey=$appKey&'
           'fillIngredients=true&'
