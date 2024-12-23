@@ -36,7 +36,7 @@ class _SearchBarFieldWidget extends State<SearchBarFieldWidget> {
       color: Colors.transparent,
       child: Stack(
         children: [
-          :qTextField(
+          TextField(
             controller: widget.controller,
             autofocus: widget.autofocus,
             readOnly: widget.readOnly,
