@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_box/domain/models/similar_recipe_model.dart';
@@ -17,13 +18,19 @@ const TextStyle _titleStyle = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
-class RecipeScreen extends StatelessWidget {
-  final RecipeModel recipe;
-  const RecipeScreen({required this.recipe, super.key});
+class RecipeScreen extends ConsumerWidget {
+  final int recipeListIndex;
+  const RecipeScreen({
+    required this.recipeListIndex,
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recipe = ref.watch(recipeViewmodelProvider(recipeListIndex));
+
     int i = 0;
+    print(recipeListIndex);
 
     return Scaffold(
       appBar: AppBar(
@@ -88,9 +95,14 @@ class RecipeScreen extends StatelessWidget {
                   i++;
 
                   return _InstructionCard(
+                    recipeInstructionsParagraph: recipe.instructionsParagraph,
+                    getParagraphDataForRecipe: ref
+                        .read(recipeViewmodelProvider(recipeListIndex).notifier)
+                        .getParagraphDataForRecipe,
                     title: instruction.title,
                     steps: instruction.steps,
                     instructionNum: i,
+                    recipeID: recipe.id,
                   );
                 }).toList(),
               ),
@@ -318,39 +330,44 @@ class _EquipmentCard extends StatelessWidget {
         .expand((step) => step.equipment) // Flatten equipment from steps
         .toSet();
 
-    return SizedBox(
-      width: cardWidth,
-      child: Card(
-        color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
-        child: Column(
-          children: [
-            const SizedBox(height: 5),
-            const Text('Equipment:', style: _titleStyle),
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                children: equipmentList.map((equipment) {
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 4.0, horizontal: 8.0),
-                    color: Theme.of(context).colorScheme.secondaryContainer,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                          StringUtils.capitalize(equipment, allWords: true),
-                          style: const TextStyle(fontSize: 14)),
-                    ),
-                  );
-                }).toList(),
+    if (equipmentList.isNotEmpty) {
+      return SizedBox(
+        width: cardWidth,
+        child: Card(
+          color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
+          child: Column(
+            children: [
+              const SizedBox(height: 5),
+              const Text('Equipment:', style: _titleStyle),
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  children: equipmentList.map((equipment) {
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 4.0, horizontal: 8.0),
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                            StringUtils.capitalize(equipment, allWords: true),
+                            style: const TextStyle(fontSize: 14)),
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
-            ),
-            const SizedBox(height: 5),
-          ],
+              const SizedBox(height: 5),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+      // if equipmentList is empty
+    } else {
+      return const SizedBox();
+    }
   }
 }
 
@@ -397,15 +414,27 @@ class _IngredentsCard extends StatelessWidget {
   }
 }
 
-class _InstructionCard extends StatelessWidget {
+class _InstructionCard extends StatefulWidget {
+  final Future<void> Function(int) getParagraphDataForRecipe;
   final String title;
   final List<StepModel> steps;
   final int instructionNum;
+  final int recipeID;
+  final String recipeInstructionsParagraph;
   const _InstructionCard({
+    required this.getParagraphDataForRecipe,
     required this.title,
     required this.steps,
     required this.instructionNum,
+    required this.recipeID,
+    required this.recipeInstructionsParagraph,
   });
+  @override
+  _InstructionCardState createState() => _InstructionCardState();
+}
+
+class _InstructionCardState extends State<_InstructionCard> {
+  InstructionView selectedView = InstructionView.list;
 
   String extractTitle(String input) {
     // Regular expression to match everything after the last meaningful phrase
@@ -427,10 +456,10 @@ class _InstructionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String instructionTitle = extractTitle(title).isNotEmpty
-        ? extractTitle(title)
-        : '${order(instructionNum)} Instruction';
-    print('OG: $title || New: $instructionTitle');
+    String instructionTitle = extractTitle(widget.title).isNotEmpty
+        ? extractTitle(widget.title)
+        : '${order(widget.instructionNum)} Instruction';
+    print('OG: ${widget.title} || New: $instructionTitle');
 
     return SizedBox(
       width: cardWidth,
@@ -439,36 +468,70 @@ class _InstructionCard extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 5),
-            Text(instructionTitle, style: _titleStyle),
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: List.generate(steps.length, (index) {
-                  return Row(
-                    children: [
-                      // Step number
-                      Card(
-                        color: Theme.of(context).colorScheme.tertiaryContainer,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            steps[index].stepNumber.toString(),
-                            textDirection: TextDirection.rtl,
-                            style: const TextStyle(fontSize: 14),
+
+            // InstructionView Picker
+            SegmentedButton<InstructionView>(
+              showSelectedIcon: false,
+              segments: const <ButtonSegment<InstructionView>>[
+                ButtonSegment(
+                  value: InstructionView.list,
+                  label: Text('List'),
+                ),
+                ButtonSegment(
+                  value: InstructionView.paragraph,
+                  label: Text('Paragraph'),
+                ),
+              ],
+              selected: {selectedView},
+              onSelectionChanged: (newSelection) async {
+                setState(() {
+                  selectedView = newSelection.first;
+                });
+                // TODO check if data hasa paragraph or not
+                await widget.getParagraphDataForRecipe(widget.recipeID);
+              },
+            ),
+
+            const SizedBox(height: 5),
+
+            // List view
+            if (selectedView == InstructionView.list) ...[
+              Text(instructionTitle, style: _titleStyle),
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: List.generate(widget.steps.length, (index) {
+                    return Row(
+                      children: [
+                        // Step number
+                        Card(
+                          color:
+                              Theme.of(context).colorScheme.tertiaryContainer,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              widget.steps[index].stepNumber.toString(),
+                              textDirection: TextDirection.rtl,
+                              style: const TextStyle(fontSize: 14),
+                            ),
                           ),
                         ),
-                      ),
-                      // Step
-                      _StepInstruction(
-                        step: steps[index],
-                        key: Key(index.toString()),
-                      ),
-                    ],
-                  );
-                }),
+                        // Step
+                        _StepInstruction(
+                          step: widget.steps[index],
+                          key: Key(index.toString()),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
               ),
-            ),
+            ],
+            // Paragraph view
+            if (selectedView == InstructionView.paragraph) ...[
+              Text(widget.recipeInstructionsParagraph),
+            ],
             const SizedBox(height: 5),
           ],
         ),
@@ -584,6 +647,9 @@ class _SimilarRecipes extends StatefulWidget {
 class _SimilarRecipesState extends State<_SimilarRecipes> {
   List<SimilarRecipeModel> similarRecipes = [];
 
+  final PageController carouselController =
+      PageController(initialPage: 1, viewportFraction: 1 / 2);
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -592,26 +658,51 @@ class _SimilarRecipesState extends State<_SimilarRecipes> {
         color: Theme.of(context).colorScheme.secondaryContainer,
         child: Column(
           children: [
-            FilledButton(
-              onPressed: () async {
-                final newList =
-                    await RecipeViewmodel().searchSimilarRecipes(widget.id);
-                setState(() {
-                  similarRecipes = newList;
-                });
-              },
-              child: const Text('Similar Recipes'),
-            ),
-            Row(
-              children: List.generate(
-                similarRecipes.length,
-                (index) {
-                  return _SimilarRecipeCard(
-                    recipe: similarRecipes[index],
-                  );
+            if (similarRecipes.isEmpty)
+              FilledButton(
+                onPressed: () async {
+                  // final newList =
+                  //    await RecipeViewmodel().searchSimilarRecipes(widget.id);
+                  setState(() {
+                    // similarRecipes = newList;
+                  });
                 },
+                child: const Text('Similar Recipes'),
               ),
-            ),
+
+            // Carousel
+            if (similarRecipes.isNotEmpty)
+              ConstrainedBox(
+                constraints:
+                    BoxConstraints(maxHeight: 300, maxWidth: cardWidth),
+                child: ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black,
+                        Colors.black,
+                        Colors.transparent,
+                      ],
+                      stops: [0.0, 0.1, 0.9, 1],
+                    ).createShader(bounds);
+                  },
+                  blendMode: BlendMode.dstIn,
+                  child: PageView.builder(
+                    controller: carouselController,
+                    pageSnapping: false,
+                    dragStartBehavior: DragStartBehavior.start,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    allowImplicitScrolling: true,
+                    itemCount: similarRecipes.length,
+                    itemBuilder: (context, index) {
+                      return _SimilarRecipeCard(recipe: similarRecipes[index]);
+                    },
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -626,13 +717,20 @@ class _SimilarRecipeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 100,
-      child: Card(
-        child: Column(
-          children: [
-            _RecipeImage(imageUrl: recipe.imageUrl, favoriteButton: false),
-            Text(recipe.title),
-          ],
+      height: 100,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _RecipeImage(imageUrl: recipe.imageUrl, favoriteButton: false),
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: Text(recipe.title),
+              ),
+            ],
+          ),
         ),
       ),
     );

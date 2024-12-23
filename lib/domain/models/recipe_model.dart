@@ -23,6 +23,7 @@ class RecipeModel {
   final int healthScore;
   final int weightWatcher;
   final String summary;
+  final String instructionsParagraph;
 
   RecipeModel({
     required this.id,
@@ -47,6 +48,7 @@ class RecipeModel {
     required this.healthScore,
     required this.weightWatcher,
     required this.summary,
+    required this.instructionsParagraph,
   });
 
   factory RecipeModel.fromJson(Map<String, dynamic> jsonData) {
@@ -74,6 +76,7 @@ class RecipeModel {
       healthScore: jsonData['healthScore'],
       weightWatcher: jsonData['weightWatcherSmartPoints'],
       summary: jsonData['summary'],
+      instructionsParagraph: jsonData['instructions'] ?? '',
     );
   }
 }

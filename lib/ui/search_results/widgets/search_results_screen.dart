@@ -60,6 +60,7 @@ class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                             recipeState.data!.length,
                             (index) {
                               return _RecipeInfoCard(
+                                recipeListIndex: index,
                                 recipe: recipeState.data![index],
                                 showPopularBadge: showPopularBadge,
                               );
@@ -128,9 +129,11 @@ class _AppBar extends StatelessWidget {
 class _RecipeInfoCard extends StatelessWidget {
   final RecipeModel recipe;
   final bool showPopularBadge;
+  final int recipeListIndex;
   const _RecipeInfoCard({
     required this.recipe,
     required this.showPopularBadge,
+    required this.recipeListIndex,
   });
 
   @override
@@ -139,7 +142,9 @@ class _RecipeInfoCard extends StatelessWidget {
       width: 175,
       child: GestureDetector(
         onTap: () {
-          context.pushNamed('Recipe', extra: recipe);
+          context.pushNamed('Recipe', extra: {
+            'recipeListIndex': recipeListIndex,
+          });
         },
         child: Card(
           shape: RoundedRectangleBorder(

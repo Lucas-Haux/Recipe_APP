@@ -32,9 +32,15 @@ final homeRouter = GoRouter(
       path: '/recipe',
       name: 'Recipe',
       builder: (context, state) {
-        final recipe =
-            state.extra as RecipeModel; // Retrieve the passed recipe object
-        return RecipeScreen(recipe: recipe, key: Key(recipe.title));
+        final args = state.extra as Map<String, dynamic>;
+
+        final recipe = args['recipe'] as RecipeModel;
+        final recipeListIndex = args['recipeListIndex'] as int;
+
+        return RecipeScreen(
+          recipeListIndex: recipeListIndex,
+          key: Key(recipe.title),
+        );
       },
     ),
   ],
