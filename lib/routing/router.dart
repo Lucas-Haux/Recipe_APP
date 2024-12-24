@@ -3,7 +3,6 @@ import '../ui/home/widgets/home_screen.dart';
 import '../ui/search/widgets/search_screen.dart';
 import '../ui/search_results/widgets/search_results_screen.dart';
 import '../ui/recipe/widgets/recipe_screen.dart';
-import '../domain/models/recipe_model.dart';
 
 import 'package:flutter/material.dart';
 
@@ -34,12 +33,11 @@ final homeRouter = GoRouter(
       builder: (context, state) {
         final args = state.extra as Map<String, dynamic>;
 
-        final recipe = args['recipe'] as RecipeModel;
         final recipeListIndex = args['recipeListIndex'] as int;
 
         return RecipeScreen(
           recipeListIndex: recipeListIndex,
-          key: Key(recipe.title),
+          key: Key(recipeListIndex.toString()),
         );
       },
     ),
