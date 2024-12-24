@@ -166,5 +166,5 @@ String _getStringFromParagraph(String summary, String searchFor) {
 
 String _convertImage(String imageUrl) {
   final pattern = RegExp(r'\d+x\d+');
-  return imageUrl.replaceFirst(pattern, '636x393');
+  return imageUrl.replaceFirst(pattern, '556x370');
 }
