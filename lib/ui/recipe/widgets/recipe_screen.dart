@@ -1,4 +1,5 @@
 import 'package:flutter/gestures.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_box/domain/models/similar_recipe_model.dart';
@@ -87,25 +88,14 @@ class RecipeScreen extends ConsumerWidget {
               //Ingredients
               _IngredentsCard(recipe: recipe),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
 
               //Instructions
-              Column(
-                children: recipe.instructions.map<Widget>((instruction) {
-                  i++;
-
-                  return _InstructionCard(
-                    recipeInstructionsParagraph: recipe.instructionsParagraph,
-                    getParagraphDataForRecipe: ref
-                        .read(recipeViewmodelProvider(recipeListIndex).notifier)
-                        .getParagraphDataForRecipe,
-                    title: instruction.title,
-                    steps: instruction.steps,
-                    instructionNum: i,
-                    recipeID: recipe.id,
-                  );
-                }).toList(),
-              ),
+              _InstructionCard(
+                  getParagraphDataForRecipe: ref
+                      .read(recipeViewmodelProvider(recipeListIndex).notifier)
+                      .getParagraphDataForRecipe,
+                  recipe: recipe),
 
               _SimilarRecipes(id: recipe.id),
             ],
@@ -416,18 +406,11 @@ class _IngredentsCard extends StatelessWidget {
 
 class _InstructionCard extends StatefulWidget {
   final Future<void> Function(int) getParagraphDataForRecipe;
-  final String title;
-  final List<StepModel> steps;
-  final int instructionNum;
-  final int recipeID;
-  final String recipeInstructionsParagraph;
+  final RecipeModel recipe;
+
   const _InstructionCard({
     required this.getParagraphDataForRecipe,
-    required this.title,
-    required this.steps,
-    required this.instructionNum,
-    required this.recipeID,
-    required this.recipeInstructionsParagraph,
+    required this.recipe,
   });
   @override
   _InstructionCardState createState() => _InstructionCardState();
@@ -435,6 +418,113 @@ class _InstructionCard extends StatefulWidget {
 
 class _InstructionCardState extends State<_InstructionCard> {
   InstructionView selectedView = InstructionView.list;
+
+  int i = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: cardWidth,
+      child: Column(
+        children: [
+          const SizedBox(height: 5),
+
+          // InstructionView Picker Button
+          Card(
+            color: Theme.of(context).colorScheme.onSecondaryFixed,
+            margin: EdgeInsets.all(0),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: SegmentedButton<InstructionView>(
+                showSelectedIcon: false,
+                segments: const <ButtonSegment<InstructionView>>[
+                  ButtonSegment(
+                    value: InstructionView.list,
+                    label: Text('List'),
+                  ),
+                  ButtonSegment(
+                    value: InstructionView.paragraph,
+                    label: Text('Paragraph'),
+                  ),
+                ],
+                selected: {selectedView},
+                onSelectionChanged: (newSelection) async {
+                  setState(() {
+                    selectedView = newSelection.first;
+                  });
+                  if (widget.recipe.instructionsParagraph.isEmpty) {
+                    await widget.getParagraphDataForRecipe(widget.recipe.id);
+                  }
+                },
+              ),
+            ),
+          ),
+          // List view
+          if (selectedView == InstructionView.list) ...[
+            Card(
+              color: Theme.of(context).colorScheme.onSecondaryFixed,
+              child: Column(
+                children: widget.recipe.instructions.map<Widget>((instruction) {
+                  i++;
+
+                  return _ListInstructions(
+                    recipeInstructionsParagraph:
+                        widget.recipe.instructionsParagraph,
+                    getParagraphDataForRecipe: widget.getParagraphDataForRecipe,
+                    title: instruction.title,
+                    steps: instruction.steps,
+                    instructionNum: i,
+                    recipeID: widget.recipe.id,
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
+          // Paragraph view
+          if (selectedView == InstructionView.paragraph) ...[
+            Card(
+              color: Theme.of(context).colorScheme.onSecondaryFixed,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                child: widget.recipe.instructionsParagraph.isNotEmpty
+                    ? HtmlWidget(widget.recipe.instructionsParagraph)
+                    : const Center(
+                        heightFactor: 2,
+                        child: SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 7,
+                            strokeCap: StrokeCap.round,
+                          ),
+                        ),
+                      ),
+              ),
+            ),
+          ],
+          const SizedBox(height: 5),
+        ],
+      ),
+    );
+  }
+}
+
+class _ListInstructions extends StatelessWidget {
+  final Future<void> Function(int) getParagraphDataForRecipe;
+  final String title;
+  final List<StepModel> steps;
+  final int instructionNum;
+  final int recipeID;
+  final String recipeInstructionsParagraph;
+  const _ListInstructions({
+    required this.getParagraphDataForRecipe,
+    required this.title,
+    required this.steps,
+    required this.instructionNum,
+    required this.recipeID,
+    required this.recipeInstructionsParagraph,
+  });
 
   String extractTitle(String input) {
     // Regular expression to match everything after the last meaningful phrase
@@ -456,86 +546,44 @@ class _InstructionCardState extends State<_InstructionCard> {
 
   @override
   Widget build(BuildContext context) {
-    String instructionTitle = extractTitle(widget.title).isNotEmpty
-        ? extractTitle(widget.title)
-        : '${order(widget.instructionNum)} Instruction';
-    print('OG: ${widget.title} || New: $instructionTitle');
+    String instructionTitle = extractTitle(title).isNotEmpty
+        ? extractTitle(title)
+        : '${order(instructionNum)} Instruction';
+    print('OG: ${title} || New: $instructionTitle');
 
-    return SizedBox(
-      width: cardWidth,
-      child: Card(
-        color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
-        child: Column(
-          children: [
-            const SizedBox(height: 5),
-
-            // InstructionView Picker
-            SegmentedButton<InstructionView>(
-              showSelectedIcon: false,
-              segments: const <ButtonSegment<InstructionView>>[
-                ButtonSegment(
-                  value: InstructionView.list,
-                  label: Text('List'),
-                ),
-                ButtonSegment(
-                  value: InstructionView.paragraph,
-                  label: Text('Paragraph'),
-                ),
-              ],
-              selected: {selectedView},
-              onSelectionChanged: (newSelection) async {
-                setState(() {
-                  selectedView = newSelection.first;
-                });
-                // TODO check if data hasa paragraph or not
-                await widget.getParagraphDataForRecipe(widget.recipeID);
-              },
-            ),
-
-            const SizedBox(height: 5),
-
-            // List view
-            if (selectedView == InstructionView.list) ...[
-              Text(instructionTitle, style: _titleStyle),
-              const Divider(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: List.generate(widget.steps.length, (index) {
-                    return Row(
-                      children: [
-                        // Step number
-                        Card(
-                          color:
-                              Theme.of(context).colorScheme.tertiaryContainer,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              widget.steps[index].stepNumber.toString(),
-                              textDirection: TextDirection.rtl,
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ),
-                        // Step
-                        _StepInstruction(
-                          step: widget.steps[index],
-                          key: Key(index.toString()),
-                        ),
-                      ],
-                    );
-                  }),
-                ),
-              ),
-            ],
-            // Paragraph view
-            if (selectedView == InstructionView.paragraph) ...[
-              Text(widget.recipeInstructionsParagraph),
-            ],
-            const SizedBox(height: 5),
-          ],
+    return Column(
+      children: [
+        Text(instructionTitle, style: _titleStyle),
+        const Divider(),
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: List.generate(steps.length, (index) {
+              return Row(
+                children: [
+                  // Step number
+                  Card(
+                    color: Theme.of(context).colorScheme.tertiaryContainer,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        steps[index].stepNumber.toString(),
+                        textDirection: TextDirection.rtl,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ),
+                  // Step
+                  _StepInstruction(
+                    step: steps[index],
+                    key: Key(index.toString()),
+                  ),
+                ],
+              );
+            }),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -584,7 +632,7 @@ class __StepInstructionState extends State<_StepInstruction> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
-                width: cardWidth / 1.41,
+                width: cardWidth / 1.345,
                 child: Text(
                   widget.step.stepInstruction,
                   style: TextStyle(
@@ -667,7 +715,7 @@ class _SimilarRecipesState extends State<_SimilarRecipes> {
                     // similarRecipes = newList;
                   });
                 },
-                child: const Text('Similar Recipes'),
+                child: const Text('Find Similar Recipes'),
               ),
 
             // Carousel
