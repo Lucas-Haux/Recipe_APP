@@ -19,8 +19,18 @@ final homeRouter = GoRouter(
     GoRoute(
       path: '/search',
       name: 'SearchPage',
-      builder: (context, state) =>
-          SearchScreen(searchController: TextEditingController()),
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          transitionDuration: (const Duration(milliseconds: 500)),
+          child: SearchScreen(searchController: TextEditingController()),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Define custom transitions, like fade-in effect
+            final anim =
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut);
+            return FadeTransition(opacity: anim, child: child);
+          },
+        );
+      },
     ),
     GoRoute(
       path: '/search_results',

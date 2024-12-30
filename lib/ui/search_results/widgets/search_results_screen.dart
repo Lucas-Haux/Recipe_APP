@@ -100,13 +100,18 @@ class _AppBar extends StatelessWidget {
           width: 300,
           child: Hero(
             tag: 'SearchBar',
-            child: SearchBarFieldWidget(
-              key: const ValueKey('searchPageSearch'),
-              goToSearchPage: true,
-              controller: TextEditingController(),
-              onTap: null,
-              readOnly: true,
-              autofocus: false,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              child: SearchBarFieldWidget(
+                focusNode: focusNode1,
+                goToSearchPage: true,
+                controller: searchController,
+                autofocus: false,
+                readOnly: true,
+                onTap: () {
+                  context.go('/search');
+                },
+              ),
             ),
           ),
         ),

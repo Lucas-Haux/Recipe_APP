@@ -1,4 +1,5 @@
 import 'package:flutter/gestures.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
@@ -121,11 +122,18 @@ class _AppBar extends StatelessWidget {
           width: 275,
           child: Hero(
             tag: 'SearchBar',
-            child: SearchBarFieldWidget(
-              autofocus: false,
-              goToSearchPage: true,
-              controller: TextEditingController(), // TODO this should change
-              readOnly: true,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              child: SearchBarFieldWidget(
+                focusNode: focusNode1,
+                goToSearchPage: true,
+                controller: TextEditingController(),
+                autofocus: false,
+                readOnly: true,
+                onTap: () {
+                  context.go('/search');
+                },
+              ),
             ),
           ),
         ),

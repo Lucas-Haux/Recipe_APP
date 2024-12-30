@@ -19,25 +19,32 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 90),
+            const SizedBox(height: 60),
             // Search Bar
             Container(
               height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Hero(
                 tag: 'SearchBar',
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  child: SearchBarFieldWidget(
+                flightShuttleBuilder: ((flightContext, animation,
+                    flightDirection, fromHeroContext, toHeroContext) {
+                  /// Don't try to add a Listener here, use a StatefulWidget that uses that logic in its initState
+                  return _FocustWidget(
+                    animation: animation,
                     focusNode: focusNode1,
-                    goToSearchPage: true,
-                    controller: searchController,
-                    autofocus: false,
-                    readOnly: true,
-                    onTap: () {
-                      context.go('/search');
-                    },
-                  ),
+                    child: toHeroContext.widget,
+                  );
+                }),
+                child: SearchBarFieldWidget(
+                  key: const ValueKey('SearchBar'),
+                  focusNode: focusNode1,
+                  goToSearchPage: true,
+                  controller: searchController,
+                  autofocus: false,
+                  readOnly: true,
+                  onTap: () {
+                    context.go('/search');
+                  },
                 ),
               ),
             ),
@@ -60,4 +67,47 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+class _FocustWidget extends StatefulWidget {
+  final Widget child;
+  final Animation<double> animation;
+  final FocusNode focusNode;
+
+  const _FocustWidget({
+    Key? key,
+    required this.focusNode,
+    required this.animation,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  State<_FocustWidget> createState() => __FocustWidgetState();
+}
+
+class __FocustWidgetState extends State<_FocustWidget> {
+  @override
+  void initState() {
+    super.initState();
+    widget.animation.addStatusListener(_status);
+
+    ///Check for the animation state
+  }
+
+  void _status(AnimationStatus status) {
+    if (status == AnimationStatus.completed) {
+      Future.microtask(() => mounted ? widget.focusNode.requestFocus() : null);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.animation.removeStatusListener(_status);
+
+    /// dispose the listener
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
