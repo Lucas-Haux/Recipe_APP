@@ -12,28 +12,27 @@ String query = '';
 List<RecipeModel> _recipesList = [];
 
 class RecipeDataRepository {
+  final Ref ref;
+
+  RecipeDataRepository(this.ref);
   List<RecipeModel> get recipes => _recipesList;
 
   RecipeModel getRecipe(int recipeListIndex) {
-    print(
-        'getRecipe tessssst ${_recipesList[recipeListIndex].instructionsParagraph}');
     return _recipesList[recipeListIndex];
   }
 
   Future<List<RecipeModel>> searchForRecipes() async {
     try {
       // Fetch API response wiht service
-      dynamic jsonResponse = await RecipeSearchService().fetchRecipes(query);
+      dynamic jsonResponse =
+          await ref.read(recipeSearchServiceProvider).fetchRecipes();
 
       // Parse JSON into RecipeModel list
       _recipesList = jsonResponse['results']
           .map<RecipeModel>((jsonMap) => RecipeModel.fromJson(jsonMap))
           .toList();
 
-      print('length: ${_recipesList.length}');
-
       return _recipesList;
-      // make the recipelist the state of the notifier
     } catch (e) {
       throw Exception('Error searching for recipes: $e');
     }
@@ -74,5 +73,6 @@ class RecipeDataRepository {
   }
 }
 
-final recipeRepositoryProvider =
-    Provider<RecipeDataRepository>((ref) => RecipeDataRepository());
+final recipeDataRepositoryProvider = Provider((ref) {
+  return RecipeDataRepository(ref);
+});

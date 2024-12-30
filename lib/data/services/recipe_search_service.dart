@@ -1,14 +1,42 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:recipe_box/data/repositories/search_pramaters_repository.dart';
+import 'package:recipe_box/domain/enums.dart';
+
 class RecipeSearchService {
-  Future<dynamic> fetchRecipes(String query) async {
+  final Ref ref; // Dependency Injection for Ref
+
+  RecipeSearchService(this.ref);
+
+  Future<dynamic> fetchRecipes() async {
+    final searchPramatersRepository =
+        ref.read(searchPramatersRepositoryProvider);
+
     try {
       const String appKey = '05f5c84cb98f42329f13b049c9f05f5a';
 
-      // TODO grab the parameters from a differnt repository
+      final query = searchPramatersRepository.query;
+      String selectedCuisines = searchPramatersRepository.selectedCuisines
+          .map((cuisine) => cuisine.displayName)
+          .join(',');
+      String deselectedCuisines = searchPramatersRepository.deselectedCuisines
+          .map((cuisine) => cuisine.displayName)
+          .join(',');
+      String dietsAndOr = searchPramatersRepository.dietAndOr.displayName;
+      String requiredDiets = searchPramatersRepository.requiredDiets
+          .map((diet) => diet.displayName)
+          .join(dietsAndOr);
+      String intolerances = searchPramatersRepository.intolerances
+          .map((intolerance) => intolerance.displayName)
+          .join(',');
       String queryParameters = 'query=${Uri.encodeComponent(query.trim())}&'
           'apiKey=$appKey&'
+          'cuisine=$selectedCuisines&'
+          'excludeCuisine=$deselectedCuisines&'
+          'diet=$requiredDiets&'
+          'intolerances=$intolerances&'
           'fillIngredients=true&'
           'addRecipeInformation=true&'
           'instructionsRequired=true&'
@@ -48,3 +76,7 @@ class RecipeSearchService {
     }
   }
 }
+
+final recipeSearchServiceProvider = Provider((ref) {
+  return RecipeSearchService(ref);
+});

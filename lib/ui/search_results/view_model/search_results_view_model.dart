@@ -24,7 +24,7 @@ class RecipeViewModel
 final recipeViewModelProvider = StateNotifierProvider<RecipeViewModel,
     DataStateStatusModel<List<RecipeModel>>>(
   (ref) {
-    final repository = ref.watch(recipeRepositoryProvider);
+    final repository = ref.watch(recipeDataRepositoryProvider);
     return RecipeViewModel(repository);
   },
 );

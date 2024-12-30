@@ -39,6 +39,7 @@ class _SearchBarFieldWidget extends State<SearchBarFieldWidget> {
           TextField(
             controller: widget.controller,
             autofocus: widget.autofocus,
+            onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
             readOnly: widget.readOnly,
             textAlignVertical: TextAlignVertical.bottom,
             textAlign: TextAlign.center,

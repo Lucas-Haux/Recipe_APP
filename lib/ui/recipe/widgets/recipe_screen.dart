@@ -28,7 +28,7 @@ class RecipeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recipe = ref.watch(recipeViewmodelProvider(recipeListIndex));
+    final recipe = ref.watch(recipeViewModelProvider(recipeListIndex));
 
     int i = 0;
     print(recipeListIndex);
@@ -93,7 +93,7 @@ class RecipeScreen extends ConsumerWidget {
               //Instructions
               _InstructionCard(
                   getParagraphDataForRecipe: ref
-                      .read(recipeViewmodelProvider(recipeListIndex).notifier)
+                      .read(recipeViewModelProvider(recipeListIndex).notifier)
                       .getParagraphDataForRecipe,
                   recipe: recipe),
 

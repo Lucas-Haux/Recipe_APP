@@ -38,9 +38,10 @@ class RecipeViewmodel extends StateNotifier<RecipeModel> {
   }
 }
 
-final recipeViewmodelProvider =
+final recipeViewModelProvider =
     StateNotifierProvider.family<RecipeViewmodel, RecipeModel, int>(
-        (ref, recipeListIndex) {
-  final recipeDataRepository = RecipeDataRepository();
-  return RecipeViewmodel(recipeDataRepository, recipeListIndex);
-});
+  (ref, recipeListIndex) {
+    final recipeDataRepository = ref.read(recipeDataRepositoryProvider);
+    return RecipeViewmodel(recipeDataRepository, recipeListIndex);
+  },
+);
