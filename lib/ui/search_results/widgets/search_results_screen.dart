@@ -52,20 +52,51 @@ class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                     final showPopularBadge =
                         _showPopularBadge(recipeState.data!);
 
+                    List<RecipeModel> leftList = [];
+                    List<RecipeModel> rightList = [];
+
+                    int index = 0;
+                    for (var recipe in recipeState.data!) {
+                      if (index.isEven) {
+                        leftList.add(recipe);
+                        print('index: $index , added to left');
+                      } else if (index.isOdd) {
+                        rightList.add(recipe);
+                      }
+                      index++;
+                    }
+
                     return Center(
                       child: SizedBox(
                         width: 350,
-                        child: Wrap(
-                          children: List.generate(
-                            recipeState.data!.length,
-                            (index) {
-                              return _RecipeInfoCard(
-                                recipeListIndex: index,
-                                recipe: recipeState.data![index],
-                                showPopularBadge: showPopularBadge,
-                              );
-                            },
-                          ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: List.generate(
+                                leftList.length,
+                                (index) {
+                                  return _RecipeInfoCard(
+                                    recipe: leftList[index],
+                                    showPopularBadge: showPopularBadge,
+                                    recipeListIndex: index,
+                                  );
+                                },
+                              ),
+                            ),
+                            Column(
+                              children: List.generate(
+                                rightList.length,
+                                (index) {
+                                  return _RecipeInfoCard(
+                                    recipe: rightList[index],
+                                    showPopularBadge: showPopularBadge,
+                                    recipeListIndex: index + 1,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );
