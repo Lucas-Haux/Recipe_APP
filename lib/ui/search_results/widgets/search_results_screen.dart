@@ -48,6 +48,9 @@ class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                 if (recipeState.status == DataStateStatus.loading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (recipeState.status == DataStateStatus.completed) {
+                  int leftIndex = -2;
+                  int rightIndex = -1;
+
                   if (recipeState.data != null) {
                     final showPopularBadge =
                         _showPopularBadge(recipeState.data!);
@@ -76,10 +79,11 @@ class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                               children: List.generate(
                                 leftList.length,
                                 (index) {
+                                  leftIndex += 2;
                                   return _RecipeInfoCard(
                                     recipe: leftList[index],
                                     showPopularBadge: showPopularBadge,
-                                    recipeListIndex: index,
+                                    recipeListIndex: leftIndex,
                                   );
                                 },
                               ),
@@ -88,10 +92,11 @@ class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                               children: List.generate(
                                 rightList.length,
                                 (index) {
+                                  rightIndex += 2;
                                   return _RecipeInfoCard(
                                     recipe: rightList[index],
                                     showPopularBadge: showPopularBadge,
-                                    recipeListIndex: index + 1,
+                                    recipeListIndex: rightIndex,
                                   );
                                 },
                               ),
