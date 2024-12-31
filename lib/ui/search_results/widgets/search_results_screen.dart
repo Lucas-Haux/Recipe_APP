@@ -36,6 +36,7 @@ class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 0,
+        titleSpacing: 0,
         leading: const SizedBox(),
         title: _AppBar(),
       ),
@@ -70,8 +71,8 @@ class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                     }
 
                     return Center(
-                      child: SizedBox(
-                        width: 350,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -88,6 +89,7 @@ class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                                 },
                               ),
                             ),
+                            const Spacer(),
                             Column(
                               children: List.generate(
                                 rightList.length,
@@ -125,44 +127,53 @@ class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
 class _AppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Search Button
-        Container(
-          padding: const EdgeInsets.only(left: 10),
-          height: 45,
-          width: 300,
-          child: Hero(
-            tag: 'SearchBar',
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              child: SearchBarFieldWidget(
-                focusNode: focusNode1,
-                goToSearchPage: true,
-                controller: searchController,
-                autofocus: false,
-                readOnly: true,
-                onTap: () {
-                  context.go('/search');
-                },
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Spacer(),
+          // Search Button
+          SizedBox(
+            height: 45,
+            width: 300,
+            child: Hero(
+              tag: 'SearchBar',
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                child: SearchBarFieldWidget(
+                  focusNode: focusNode1,
+                  goToSearchPage: true,
+                  controller: searchController,
+                  autofocus: false,
+                  readOnly: true,
+                  onTap: () {
+                    context.go('/search');
+                  },
+                ),
               ),
             ),
           ),
-        ),
+          const Spacer(),
 
-        const Spacer(),
+          // Home Button
+          Hero(
+            tag: const Key('HomeButton'),
+            child: IconButton(
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen())),
+              icon: Icon(
+                Icons.home,
+                size: 30,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+          ),
 
-        // Home Button
-        IconButton(
-          onPressed: () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const HomeScreen())),
-          icon: const Icon(Icons.home),
-        ),
-
-        const Spacer(),
-      ],
+          const Spacer(),
+        ],
+      ),
     );
   }
 }
@@ -180,7 +191,7 @@ class _RecipeInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 175,
+      width: 185,
       child: GestureDetector(
         onTap: () {
           context.pushNamed('Recipe', extra: {
@@ -188,6 +199,7 @@ class _RecipeInfoCard extends StatelessWidget {
           });
         },
         child: Card(
+          margin: const EdgeInsets.all(5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -201,16 +213,23 @@ class _RecipeInfoCard extends StatelessWidget {
                 popular: recipe.popular,
                 showPopularBadge: showPopularBadge,
               ),
-              Text(
-                recipe.title,
-                textAlign: TextAlign.center,
+              const SizedBox(height: 3),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: Text(
+                  recipe.title,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
               ),
               const Divider(),
               const Text(
                 'Per Serving:',
                 textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 7),
               Text(
                 recipe.calories,
                 textAlign: TextAlign.center,
@@ -246,6 +265,16 @@ class _RecipeImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String newTime = '';
+    if (time >= 61) {
+      double hour = time / 60;
+      double min = time % 60;
+
+      newTime = '${hour.round()}h:${min.round()}m';
+    } else {
+      newTime = '${time}m';
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
       child: SizedBox(
@@ -263,6 +292,16 @@ class _RecipeImage extends StatelessWidget {
                   topRight: Radius.circular(20),
                   bottomRight: Radius.circular(20),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black
+                        .withOpacity(0.4), // Shadow color with opacity
+                    spreadRadius: 1, // How far the shadow spreads
+                    blurRadius: 5, // How soft the shadow appears
+                    offset:
+                        const Offset(2, 2), // Horizontal and vertical offset
+                  ),
+                ],
               ),
               padding:
                   const EdgeInsets.only(left: 6, right: 8, bottom: 8, top: 8),
@@ -275,7 +314,7 @@ class _RecipeImage extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    '${time}m',
+                    newTime,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,

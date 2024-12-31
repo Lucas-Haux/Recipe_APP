@@ -13,7 +13,7 @@ import '../view_model/recipe_viewmodel.dart';
 import 'package:recipe_box/domain/models/recipe_model.dart';
 import 'package:recipe_box/ui/core/ui/search_bar_field_widget.dart';
 
-double cardWidth = 360;
+double cardWidth = 370;
 
 const TextStyle _titleStyle = TextStyle(
   fontSize: 25,
@@ -31,11 +31,13 @@ class RecipeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recipe = ref.watch(recipeViewModelProvider(recipeListIndex));
 
-    int i = 0;
     print(recipeListIndex);
 
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 0,
+        titleSpacing: 0,
+        leading: const SizedBox(),
         forceMaterialTransparency: true,
         title: const _AppBar(),
       ),
@@ -64,9 +66,10 @@ class RecipeScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+
               // Diets
               if (recipe.diets.isNotEmpty && recipe.diets[0].isNotEmpty)
-                _DietLabels(recipe: recipe),
+                _RowOfData(listEnum: recipe.diets),
 
               // Row of Serving and misc cards
               SizedBox(
@@ -81,7 +84,17 @@ class RecipeScreen extends ConsumerWidget {
                 ),
               ),
 
+              // Cuisines
+              if (recipe.cuisines.isNotEmpty && recipe.cuisines[0].isNotEmpty)
+                _RowOfData(listEnum: recipe.cuisines),
+
+              // Dish Types
+              if (recipe.dishTypes.isNotEmpty && recipe.dishTypes[0].isNotEmpty)
+                _RowOfData(listEnum: recipe.dishTypes),
+
               const SizedBox(height: 20),
+
+              const Divider(),
 
               // Equipment
               _EquipmentCard(recipe: recipe),
@@ -89,7 +102,9 @@ class RecipeScreen extends ConsumerWidget {
               //Ingredients
               _IngredentsCard(recipe: recipe),
 
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
+
+              const Divider(),
 
               //Instructions
               _InstructionCard(
@@ -98,6 +113,11 @@ class RecipeScreen extends ConsumerWidget {
                       .getParagraphDataForRecipe,
                   recipe: recipe),
 
+              const SizedBox(height: 20),
+
+              const Divider(),
+
+              // Similar REcipes
               _SimilarRecipes(id: recipe.id),
             ],
           ),
@@ -112,40 +132,63 @@ class _AppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Search Button
-        SizedBox(
-          height: 45,
-          width: 275,
-          child: Hero(
-            tag: 'SearchBar',
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              child: SearchBarFieldWidget(
-                focusNode: focusNode1,
-                goToSearchPage: true,
-                controller: TextEditingController(),
-                autofocus: false,
-                readOnly: true,
-                onTap: () {
-                  context.go('/search');
-                },
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Spacer(),
+
+          // Back Button
+          IconButton(
+            onPressed: () => context.pop(),
+            icon: Icon(
+              Icons.arrow_back,
+              size: 30,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+          const Spacer(),
+
+          // Search Button
+          SizedBox(
+            height: 45,
+            width: 250,
+            child: Hero(
+              tag: 'SearchBar',
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                child: SearchBarFieldWidget(
+                  focusNode: focusNode1,
+                  goToSearchPage: true,
+                  controller: TextEditingController(),
+                  autofocus: false,
+                  readOnly: true,
+                  onTap: () {
+                    context.go('/search');
+                  },
+                ),
               ),
             ),
           ),
-        ),
-        const Spacer(),
+          const Spacer(),
 
-        // Home Button
-        IconButton(
-          onPressed: () => print('go home'),
-          icon: const Icon(Icons.home),
-        ),
-        const Spacer()
-      ],
+          // Home Button
+          Hero(
+            tag: const Key('HomeButton'),
+            child: IconButton(
+              onPressed: () => context.go('/'),
+              icon: Icon(
+                Icons.home,
+                size: 30,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+          ),
+          const Spacer()
+        ],
+      ),
     );
   }
 }
@@ -194,9 +237,9 @@ class _RecipeImage extends StatelessWidget {
   }
 }
 
-class _DietLabels extends StatelessWidget {
-  final RecipeModel recipe;
-  const _DietLabels({required this.recipe});
+class _RowOfData extends StatelessWidget {
+  final List<dynamic> listEnum;
+  const _RowOfData({required this.listEnum});
 
   @override
   Widget build(BuildContext context) {
@@ -211,12 +254,12 @@ class _DietLabels extends StatelessWidget {
             spacing: 5,
             runSpacing: 5,
             children: List.generate(
-              recipe.diets.length,
+              listEnum.length,
               (index) {
                 return Card(
                   color: Theme.of(context).colorScheme.secondaryContainer,
                   child: Text(
-                      '  ${StringUtils.capitalize(recipe.diets[index], allWords: true)}  '),
+                      '  ${StringUtils.capitalize(listEnum[index].toString(), allWords: true)}  '),
                 );
               },
             ),
@@ -440,7 +483,10 @@ class _InstructionCardState extends State<_InstructionCard> {
           // InstructionView Picker Button
           Card(
             color: Theme.of(context).colorScheme.onSecondaryFixed,
-            margin: EdgeInsets.all(0),
+            margin: const EdgeInsets.all(0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: SegmentedButton<InstructionView>(
