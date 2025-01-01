@@ -693,6 +693,11 @@ class _MinMaxSlidersState extends State<_MinMaxSliders> {
 
   @override
   Widget build(BuildContext context) {
+    TextStyle secondaryTitleStyle = const TextStyle(
+      fontWeight: FontWeight.w300,
+      fontSize: 12,
+    );
+
     return Card(
       color: Theme.of(context).colorScheme.onSecondary,
       shape: const RoundedRectangleBorder(
@@ -703,7 +708,9 @@ class _MinMaxSlidersState extends State<_MinMaxSliders> {
       margin: const EdgeInsets.all(10),
       child: Column(
         children: <Widget>[
-          Text('Min ${widget.title}', style: titleTextStyle),
+          Text(widget.title, style: titleTextStyle),
+          const Divider(),
+          Text('Minimum', style: secondaryTitleStyle),
           Slider(
             value: _minSliderValue,
             min: 0,
@@ -717,7 +724,7 @@ class _MinMaxSlidersState extends State<_MinMaxSliders> {
               });
             },
           ),
-          Text('Max ${widget.title}', style: titleTextStyle),
+          Text('Maximum', style: secondaryTitleStyle),
           Slider(
             value: _maxSliderValue,
             min: 0,

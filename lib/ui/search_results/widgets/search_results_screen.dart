@@ -30,8 +30,9 @@ class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final recipeState = ref.watch(recipeViewModelProvider);
     ref.watch(recipeViewModelProvider); // Watch the ViewModel provider
+
+    final recipeState = ref.watch(recipeViewModelProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -49,6 +50,8 @@ class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                 if (recipeState.status == DataStateStatus.loading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (recipeState.status == DataStateStatus.completed) {
+                  print(' length!!!!!!!: ${recipeState.data!.length}');
+
                   int leftIndex = -2;
                   int rightIndex = -1;
 
@@ -196,6 +199,7 @@ class _RecipeInfoCard extends StatelessWidget {
         onTap: () {
           context.pushNamed('Recipe', extra: {
             'recipeListIndex': recipeListIndex,
+            'id': recipe.id.toString(),
           });
         },
         child: Card(

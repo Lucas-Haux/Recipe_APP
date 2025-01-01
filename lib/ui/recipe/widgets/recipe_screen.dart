@@ -1,3 +1,4 @@
+import 'package:diacritic/diacritic.dart';
 import 'package:flutter/gestures.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -22,16 +23,11 @@ const TextStyle _titleStyle = TextStyle(
 
 class RecipeScreen extends ConsumerWidget {
   final int recipeListIndex;
-  const RecipeScreen({
-    required this.recipeListIndex,
-    super.key,
-  });
+  const RecipeScreen({required this.recipeListIndex, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recipe = ref.watch(recipeViewModelProvider(recipeListIndex));
-
-    print(recipeListIndex);
+    RecipeModel recipe = ref.watch(recipeViewModelProvider(recipeListIndex));
 
     return Scaffold(
       appBar: AppBar(
@@ -57,7 +53,7 @@ class RecipeScreen extends ConsumerWidget {
                           imageUrl: recipe.imageUrl, favoriteButton: true),
                       // Title
                       Text(
-                        recipe.title,
+                        removeDiacritics(recipe.title),
                         maxLines: 2,
                         textAlign: TextAlign.center,
                         style: _titleStyle,
@@ -259,7 +255,7 @@ class _RowOfData extends StatelessWidget {
                 return Card(
                   color: Theme.of(context).colorScheme.secondaryContainer,
                   child: Text(
-                      '  ${StringUtils.capitalize(listEnum[index].toString(), allWords: true)}  '),
+                      '  ${StringUtils.capitalize(removeDiacritics(listEnum[index]), allWords: true)}  '),
                 );
               },
             ),
@@ -393,7 +389,8 @@ class _EquipmentCard extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                            StringUtils.capitalize(equipment, allWords: true),
+                            StringUtils.capitalize(removeDiacritics(equipment),
+                                allWords: true),
                             style: const TextStyle(fontSize: 14)),
                       ),
                     );
@@ -438,7 +435,8 @@ class _IngredentsCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        StringUtils.capitalize(ingredient, allWords: true),
+                        StringUtils.capitalize(removeDiacritics(ingredient),
+                            allWords: true),
                         style: const TextStyle(fontSize: 14),
                         textAlign: TextAlign.center,
                       ),
@@ -523,7 +521,7 @@ class _InstructionCardState extends State<_InstructionCard> {
 
                   return _ListInstructions(
                     recipeInstructionsParagraph:
-                        widget.recipe.instructionsParagraph,
+                        removeDiacritics(widget.recipe.instructionsParagraph),
                     getParagraphDataForRecipe: widget.getParagraphDataForRecipe,
                     title: instruction.title,
                     steps: instruction.steps,
@@ -542,7 +540,8 @@ class _InstructionCardState extends State<_InstructionCard> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: widget.recipe.instructionsParagraph.isNotEmpty
-                    ? HtmlWidget(widget.recipe.instructionsParagraph)
+                    ? HtmlWidget(
+                        (removeDiacritics(widget.recipe.instructionsParagraph)))
                     : const Center(
                         heightFactor: 2,
                         child: SizedBox(
@@ -829,7 +828,7 @@ class _SimilarRecipeCard extends StatelessWidget {
               _RecipeImage(imageUrl: recipe.imageUrl, favoriteButton: false),
               Padding(
                 padding: const EdgeInsets.all(5),
-                child: Text(recipe.title),
+                child: Text(removeDiacritics(recipe.title)),
               ),
             ],
           ),

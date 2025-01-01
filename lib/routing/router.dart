@@ -41,13 +41,13 @@ final homeRouter = GoRouter(
       path: '/recipe',
       name: 'Recipe',
       builder: (context, state) {
-        final args = state.extra as Map<String, dynamic>;
+        Map<String, dynamic> args = state.extra as Map<String, dynamic>;
 
-        final recipeListIndex = args['recipeListIndex'] as int;
+        int recipeListIndex = args['recipeListIndex'] as int;
 
         return RecipeScreen(
           recipeListIndex: recipeListIndex,
-          key: Key(recipeListIndex.toString()),
+          key: Key(args['id']),
         );
       },
     ),
