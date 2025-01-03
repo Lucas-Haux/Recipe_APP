@@ -8,19 +8,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 
-class RecipeDataRepository {
+class RecipeDataRepository extends StateNotifier<List<RecipeModel>> {
   final Ref ref;
-  RecipeDataRepository(this.ref);
+  RecipeDataRepository(this.ref) : super([]);
 
   Provider searchService = recipeSearchServiceProvider;
 
   List<RecipeModel> _cachedRecipesList = [];
+  int? _cachedTotalRecipeResults;
 
   List<RecipeModel> get recipes => _cachedRecipesList;
   RecipeModel recipe(int index) => _cachedRecipesList[index];
+  int? get totalRecipeResults => _cachedTotalRecipeResults;
 
   // use spoonacular api to get list of recipes
-  // TODO make void
   Future<List<RecipeModel>> searchForRecipes() async {
     try {
       // Fetch API
@@ -30,6 +31,11 @@ class RecipeDataRepository {
       _cachedRecipesList = jsonResponse['results']
           .map<RecipeModel>((jsonMap) => RecipeModel.fromJson(jsonMap))
           .toList();
+
+      state = _cachedRecipesList;
+
+      _cachedTotalRecipeResults = jsonResponse['totalResults'];
+      print(' new _cachedTotalRecipeResults $_cachedTotalRecipeResults');
 
       return _cachedRecipesList;
     } catch (e) {
@@ -70,18 +76,20 @@ class RecipeDataRepository {
   }
 }
 
-var recipeDataRepositoryProvider = Provider((ref) {
-  return RecipeDataRepository(ref);
-});
+final recipeDataRepositoryProvider =
+    StateNotifierProvider<RecipeDataRepository, List<RecipeModel>>(
+  (ref) => RecipeDataRepository(ref),
+);
 
 // Returns the whole list
 final recipeListProvider = Provider<List<RecipeModel>>((ref) {
-  final repository = ref.read(recipeDataRepositoryProvider);
-  return repository.recipes;
+  final recipes = ref.watch(recipeDataRepositoryProvider);
+  return recipes;
 });
 
 // Return one Recipe from list
 final singleRecipeProvider = Provider.family<RecipeModel, int>((ref, id) {
-  final repository = ref.watch(recipeDataRepositoryProvider);
-  return repository.recipes[id];
+  final recipes = ref.watch(recipeDataRepositoryProvider);
+  final recipe = recipes[id];
+  return recipe;
 });

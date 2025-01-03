@@ -23,8 +23,9 @@ class SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
     super.initState();
     // Trigger the recipe search when the tree is done building
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // This runs after the widget tree is built
-      ref.read(searchResultsViewModelProvider.notifier).searchForRecipes();
+      if (mounted) {
+        ref.watch(searchResultsViewModelProvider.notifier).searchForRecipes();
+      }
     });
   }
 
@@ -48,9 +49,23 @@ class SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
             Builder(
               builder: (context) {
                 if (recipeState.status == DataStateStatus.loading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                    heightFactor: 7,
+                    child: SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 7,
+                        strokeCap: StrokeCap.round,
+                      ),
+                    ),
+                  );
                 } else if (recipeState.status == DataStateStatus.completed) {
-                  print(' length!!!!!!!: ${recipeState.data!.length}');
+                  int? totalRecipeResults = ref
+                      .read(searchResultsViewModelProvider.notifier)
+                      .getTotalRecipeResults();
+
+                  print(totalRecipeResults);
 
                   int leftIndex = -2;
                   int rightIndex = -1;
@@ -66,7 +81,6 @@ class SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                     for (var recipe in recipeState.data!) {
                       if (index.isEven) {
                         leftList.add(recipe);
-                        print('index: $index , added to left');
                       } else if (index.isOdd) {
                         rightList.add(recipe);
                       }
@@ -76,35 +90,60 @@ class SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                     return Center(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Column(
                           children: [
-                            Column(
-                              children: List.generate(
-                                leftList.length,
-                                (index) {
-                                  leftIndex += 2;
-                                  return _RecipeInfoCard(
-                                    recipe: leftList[index],
-                                    showPopularBadge: showPopularBadge,
-                                    recipeListIndex: leftIndex,
-                                  );
-                                },
+                            const SizedBox(height: 3),
+                            if (totalRecipeResults != null)
+                              RichText(
+                                text: TextSpan(
+                                  style: const TextStyle(fontSize: 15),
+                                  children: <TextSpan>[
+                                    const TextSpan(text: 'Total Results: '),
+                                    TextSpan(
+                                      text: totalRecipeResults.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .tertiary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            const Spacer(),
-                            Column(
-                              children: List.generate(
-                                rightList.length,
-                                (index) {
-                                  rightIndex += 2;
-                                  return _RecipeInfoCard(
-                                    recipe: rightList[index],
-                                    showPopularBadge: showPopularBadge,
-                                    recipeListIndex: rightIndex,
-                                  );
-                                },
-                              ),
+                            const SizedBox(height: 8),
+                            // Two Columns showing recipe cards
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  children: List.generate(
+                                    leftList.length,
+                                    (index) {
+                                      leftIndex += 2;
+                                      return _RecipeInfoCard(
+                                        recipe: leftList[index],
+                                        showPopularBadge: showPopularBadge,
+                                        recipeListIndex: leftIndex,
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const Spacer(),
+                                Column(
+                                  children: List.generate(
+                                    rightList.length,
+                                    (index) {
+                                      rightIndex += 2;
+                                      return _RecipeInfoCard(
+                                        recipe: rightList[index],
+                                        showPopularBadge: showPopularBadge,
+                                        recipeListIndex: rightIndex,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

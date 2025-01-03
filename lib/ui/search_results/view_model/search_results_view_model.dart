@@ -13,8 +13,6 @@ class SearchResultsViewModel
 
   // search Recipes from list
   Future<void> searchForRecipes() async {
-    print('!!!!!!!!what????????');
-
     state = DataStateStatusModel.loading(); // Set loading state
     try {
       final recipes = await repository.searchForRecipes();
@@ -23,12 +21,16 @@ class SearchResultsViewModel
       state = DataStateStatusModel.error(e.toString()); // Set error state
     }
   }
+
+  int? getTotalRecipeResults() {
+    return repository.totalRecipeResults;
+  }
 }
 
 final searchResultsViewModelProvider = StateNotifierProvider<
     SearchResultsViewModel, DataStateStatusModel<List<RecipeModel>>>(
   (ref) {
-    final repository = ref.watch(recipeDataRepositoryProvider);
+    final repository = ref.watch(recipeDataRepositoryProvider.notifier);
     return SearchResultsViewModel(repository);
   },
 );

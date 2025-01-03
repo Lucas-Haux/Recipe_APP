@@ -14,7 +14,7 @@ class RecipeViewmodel {
   final int recipeListIndex;
   RecipeViewmodel(this.recipeDataRepository, this.recipeListIndex, this.ref);
 
-  RecipeModel recipe(int id) => recipeDataRepository.recipe(id);
+  RecipeModel recipe(int id) => ref.watch(singleRecipeProvider(id));
 
   // Used for similar recipes
   Future<List<SimilarRecipeModel>> searchSimilarRecipes(int id) async {
@@ -40,6 +40,6 @@ class RecipeViewmodel {
 
 final recipeViewModelProvider =
     Provider.family<RecipeViewmodel, int>((ref, recipeListIndex) {
-  final recipeDataRepository = ref.watch(recipeDataRepositoryProvider);
+  final recipeDataRepository = ref.watch(recipeDataRepositoryProvider.notifier);
   return RecipeViewmodel(recipeDataRepository, recipeListIndex, ref);
 });

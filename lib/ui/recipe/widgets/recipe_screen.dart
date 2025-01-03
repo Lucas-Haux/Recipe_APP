@@ -43,12 +43,6 @@ class RecipeScreen extends ConsumerWidget {
         child: Center(
           child: Column(
             children: [
-              FilledButton(
-                  onPressed: () {
-                    print(
-                        'okay: ${ref.read(recipeDataRepositoryProvider).recipe(recipeListIndex).title}');
-                  },
-                  child: Text('test')),
               // First Card
               SizedBox(
                 width: cardWidth,

@@ -48,6 +48,6 @@ class SearchViewModel {
   }
 
   Future<void> searchForRecipes() async {
-    ref.read(recipeDataRepositoryProvider).searchForRecipes();
+    ref.read(recipeDataRepositoryProvider.notifier).searchForRecipes();
   }
 }
