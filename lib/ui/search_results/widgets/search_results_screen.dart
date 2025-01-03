@@ -65,8 +65,6 @@ class SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                       .read(searchResultsViewModelProvider.notifier)
                       .getTotalRecipeResults();
 
-                  print(totalRecipeResults);
-
                   int leftIndex = -2;
                   int rightIndex = -1;
 

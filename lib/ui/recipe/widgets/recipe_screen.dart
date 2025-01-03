@@ -1,4 +1,3 @@
-import 'package:diacritic/diacritic.dart';
 import 'package:flutter/gestures.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -30,6 +29,7 @@ class RecipeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(recipeViewModelProvider(recipeListIndex));
     RecipeModel recipe = viewModel.recipe(recipeListIndex);
+    print(recipe.title);
 
     return Scaffold(
       appBar: AppBar(
@@ -55,7 +55,7 @@ class RecipeScreen extends ConsumerWidget {
                           imageUrl: recipe.imageUrl, favoriteButton: true),
                       // Title
                       Text(
-                        removeDiacritics(recipe.title),
+                        recipe.title,
                         maxLines: 2,
                         textAlign: TextAlign.center,
                         style: _titleStyle,
@@ -256,7 +256,7 @@ class _RowOfData extends StatelessWidget {
                 return Card(
                   color: Theme.of(context).colorScheme.secondaryContainer,
                   child: Text(
-                      '  ${StringUtils.capitalize(removeDiacritics(listEnum[index]), allWords: true)}  '),
+                      '  ${StringUtils.capitalize(listEnum[index], allWords: true)}  '),
                 );
               },
             ),
@@ -286,11 +286,17 @@ class _ServingsInfoCard extends StatelessWidget {
                 recipe.servings > 1
                     ? '${recipe.servings} Servings' // plural
                     : '${recipe.servings} Serving', // Single
-                style: const TextStyle(fontSize: 20),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const Divider(),
-            const Text('Per Serving:'),
+            const Text(
+              'Per Serving:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 10),
             Text(' ${recipe.calories} '),
             Text(' ${recipe.protein} '),
@@ -390,8 +396,7 @@ class _EquipmentCard extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                            StringUtils.capitalize(removeDiacritics(equipment),
-                                allWords: true),
+                            StringUtils.capitalize(equipment, allWords: true),
                             style: const TextStyle(fontSize: 14)),
                       ),
                     );
@@ -436,8 +441,7 @@ class _IngredentsCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        StringUtils.capitalize(removeDiacritics(ingredient),
-                            allWords: true),
+                        StringUtils.capitalize(ingredient, allWords: true),
                         style: const TextStyle(fontSize: 14),
                         textAlign: TextAlign.center,
                       ),
@@ -522,7 +526,7 @@ class _InstructionCardState extends State<_InstructionCard> {
 
                   return _ListInstructions(
                     recipeInstructionsParagraph:
-                        removeDiacritics(widget.recipe.instructionsParagraph),
+                        widget.recipe.instructionsParagraph,
                     getParagraphDataForRecipe: widget.getParagraphDataForRecipe,
                     title: instruction.title,
                     steps: instruction.steps,
@@ -541,8 +545,7 @@ class _InstructionCardState extends State<_InstructionCard> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: widget.recipe.instructionsParagraph.isNotEmpty
-                    ? HtmlWidget(
-                        (removeDiacritics(widget.recipe.instructionsParagraph)))
+                    ? HtmlWidget((widget.recipe.instructionsParagraph))
                     : const Center(
                         heightFactor: 2,
                         child: SizedBox(
@@ -829,7 +832,7 @@ class _SimilarRecipeCard extends StatelessWidget {
               _RecipeImage(imageUrl: recipe.imageUrl, favoriteButton: false),
               Padding(
                 padding: const EdgeInsets.all(5),
-                child: Text(removeDiacritics(recipe.title)),
+                child: Text(recipe.title),
               ),
             ],
           ),
