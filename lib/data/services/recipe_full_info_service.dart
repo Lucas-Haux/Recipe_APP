@@ -4,7 +4,7 @@ import 'dart:convert';
 class RecipeFullInfoService {
   Future<dynamic> fetchFullRecipe(int id) async {
     try {
-      const String appKey = '1f9d617ba13041859ea773423b0e6291';
+      const String appKey = '9ecb4e675175477d8edbd94c9dfa20a8';
 
       const String queryParameters = 'apiKey=$appKey&'
           'number=3';

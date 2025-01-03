@@ -15,7 +15,7 @@ class RecipeSearchService {
         ref.read(searchPramatersRepositoryProvider);
 
     try {
-      const String appKey = '1f9d617ba13041859ea773423b0e6291';
+      const String appKey = '9ecb4e675175477d8edbd94c9dfa20a8';
 
       final query = searchPramatersRepository.query;
       String selectedCuisines = searchPramatersRepository.selectedCuisines
@@ -64,7 +64,7 @@ class RecipeSearchService {
       print('-----------');
 
       if (response.statusCode == 200) {
-        final recipeResponseData = jsonDecode(response.body);
+        final recipeResponseData = jsonDecode(utf8.decode(response.bodyBytes));
 
         return recipeResponseData;
         // Handle the response recipeResponseData
