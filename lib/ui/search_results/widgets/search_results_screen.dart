@@ -11,28 +11,28 @@ import '../../core/ui/search_bar_field_widget.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SearchResultsScreen extends ConsumerStatefulWidget {
-  const SearchResultsScreen({Key? key}) : super(key: key);
+  const SearchResultsScreen({super.key});
 
   @override
-  _SearchResultsScreenState createState() => _SearchResultsScreenState();
+  SearchResultsScreenState createState() => SearchResultsScreenState();
 }
 
-class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
+class SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
   @override
   void initState() {
     super.initState();
     // Trigger the recipe search when the tree is done building
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // This runs after the widget tree is built
-      ref.read(recipeViewModelProvider.notifier).searchForRecipes();
+      ref.read(searchResultsViewModelProvider.notifier).searchForRecipes();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(recipeViewModelProvider); // Watch the ViewModel provider
+    ref.watch(searchResultsViewModelProvider); // Watch the ViewModel provider
 
-    final recipeState = ref.watch(recipeViewModelProvider);
+    final recipeState = ref.watch(searchResultsViewModelProvider);
 
     return Scaffold(
       appBar: AppBar(

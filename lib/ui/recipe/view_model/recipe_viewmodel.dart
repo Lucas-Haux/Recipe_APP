@@ -8,30 +8,30 @@ enum InstructionView {
   paragraph,
 }
 
-class RecipeViewmodel extends StateNotifier<RecipeModel> {
+class RecipeViewmodel {
+  final Ref ref;
   final RecipeDataRepository recipeDataRepository;
   final int recipeListIndex;
+  RecipeViewmodel(this.recipeDataRepository, this.recipeListIndex, this.ref);
 
-  RecipeViewmodel(this.recipeDataRepository, this.recipeListIndex)
-      : super(recipeDataRepository.getRecipe(recipeListIndex));
+  RecipeModel recipe(int id) => recipeDataRepository.recipe(id);
 
+  // Used for similar recipes
   Future<List<SimilarRecipeModel>> searchSimilarRecipes(int id) async {
     try {
       return await recipeDataRepository.searchForSimilarRecipes(id);
     } catch (e) {
-      throw e;
+      throw '$e';
     }
   }
 
-  Future<void> getParagraphDataForRecipe(
-    int recipeId,
-  ) async {
+  // Used for Instruction Paragraph view
+  Future<void> getParagraphDataForRecipe(int recipeId) async {
     try {
       await recipeDataRepository.replaceRecipeDataWithFullData(
         recipeId,
         recipeListIndex,
       );
-      state = recipeDataRepository.getRecipe(recipeListIndex);
     } catch (e) {
       throw '$e';
     }
@@ -39,9 +39,7 @@ class RecipeViewmodel extends StateNotifier<RecipeModel> {
 }
 
 final recipeViewModelProvider =
-    StateNotifierProvider.family<RecipeViewmodel, RecipeModel, int>(
-  (ref, recipeListIndex) {
-    final recipeDataRepository = ref.read(recipeDataRepositoryProvider);
-    return RecipeViewmodel(recipeDataRepository, recipeListIndex);
-  },
-);
+    Provider.family<RecipeViewmodel, int>((ref, recipeListIndex) {
+  final recipeDataRepository = ref.watch(recipeDataRepositoryProvider);
+  return RecipeViewmodel(recipeDataRepository, recipeListIndex, ref);
+});

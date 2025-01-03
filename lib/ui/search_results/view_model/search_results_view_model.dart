@@ -4,13 +4,17 @@ import '../../../domain/models/recipe_model.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RecipeViewModel
+class SearchResultsViewModel
     extends StateNotifier<DataStateStatusModel<List<RecipeModel>>> {
   final RecipeDataRepository repository;
 
-  RecipeViewModel(this.repository) : super(DataStateStatusModel.loading());
+  SearchResultsViewModel(this.repository)
+      : super(DataStateStatusModel.loading());
 
+  // search Recipes from list
   Future<void> searchForRecipes() async {
+    print('!!!!!!!!what????????');
+
     state = DataStateStatusModel.loading(); // Set loading state
     try {
       final recipes = await repository.searchForRecipes();
@@ -21,10 +25,10 @@ class RecipeViewModel
   }
 }
 
-final recipeViewModelProvider = StateNotifierProvider<RecipeViewModel,
-    DataStateStatusModel<List<RecipeModel>>>(
+final searchResultsViewModelProvider = StateNotifierProvider<
+    SearchResultsViewModel, DataStateStatusModel<List<RecipeModel>>>(
   (ref) {
     final repository = ref.watch(recipeDataRepositoryProvider);
-    return RecipeViewModel(repository);
+    return SearchResultsViewModel(repository);
   },
 );

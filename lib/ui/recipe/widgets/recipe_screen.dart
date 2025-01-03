@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:recipe_box/data/repositories/recipe_data_repository.dart';
 import 'package:recipe_box/domain/models/similar_recipe_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:basic_utils/basic_utils.dart';
@@ -27,7 +28,8 @@ class RecipeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    RecipeModel recipe = ref.watch(recipeViewModelProvider(recipeListIndex));
+    final viewModel = ref.watch(recipeViewModelProvider(recipeListIndex));
+    RecipeModel recipe = viewModel.recipe(recipeListIndex);
 
     return Scaffold(
       appBar: AppBar(
@@ -41,6 +43,12 @@ class RecipeScreen extends ConsumerWidget {
         child: Center(
           child: Column(
             children: [
+              FilledButton(
+                  onPressed: () {
+                    print(
+                        'okay: ${ref.read(recipeDataRepositoryProvider).recipe(recipeListIndex).title}');
+                  },
+                  child: Text('test')),
               // First Card
               SizedBox(
                 width: cardWidth,
@@ -104,10 +112,9 @@ class RecipeScreen extends ConsumerWidget {
 
               //Instructions
               _InstructionCard(
-                  getParagraphDataForRecipe: ref
-                      .read(recipeViewModelProvider(recipeListIndex).notifier)
-                      .getParagraphDataForRecipe,
-                  recipe: recipe),
+                getParagraphDataForRecipe: viewModel.getParagraphDataForRecipe,
+                recipe: recipe,
+              ),
 
               const SizedBox(height: 20),
 

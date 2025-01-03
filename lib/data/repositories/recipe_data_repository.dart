@@ -8,49 +8,46 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 
-String query = '';
-List<RecipeModel> _recipesList = [];
-
 class RecipeDataRepository {
   final Ref ref;
-
   RecipeDataRepository(this.ref);
-  List<RecipeModel> get recipes => _recipesList;
 
-  RecipeModel getRecipe(int recipeListIndex) {
-    return _recipesList[recipeListIndex];
-  }
+  Provider searchService = recipeSearchServiceProvider;
 
+  List<RecipeModel> _cachedRecipesList = [];
+
+  List<RecipeModel> get recipes => _cachedRecipesList;
+  RecipeModel recipe(int index) => _cachedRecipesList[index];
+
+  // use spoonacular api to get list of recipes
+  // TODO make void
   Future<List<RecipeModel>> searchForRecipes() async {
     try {
-      // Fetch API response wiht service
-      dynamic jsonResponse =
-          await ref.read(recipeSearchServiceProvider).fetchRecipes();
+      // Fetch API
+      dynamic jsonResponse = await ref.read(searchService).fetchRecipes();
 
       // Parse JSON into RecipeModel list
-      _recipesList = jsonResponse['results']
+      _cachedRecipesList = jsonResponse['results']
           .map<RecipeModel>((jsonMap) => RecipeModel.fromJson(jsonMap))
           .toList();
 
-      return _recipesList;
+      return _cachedRecipesList;
     } catch (e) {
       throw Exception('Error searching for recipes: $e');
     }
   }
 
+  // Replace recipe with a recipe with full data
   Future<void> replaceRecipeDataWithFullData(
     int recipeId,
     int recipeListIndex,
   ) async {
     try {
-      print(_recipesList[recipeListIndex].instructionsParagraph);
-
       dynamic jsonResponse =
           await RecipeFullInfoService().fetchFullRecipe(recipeId);
+
       // update the RecipeModel with the new RecipeModel with full data
-      _recipesList[recipeListIndex] = RecipeModel.fromJson(jsonResponse);
-      print(_recipesList[recipeListIndex].instructionsParagraph);
-      print(recipes[recipeListIndex].instructionsParagraph);
+      _cachedRecipesList[recipeListIndex] = RecipeModel.fromJson(jsonResponse);
     } catch (e) {
       throw '$e';
     }
@@ -73,6 +70,18 @@ class RecipeDataRepository {
   }
 }
 
-final recipeDataRepositoryProvider = Provider((ref) {
+var recipeDataRepositoryProvider = Provider((ref) {
   return RecipeDataRepository(ref);
+});
+
+// Returns the whole list
+final recipeListProvider = Provider<List<RecipeModel>>((ref) {
+  final repository = ref.read(recipeDataRepositoryProvider);
+  return repository.recipes;
+});
+
+// Return one Recipe from list
+final singleRecipeProvider = Provider.family<RecipeModel, int>((ref, id) {
+  final repository = ref.watch(recipeDataRepositoryProvider);
+  return repository.recipes[id];
 });
