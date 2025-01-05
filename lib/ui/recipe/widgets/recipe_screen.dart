@@ -27,9 +27,9 @@ class RecipeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(recipeViewModelProvider(recipeListIndex));
+    RecipeViewmodel viewModel =
+        ref.watch(recipeViewModelProvider(recipeListIndex));
     RecipeModel recipe = viewModel.recipe(recipeListIndex);
-    print(recipe.title);
 
     return Scaffold(
       appBar: AppBar(
@@ -107,7 +107,8 @@ class RecipeScreen extends ConsumerWidget {
               //Instructions
               _InstructionCard(
                 getParagraphDataForRecipe: viewModel.getParagraphDataForRecipe,
-                recipe: recipe,
+                recipe:
+                    ref.watch(recipeDataRepositoryProvider)[recipeListIndex],
               ),
 
               const SizedBox(height: 20),

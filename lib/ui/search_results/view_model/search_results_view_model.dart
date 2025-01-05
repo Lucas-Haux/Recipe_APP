@@ -9,6 +9,7 @@ class SearchResultsViewModel
   final RecipeDataRepository repository;
 
   SearchResultsViewModel(this.repository)
+      //TODO couldnt i make the screen not have the init state if this super calls searchREcipes
       : super(DataStateStatusModel.loading());
 
   // search Recipes from list

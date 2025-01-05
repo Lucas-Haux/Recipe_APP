@@ -15,7 +15,7 @@ class RecipeSearchService {
         ref.read(searchPramatersRepositoryProvider);
 
     try {
-      const String appKey = '9ecb4e675175477d8edbd94c9dfa20a8';
+      const String appKey = '05f5c84cb98f42329f13b049c9f05f5a';
 
       final query = searchPramatersRepository.query;
       String selectedCuisines = searchPramatersRepository.selectedCuisines

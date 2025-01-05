@@ -52,8 +52,9 @@ class RecipeDataRepository extends StateNotifier<List<RecipeModel>> {
       dynamic jsonResponse =
           await RecipeFullInfoService().fetchFullRecipe(recipeId);
 
-      // update the RecipeModel with the new RecipeModel with full data
-      _cachedRecipesList[recipeListIndex] = RecipeModel.fromJson(jsonResponse);
+      _cachedRecipesList = List.from(_cachedRecipesList)
+        ..[recipeListIndex] = RecipeModel.fromJson(jsonResponse);
+      state = _cachedRecipesList;
     } catch (e) {
       throw '$e';
     }
@@ -85,11 +86,4 @@ final recipeDataRepositoryProvider =
 final recipeListProvider = Provider<List<RecipeModel>>((ref) {
   final recipes = ref.watch(recipeDataRepositoryProvider);
   return recipes;
-});
-
-// Return one Recipe from list
-final singleRecipeProvider = Provider.family<RecipeModel, int>((ref, id) {
-  final recipes = ref.watch(recipeDataRepositoryProvider);
-  final recipe = recipes[id];
-  return recipe;
 });

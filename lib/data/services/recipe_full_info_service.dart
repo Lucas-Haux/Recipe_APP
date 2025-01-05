@@ -4,11 +4,9 @@ import 'dart:convert';
 class RecipeFullInfoService {
   Future<dynamic> fetchFullRecipe(int id) async {
     try {
-      const String appKey = '9ecb4e675175477d8edbd94c9dfa20a8';
+      const String appKey = '05f5c84cb98f42329f13b049c9f05f5a';
 
-      const String queryParameters = 'apiKey=$appKey&'
-          'number=3';
-
+      const String queryParameters = 'apiKey=$appKey';
       final String recipeInfoUrl =
           'https://api.spoonacular.com/recipes/$id/information?';
 

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/models/similar_recipe_model.dart';
 import '../../../domain/models/recipe_model.dart';
@@ -14,7 +15,7 @@ class RecipeViewmodel {
   final int recipeListIndex;
   RecipeViewmodel(this.recipeDataRepository, this.recipeListIndex, this.ref);
 
-  RecipeModel recipe(int id) => ref.watch(singleRecipeProvider(id));
+  RecipeModel recipe(int id) => recipeDataRepository.recipe(id);
 
   // Used for similar recipes
   Future<List<SimilarRecipeModel>> searchSimilarRecipes(int id) async {
