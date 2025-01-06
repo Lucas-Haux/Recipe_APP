@@ -90,3 +90,7 @@ enum InstructionView {
   list,
   paragraph,
 }
+
+enum RequireExclude { require, exclude }
+
+enum ChipMode { requireExclude, and, orAnd }

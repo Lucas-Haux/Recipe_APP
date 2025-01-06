@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SearchBarFieldWidget extends StatefulWidget {
   final bool goToSearchPage;
   final void Function()? onTap;
   final VoidCallback? searchForRecipes;
-  final TextEditingController? controller;
+  final TextEditingController controller;
 
   const SearchBarFieldWidget({
     super.key,
@@ -69,7 +70,14 @@ class _SearchBarFieldWidget extends State<SearchBarFieldWidget> {
                 widget.searchForRecipes!();
               }
             },
-            onTap: widget.onTap,
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus(); // remove keyboard
+              if (widget.goToSearchPage == true) {
+                context.go('/search');
+              } else {
+                widget.onTap;
+              }
+            },
           ),
           // Search Icon
           // Have to do it this way due to jaring scaling with the flexable space bar

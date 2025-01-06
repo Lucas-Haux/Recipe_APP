@@ -186,9 +186,6 @@ class _AppBar extends StatelessWidget {
                 child: SearchBarFieldWidget(
                   goToSearchPage: true,
                   controller: TextEditingController(),
-                  onTap: () {
-                    context.go('/search');
-                  },
                 ),
               ),
             ),

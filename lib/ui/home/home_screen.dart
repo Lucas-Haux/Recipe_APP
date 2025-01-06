@@ -31,9 +31,6 @@ class HomeScreen extends ConsumerWidget {
                   key: const ValueKey('SearchBar'),
                   goToSearchPage: true,
                   controller: searchController,
-                  onTap: () {
-                    context.go('/search');
-                  },
                 ),
               ),
             ),
