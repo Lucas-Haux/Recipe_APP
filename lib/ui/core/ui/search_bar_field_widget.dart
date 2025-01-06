@@ -1,28 +1,17 @@
-import 'package:go_router/go_router.dart';
-import '../../search/widgets/search_screen.dart';
-
 import 'package:flutter/material.dart';
-
-final FocusNode focusNode1 = FocusNode();
 
 class SearchBarFieldWidget extends StatefulWidget {
   final bool goToSearchPage;
-  final bool autofocus;
   final void Function()? onTap;
-  final FocusNode? focusNode;
   final VoidCallback? searchForRecipes;
   final TextEditingController? controller;
-  final bool readOnly;
 
   const SearchBarFieldWidget({
     super.key,
-    this.searchForRecipes,
-    this.focusNode,
-    required this.autofocus,
-    this.onTap,
     required this.goToSearchPage,
     required this.controller,
-    required this.readOnly,
+    this.onTap,
+    this.searchForRecipes,
   });
 
   @override
@@ -38,9 +27,9 @@ class _SearchBarFieldWidget extends State<SearchBarFieldWidget> {
         children: [
           TextField(
             controller: widget.controller,
-            autofocus: widget.autofocus,
+            autofocus: !widget.goToSearchPage,
             onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-            readOnly: widget.readOnly,
+            readOnly: widget.goToSearchPage,
             textAlignVertical: TextAlignVertical.bottom,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.text,
@@ -81,19 +70,6 @@ class _SearchBarFieldWidget extends State<SearchBarFieldWidget> {
               }
             },
             onTap: widget.onTap,
-            // if (goToSearchPage == true) {
-            // Code that works
-            // doesnt use go router due to problems
-            //Navigator.push(
-            //  context,
-            //  PageRouteBuilder(
-            //    transitionDuration: const Duration(milliseconds: 800),
-            //    pageBuilder: (_, __, ___) =>
-            //        SearchScreen(searchController: controller),
-            //  ),
-            //);
-            //    }
-            // }
           ),
           // Search Icon
           // Have to do it this way due to jaring scaling with the flexable space bar

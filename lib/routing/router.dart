@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
-import '../ui/home/widgets/home_screen.dart';
-import '../ui/search/widgets/search_screen.dart';
-import '../ui/search_results/widgets/search_results_screen.dart';
-import '../ui/recipe/widgets/recipe_screen.dart';
+import '../ui/home/home_screen.dart';
+import '../ui/search/search_screen.dart';
+import '../ui/search_results/search_results_screen.dart';
+import '../ui/recipe/recipe_screen.dart';
 
 import 'package:flutter/material.dart';
 

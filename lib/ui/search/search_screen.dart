@@ -1,12 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../domain/enums.dart';
-import '../../search_results/widgets/search_results_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:recipe_box/ui/home/widgets/home_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../view_model/search_view_model.dart';
-import '../../core/ui/search_bar_field_widget.dart';
+import 'search_view_model.dart';
+import '../core/ui/search_bar_field_widget.dart';
 
 TextStyle titleTextStyle = const TextStyle(fontSize: 25);
 
@@ -52,21 +49,10 @@ class SearchScreen extends ConsumerWidget {
                 // Search Field
                 child: Hero(
                   tag: 'SearchBar',
-                  flightShuttleBuilder: ((flightContext, animation,
-                      flightDirection, fromHeroContext, toHeroContext) {
-                    /// Don't try to add a Listener here, use a StatefulWidget that uses that logic in its initState
-                    return _FocustWidget(
-                      animation: animation,
-                      focusNode: focusNode1,
-                      child: toHeroContext.widget,
-                    );
-                  }),
                   child: SearchBarFieldWidget(
                     key: const ValueKey('SearchBar'),
                     goToSearchPage: false,
                     controller: searchController,
-                    autofocus: true,
-                    readOnly: false,
                     onTap: null,
                   ),
                 ),

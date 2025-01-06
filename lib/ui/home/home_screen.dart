@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../view_model/home_view_model.dart';
+import 'home_view_model.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/ui/search_bar_field_widget.dart';
+import '../core/ui/search_bar_field_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // TODO should these be in viewmodel?
@@ -19,6 +19,7 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Gap on Top
             const SizedBox(height: 60),
             // Search Bar
             Container(
@@ -26,22 +27,10 @@ class HomeScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Hero(
                 tag: 'SearchBar',
-                flightShuttleBuilder: ((flightContext, animation,
-                    flightDirection, fromHeroContext, toHeroContext) {
-                  /// Don't try to add a Listener here, use a StatefulWidget that uses that logic in its initState
-                  return _FocustWidget(
-                    animation: animation,
-                    focusNode: focusNode1,
-                    child: toHeroContext.widget,
-                  );
-                }),
                 child: SearchBarFieldWidget(
                   key: const ValueKey('SearchBar'),
-                  focusNode: focusNode1,
                   goToSearchPage: true,
                   controller: searchController,
-                  autofocus: false,
-                  readOnly: true,
                   onTap: () {
                     context.go('/search');
                   },

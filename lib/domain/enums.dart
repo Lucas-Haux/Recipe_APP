@@ -85,3 +85,8 @@ enum AndOrType implements DisplayableEnum {
   final String displayName;
   const AndOrType(this.displayName);
 }
+
+enum InstructionView {
+  list,
+  paragraph,
+}

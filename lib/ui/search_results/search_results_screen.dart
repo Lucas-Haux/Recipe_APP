@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:go_router/go_router.dart';
-import 'package:recipe_box/data/model/data_state_status_model.dart';
-import '../../home/widgets/home_screen.dart';
+import '../home/home_screen.dart';
 import '../../../domain/enums.dart';
 import '../../../domain/models/recipe_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../view_model/search_results_view_model.dart';
-import '../../core/ui/search_bar_field_widget.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'search_results_view_model.dart';
+import '../core/ui/search_bar_field_widget.dart';
 
 class SearchResultsScreen extends ConsumerStatefulWidget {
   const SearchResultsScreen({super.key});
@@ -183,11 +181,8 @@ class _AppBar extends StatelessWidget {
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 child: SearchBarFieldWidget(
-                  focusNode: focusNode1,
                   goToSearchPage: true,
                   controller: searchController,
-                  autofocus: false,
-                  readOnly: true,
                   onTap: () {
                     context.go('/search');
                   },

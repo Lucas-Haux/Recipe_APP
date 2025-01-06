@@ -4,11 +4,6 @@ import '../../../domain/models/similar_recipe_model.dart';
 import '../../../domain/models/recipe_model.dart';
 import '../../../data/repositories/recipe_data_repository.dart';
 
-enum InstructionView {
-  list,
-  paragraph,
-}
-
 class RecipeViewmodel {
   final Ref ref;
   final RecipeDataRepository recipeDataRepository;
