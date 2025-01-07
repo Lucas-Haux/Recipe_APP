@@ -113,9 +113,11 @@ class SearchScreen extends ConsumerWidget {
                 ),
                 // Max Ready Time
                 MaxReadyTimeSlider(
-                  givenPrimarySliderValue: 60,
+                  givenPrimarySliderValue:
+                      searchViewModel.searchParameters.maxTime,
                   primaryTitle: 'Max Ready Time',
                   titleTextStyle: titleTextStyle,
+                  setValue: searchViewModel.setMaxReadyTime,
                 ),
 
                 // Servings

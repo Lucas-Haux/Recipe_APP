@@ -7,6 +7,7 @@ class SearchParameters {
   final Set<DietType> requiredDiets;
   final AndOrType dietAndOr;
   final Set<IntoleranceType> intolerances;
+  final double maxTime;
 
   SearchParameters({
     this.query = '',
@@ -15,6 +16,7 @@ class SearchParameters {
     this.requiredDiets = const {},
     this.dietAndOr = AndOrType.and,
     this.intolerances = const {},
+    this.maxTime = 720,
   });
 
   SearchParameters copyWith({
@@ -24,6 +26,7 @@ class SearchParameters {
     Set<DietType>? requiredDiets,
     AndOrType? dietAndOr,
     Set<IntoleranceType>? intolerances,
+    double? maxTime,
   }) {
     return SearchParameters(
       query: query ?? this.query,
@@ -32,6 +35,7 @@ class SearchParameters {
       requiredDiets: requiredDiets ?? this.requiredDiets,
       dietAndOr: dietAndOr ?? this.dietAndOr,
       intolerances: intolerances ?? this.intolerances,
+      maxTime: maxTime ?? this.maxTime,
     );
   }
 }

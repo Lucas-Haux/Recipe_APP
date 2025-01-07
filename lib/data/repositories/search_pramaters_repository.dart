@@ -79,6 +79,11 @@ class SearchPramatersRepository extends StateNotifier<SearchParameters> {
 
     state = state.copyWith(intolerances: newIntolerances);
   }
+
+  // Max Ready Time
+  void updateMaxReadyTime(double newTime) {
+    state = state.copyWith(maxTime: newTime);
+  }
 }
 
 final searchPramatersRepositoryProvider =

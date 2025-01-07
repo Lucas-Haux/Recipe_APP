@@ -4,10 +4,12 @@ class MaxReadyTimeSlider extends StatefulWidget {
   final double givenPrimarySliderValue;
   final String primaryTitle;
   final TextStyle titleTextStyle;
+  final void Function(double) setValue;
   const MaxReadyTimeSlider({
     required this.givenPrimarySliderValue,
     required this.primaryTitle,
     required this.titleTextStyle,
+    required this.setValue,
     super.key,
   });
   @override
@@ -46,6 +48,7 @@ class MaxReadyTimeState extends State<MaxReadyTimeSlider> {
               setState(() {
                 double remainder = value.round() % 30;
                 _primarySliderValue = value.round() - remainder;
+                widget.setValue(_primarySliderValue);
               });
             },
           ),

@@ -47,6 +47,12 @@ class SearchViewModel {
         .updateIntolerances(newIntolerance);
   }
 
+  void setMaxReadyTime(double newTime) {
+    ref
+        .read(searchPramatersRepositoryProvider.notifier)
+        .updateMaxReadyTime(newTime);
+  }
+
   Future<void> searchForRecipes() async {
     ref.read(recipeDataRepositoryProvider.notifier).searchForRecipes();
   }
