@@ -31,14 +31,21 @@ class RecipeSearchService {
       String intolerances = searchPramatersRepository.intolerances
           .map((intolerance) => intolerance.displayName)
           .join(',');
-      int maxReadyTime = searchPramatersRepository.maxTime.toInt();
       String queryParameters = 'query=${Uri.encodeComponent(query.trim())}&'
           'apiKey=$appKey&'
           'cuisine=$selectedCuisines&'
           'excludeCuisine=$deselectedCuisines&'
           'diet=$requiredDiets&'
           'intolerances=$intolerances&'
-          'maxReadyTime=$maxReadyTime&'
+          'maxReadyTime=${searchPramatersRepository.maxTime.toInt()}&'
+          'maxServings=${searchPramatersRepository.maxServings.toInt()}&'
+          'minServings=${searchPramatersRepository.minServings.toInt()}&'
+          'maxCarbs=${searchPramatersRepository.maxCalories.toInt()}&'
+          'minCarbs=${searchPramatersRepository.minCalories.toInt()}&'
+          'maxProtein=${searchPramatersRepository.maxProtein.toInt()}&'
+          'minProtein=${searchPramatersRepository.minProtein.toInt()}&'
+          'maxFat=${searchPramatersRepository.maxFat.toInt()}&'
+          'minFat=${searchPramatersRepository.minFat.toInt()}&'
           'fillIngredients=true&'
           'addRecipeInformation=true&'
           'instructionsRequired=true&'

@@ -12,9 +12,70 @@ class SearchViewModel {
   SearchParameters get searchParameters =>
       ref.watch(searchPramatersRepositoryProvider);
 
-  void setQuery(String query) {
-    print('view_model');
-    ref.read(searchPramatersRepositoryProvider.notifier).updateQuery(query);
+  void setIntolerance(IntoleranceType newIntolerance) {
+    ref
+        .read(searchPramatersRepositoryProvider.notifier)
+        .updateIntolerances(newIntolerance);
+  }
+
+  void setMaxReadyTime(double newTime) {
+    ref
+        .read(searchPramatersRepositoryProvider.notifier)
+        .updateState(newMaxTime: newTime);
+  }
+
+  void setMaxCalories(double newCalories) {
+    ref
+        .read(searchPramatersRepositoryProvider.notifier)
+        .updateState(newMaxCalories: newCalories);
+  }
+
+  void setMinCalories(double newCalories) {
+    ref
+        .read(searchPramatersRepositoryProvider.notifier)
+        .updateState(newMinCalories: newCalories);
+  }
+
+  void setMaxServings(double newServings) {
+    ref
+        .read(searchPramatersRepositoryProvider.notifier)
+        .updateState(newMaxServings: newServings);
+  }
+
+  void setMinServings(double newServings) {
+    ref
+        .read(searchPramatersRepositoryProvider.notifier)
+        .updateState(newMinServings: newServings);
+  }
+
+  void setMaxProtein(double newProtein) {
+    ref
+        .read(searchPramatersRepositoryProvider.notifier)
+        .updateState(newMaxProtein: newProtein);
+  }
+
+  void setMinProtein(double newProtein) {
+    ref
+        .read(searchPramatersRepositoryProvider.notifier)
+        .updateState(newMinProtein: newProtein);
+  }
+
+  void setMaxFat(double newFat) {
+    ref
+        .read(searchPramatersRepositoryProvider.notifier)
+        .updateState(newMaxFat: newFat);
+  }
+
+  void setMinFat(double newFat) {
+    ref
+        .read(searchPramatersRepositoryProvider.notifier)
+        .updateState(newMinFat: newFat);
+  }
+
+  void setDietAndOr(AndOrType newAndOr) {
+    ref
+        .read(searchPramatersRepositoryProvider.notifier)
+        .updateState(newDietAndOr: newAndOr);
   }
 
   void setSelectedCuisines(CuisineType newCuisine) {
@@ -35,22 +96,10 @@ class SearchViewModel {
         .updateRequiredDiets(newDiet);
   }
 
-  void setDietAndOr(AndOrType newAndOr) {
+  void setQuery(String newQuery) {
     ref
         .read(searchPramatersRepositoryProvider.notifier)
-        .updateDietAndOr(newAndOr);
-  }
-
-  void setIntolerance(IntoleranceType newIntolerance) {
-    ref
-        .read(searchPramatersRepositoryProvider.notifier)
-        .updateIntolerances(newIntolerance);
-  }
-
-  void setMaxReadyTime(double newTime) {
-    ref
-        .read(searchPramatersRepositoryProvider.notifier)
-        .updateMaxReadyTime(newTime);
+        .updateState(newQuery: newQuery);
   }
 
   Future<void> searchForRecipes() async {

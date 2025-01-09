@@ -123,32 +123,48 @@ class SearchScreen extends ConsumerWidget {
                 // Servings
                 MinMaxSliders(
                   title: 'Servings',
-                  givenMaxValue: 100,
-                  givenMinValue: 10,
+                  givenMaxValue: searchViewModel.searchParameters.maxServings,
+                  givenMinValue: searchViewModel.searchParameters.minServings,
+                  setMaxValue: searchViewModel.setMaxServings,
+                  setMinValue: searchViewModel.setMinServings,
+                  sliderMaximum: 100,
+                  sliderMinimum: 0,
                   titleTextStyle: titleTextStyle,
                 ),
 
                 // Carbs
                 MinMaxSliders(
                   title: 'Carbs',
-                  givenMaxValue: 100,
-                  givenMinValue: 10,
+                  givenMaxValue: searchViewModel.searchParameters.maxCalories,
+                  givenMinValue: searchViewModel.searchParameters.minCalories,
+                  setMaxValue: searchViewModel.setMaxCalories,
+                  setMinValue: searchViewModel.setMinCalories,
+                  sliderMaximum: 1000,
+                  sliderMinimum: 0,
                   titleTextStyle: titleTextStyle,
                 ),
 
-                // Servings
+                // Protein
                 MinMaxSliders(
                   title: 'Protein',
-                  givenMaxValue: 100,
-                  givenMinValue: 10,
+                  givenMaxValue: searchViewModel.searchParameters.maxProtein,
+                  givenMinValue: searchViewModel.searchParameters.minProtein,
+                  setMaxValue: searchViewModel.setMaxProtein,
+                  setMinValue: searchViewModel.setMinProtein,
+                  sliderMaximum: 100,
+                  sliderMinimum: 0,
                   titleTextStyle: titleTextStyle,
                 ),
 
-                // Servings
+                // Fat
                 MinMaxSliders(
                   title: 'Fat',
-                  givenMaxValue: 100,
-                  givenMinValue: 10,
+                  givenMaxValue: searchViewModel.searchParameters.maxFat,
+                  givenMinValue: searchViewModel.searchParameters.minFat,
+                  setMaxValue: searchViewModel.setMaxFat,
+                  setMinValue: searchViewModel.setMinFat,
+                  sliderMaximum: 100,
+                  sliderMinimum: 0,
                   titleTextStyle: titleTextStyle,
                 ),
                 const SizedBox(height: 120),

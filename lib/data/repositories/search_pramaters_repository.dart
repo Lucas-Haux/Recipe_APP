@@ -5,10 +5,6 @@ import '../../domain/models/search_parameters_model.dart';
 class SearchPramatersRepository extends StateNotifier<SearchParameters> {
   SearchPramatersRepository() : super(SearchParameters());
 
-  void updateQuery(String newQuery) {
-    state = state.copyWith(query: newQuery);
-  }
-
   // selected Cuisines
   void updateSelectedCuisines(CuisineType newSelection) {
     final newSelectedCuisines = Set<CuisineType>.from(state.selectedCuisines);
@@ -62,11 +58,6 @@ class SearchPramatersRepository extends StateNotifier<SearchParameters> {
     state = state.copyWith(requiredDiets: newRequiredDiets);
   }
 
-  // dietAndOr
-  void updateDietAndOr(AndOrType newAndOr) {
-    state = state.copyWith(dietAndOr: newAndOr);
-  }
-
   // intolerances
   void updateIntolerances(IntoleranceType newIntolerance) {
     final newIntolerances = Set<IntoleranceType>.from(state.intolerances);
@@ -80,9 +71,32 @@ class SearchPramatersRepository extends StateNotifier<SearchParameters> {
     state = state.copyWith(intolerances: newIntolerances);
   }
 
-  // Max Ready Time
-  void updateMaxReadyTime(double newTime) {
-    state = state.copyWith(maxTime: newTime);
+  void updateState({
+    String? newQuery,
+    AndOrType? newDietAndOr,
+    double? newMaxTime,
+    double? newMaxCalories,
+    double? newMinCalories,
+    double? newMaxServings,
+    double? newMinServings,
+    double? newMaxProtein,
+    double? newMinProtein,
+    double? newMaxFat,
+    double? newMinFat,
+  }) {
+    state = state.copyWith(
+      query: newQuery ?? state.query,
+      dietAndOr: newDietAndOr ?? state.dietAndOr,
+      maxTime: newMaxTime ?? state.maxTime,
+      maxCalories: newMaxCalories ?? state.maxCalories,
+      minCalories: newMinCalories ?? state.minCalories,
+      maxServings: newMaxServings ?? state.maxServings,
+      minServings: newMinServings ?? state.minServings,
+      maxProtein: newMaxProtein ?? state.maxProtein,
+      minProtein: newMinProtein ?? state.minProtein,
+      maxFat: newMaxFat ?? state.maxFat,
+      minFat: newMinFat ?? state.minFat,
+    );
   }
 }
 
