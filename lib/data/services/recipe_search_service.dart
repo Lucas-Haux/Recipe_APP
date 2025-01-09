@@ -40,8 +40,8 @@ class RecipeSearchService {
           'maxReadyTime=${searchPramatersRepository.maxTime.toInt()}&'
           'maxServings=${searchPramatersRepository.maxServings.toInt()}&'
           'minServings=${searchPramatersRepository.minServings.toInt()}&'
-          'maxCarbs=${searchPramatersRepository.maxCalories.toInt()}&'
-          'minCarbs=${searchPramatersRepository.minCalories.toInt()}&'
+          'maxCalories=${searchPramatersRepository.maxCalories.toInt()}&'
+          'minCalories=${searchPramatersRepository.minCalories.toInt()}&'
           'maxProtein=${searchPramatersRepository.maxProtein.toInt()}&'
           'minProtein=${searchPramatersRepository.minProtein.toInt()}&'
           'maxFat=${searchPramatersRepository.maxFat.toInt()}&'
@@ -49,6 +49,7 @@ class RecipeSearchService {
           'fillIngredients=true&'
           'addRecipeInformation=true&'
           'instructionsRequired=true&'
+          'addRecipeNutrition=true&'
           'number=30&'
           'sort=popularity';
 
