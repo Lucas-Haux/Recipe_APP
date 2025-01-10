@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/models/similar_recipe_model.dart';
 import '../../../domain/models/recipe_model.dart';

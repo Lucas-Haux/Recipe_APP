@@ -35,7 +35,7 @@ class _SimilarRecipesState extends State<SimilarRecipesWidget> {
           if (similarRecipes.isEmpty)
             DottedBorder(
               padding:
-                  const EdgeInsets.symmetric(vertical: 25, horizontal: 100),
+                  const EdgeInsets.symmetric(vertical: 75, horizontal: 100),
               dashPattern: const [6, 10],
               color: Theme.of(context).colorScheme.outlineVariant,
               strokeWidth: 2,

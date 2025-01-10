@@ -7,7 +7,7 @@ class SimilarRecipeService {
       const String appKey = '1f9d617ba13041859ea773423b0e6291';
 
       String queryParameters = 'apiKey=$appKey&'
-          'number=3';
+          'number=5';
 
       final Uri uri =
           Uri.parse('https://api.spoonacular.com/recipes/$id/similar').replace(
