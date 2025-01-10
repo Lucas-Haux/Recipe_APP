@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/gestures.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -142,7 +143,11 @@ class RecipeScreen extends ConsumerWidget {
             const SizedBox(height: 20),
             const Divider(),
 
-            _SimilarRecipes(id: recipe.id),
+            _SimilarRecipes(
+              id: recipe.id,
+              searchForSimilarRecipes:
+                  viewModel.searchSimilarRecipes(recipe.id),
+            ),
           ],
         ),
       ),
@@ -215,7 +220,11 @@ class _AppBar extends StatelessWidget {
 
 class _SimilarRecipes extends StatefulWidget {
   final int id;
-  const _SimilarRecipes({required this.id});
+  final Future<List<SimilarRecipeModel>> searchForSimilarRecipes;
+  const _SimilarRecipes({
+    required this.id,
+    required this.searchForSimilarRecipes,
+  });
 
   @override
   State<_SimilarRecipes> createState() => _SimilarRecipesState();
@@ -231,57 +240,61 @@ class _SimilarRecipesState extends State<_SimilarRecipes> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: cardWidth,
-      child: Card(
-        color: Theme.of(context).colorScheme.secondaryContainer,
-        child: Column(
-          children: [
-            if (similarRecipes.isEmpty)
-              FilledButton(
+      child: Column(
+        children: [
+          if (similarRecipes.isEmpty)
+            DottedBorder(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 25, horizontal: 100),
+              dashPattern: const [6, 10],
+              color: Theme.of(context).colorScheme.outlineVariant,
+              strokeWidth: 2,
+              strokeCap: StrokeCap.round,
+              child: FilledButton(
                 onPressed: () async {
-                  // final newList =
-                  //    await RecipeViewmodel().searchSimilarRecipes(widget.id);
+                  final newList = await widget.searchForSimilarRecipes;
                   setState(() {
-                    // similarRecipes = newList;
+                    similarRecipes = newList;
                   });
                 },
-                child: const Text('Find Similar Recipes'),
+                child: const Text('Similar Recipes'),
               ),
+            ),
 
-            // Carousel
-            if (similarRecipes.isNotEmpty)
-              ConstrainedBox(
-                constraints:
-                    BoxConstraints(maxHeight: 300, maxWidth: cardWidth),
-                child: ShaderMask(
-                  shaderCallback: (Rect bounds) {
-                    return const LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black,
-                        Colors.black,
-                        Colors.transparent,
-                      ],
-                      stops: [0.0, 0.1, 0.9, 1],
-                    ).createShader(bounds);
+          // Carousel
+          if (similarRecipes.isNotEmpty)
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 250, maxWidth: cardWidth),
+              child: ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return const LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black,
+                      Colors.black,
+                      Colors.transparent,
+                    ],
+                    stops: [0.0, 0.1, 0.9, 1],
+                  ).createShader(bounds);
+                },
+                blendMode: BlendMode.dstIn,
+                child: PageView.builder(
+                  controller: carouselController,
+                  pageSnapping: false,
+                  dragStartBehavior: DragStartBehavior.start,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  allowImplicitScrolling: true,
+                  itemCount: similarRecipes.length,
+                  itemBuilder: (context, index) {
+                    return _SimilarRecipeCard(recipe: similarRecipes[index]);
                   },
-                  blendMode: BlendMode.dstIn,
-                  child: PageView.builder(
-                    controller: carouselController,
-                    pageSnapping: false,
-                    dragStartBehavior: DragStartBehavior.start,
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    allowImplicitScrolling: true,
-                    itemCount: similarRecipes.length,
-                    itemBuilder: (context, index) {
-                      return _SimilarRecipeCard(recipe: similarRecipes[index]);
-                    },
-                  ),
                 ),
               ),
-          ],
-        ),
+            ),
+          const SizedBox(height: 10),
+        ],
       ),
     );
   }
@@ -293,11 +306,12 @@ class _SimilarRecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: GestureDetector(
+        onTap: () {},
         child: Card(
+          color: Theme.of(context).colorScheme.onSecondary,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -308,7 +322,7 @@ class _SimilarRecipeCard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(5),
-                child: Text(recipe.title),
+                child: Text(recipe.title, textAlign: TextAlign.center),
               ),
             ],
           ),
