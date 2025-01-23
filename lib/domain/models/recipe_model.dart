@@ -24,6 +24,7 @@ class RecipeModel {
   final int weightWatcher;
   final String summary;
   final String instructionsParagraph;
+  final List<NutritionModel>? nutrients;
 
   RecipeModel({
     required this.id,
@@ -49,6 +50,7 @@ class RecipeModel {
     required this.weightWatcher,
     required this.summary,
     required this.instructionsParagraph,
+    this.nutrients,
   });
 
   factory RecipeModel.fromJson(Map<String, dynamic> jsonData) {
@@ -77,6 +79,10 @@ class RecipeModel {
       weightWatcher: jsonData['weightWatcherSmartPoints'],
       summary: jsonData['summary'],
       instructionsParagraph: jsonData['instructions'] ?? '',
+      nutrients:
+          (_checkIfJsonDataPresent(jsonData['nutrition']['nutrients']) as List)
+              .map((nutrient) => NutritionModel.fromJson(nutrient))
+              .toList(),
     );
   }
 }
@@ -114,6 +120,28 @@ class StepModel {
       //equipment: [''],
       ingredents: _extractStringFromList(jsonData['ingredients'], 'name'),
       equipment: _extractStringFromList(jsonData['equipment'], 'name'),
+    );
+  }
+}
+
+class NutritionModel {
+  final String label;
+  final double amount;
+  final String unit;
+  final double percentage;
+  NutritionModel({
+    required this.label,
+    required this.amount,
+    required this.unit,
+    required this.percentage,
+  });
+
+  factory NutritionModel.fromJson(Map<String, dynamic> jsonData) {
+    return NutritionModel(
+      label: jsonData['name'],
+      amount: jsonData['amount'],
+      unit: jsonData['unit'],
+      percentage: jsonData['percentOfDailyNeeds'],
     );
   }
 }

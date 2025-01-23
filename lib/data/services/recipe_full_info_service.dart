@@ -6,7 +6,11 @@ class RecipeFullInfoService {
     try {
       const String appKey = '05f5c84cb98f42329f13b049c9f05f5a';
 
-      const String queryParameters = 'apiKey=$appKey';
+      const String queryParameters = 'apiKey=$appKey&'
+          'includeNutrition=true&'
+          'addWinePairing=true&'
+          'addTasteData=true';
+
       final String recipeInfoUrl =
           'https://api.spoonacular.com/recipes/$id/information?';
 

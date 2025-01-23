@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:basic_utils/basic_utils.dart';
 
-import '../../../domain/models/recipe_model.dart';
 
 class IngredentsCard extends StatelessWidget {
   final double cardWidth;

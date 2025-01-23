@@ -37,7 +37,7 @@ class SimilarRecipeService {
         throw 'api response != 200: ${response.reasonPhrase}';
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

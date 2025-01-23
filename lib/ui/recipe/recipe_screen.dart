@@ -46,9 +46,10 @@ class RecipeScreen extends ConsumerWidget {
           children: [
             FilledButton(
                 onPressed: () {
-                  print(recipe.instructionsParagraph);
+                  print(recipe.nutrients?.isEmpty);
+                  print(recipe.nutrients?[5].label);
                 },
-                child: Text('test')),
+                child: const Text('test')),
             // Image and Title Card
             SizedBox(
               width: cardWidth,

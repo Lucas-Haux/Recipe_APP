@@ -1,4 +1,3 @@
-import '../../utils/result.dart';
 import '../../domain/models/favorites.dart';
 
 List<Favorites> _favoritesList = [];

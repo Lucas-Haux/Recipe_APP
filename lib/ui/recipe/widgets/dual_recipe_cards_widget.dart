@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:url_launcher/url_launcher.dart';
+
+import 'nutrition_widget.dart';
 import '../../../domain/models/recipe_model.dart';
 
 class DualRecipeCards extends StatelessWidget {
@@ -35,6 +37,7 @@ class DualRecipeCards extends StatelessWidget {
             ingredients: recipe.ingredients,
             weightWatcher: recipe.weightWatcher,
             healthScore: recipe.healthScore,
+            nutrients: recipe.nutrients!,
           ),
         ],
       ),
@@ -72,8 +75,9 @@ class _ServingsInfoCard extends StatelessWidget {
                 servings > 1
                     ? '$servings Servings' // plural
                     : '$servings Serving', // Single
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
+                  color: Theme.of(context).colorScheme.tertiary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -81,7 +85,7 @@ class _ServingsInfoCard extends StatelessWidget {
             const Divider(),
             const Text(
               'Per Serving:',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             const SizedBox(height: 10),
             Text(' $calories '),
@@ -104,6 +108,7 @@ class _MicInfoCard extends StatelessWidget {
   final List<String> ingredients;
   final int weightWatcher;
   final int healthScore;
+  final List<NutritionModel> nutrients;
   const _MicInfoCard({
     required this.cardWidth,
     required this.sourceUrl,
@@ -112,6 +117,7 @@ class _MicInfoCard extends StatelessWidget {
     required this.ingredients,
     required this.weightWatcher,
     required this.healthScore,
+    required this.nutrients,
   });
   @override
   Widget build(BuildContext context) {
@@ -148,11 +154,18 @@ class _MicInfoCard extends StatelessWidget {
             const Spacer(),
             Text('Time To Cook: ${time}m'),
             const Spacer(),
-            Text('Total Ingredients: ${ingredients.length}'),
-            const Spacer(),
             Text('Weight Watcher: ${weightWatcher.toString()}'),
             const Spacer(),
-            Text('Health Score: ${healthScore.toString()}'),
+            FilledButton(
+              onPressed: () {
+                showDialog(
+                    useSafeArea: false,
+                    context: context,
+                    builder: (BuildContext context) =>
+                        Dialog(child: NutritionWidget(nutrients: nutrients)));
+              },
+              child: const Text('Nutrition Data'),
+            ),
             const Spacer(),
           ],
         ),

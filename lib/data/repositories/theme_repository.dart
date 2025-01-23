@@ -46,11 +46,11 @@ void printColorScheme(ColorScheme colorScheme) {
   print('  On Tertiary: ${colorScheme.onTertiary}');
   print('  Tertiary Container: ${colorScheme.tertiaryContainer}');
   print('  On Tertiary Container: ${colorScheme.onTertiaryContainer}');
-  print('  Background: ${colorScheme.background}');
-  print('  On Background: ${colorScheme.onBackground}');
+  print('  Background: ${colorScheme.surface}');
+  print('  On Background: ${colorScheme.onSurface}');
   print('  Surface: ${colorScheme.surface}');
   print('  On Surface: ${colorScheme.onSurface}');
-  print('  Surface Variant: ${colorScheme.surfaceVariant}');
+  print('  Surface Variant: ${colorScheme.surfaceContainerHighest}');
   print('  On Surface Variant: ${colorScheme.onSurfaceVariant}');
   print('  Error: ${colorScheme.error}');
   print('  On Error: ${colorScheme.onError}');
@@ -77,11 +77,9 @@ ColorScheme createCustomColorScheme() {
     onTertiary: Color(0xffffffff),
     tertiaryContainer: Color(0xffe1dfff),
     onTertiaryContainer: Color(0xff151643),
-    background: Color(0xfffcfcff),
-    onBackground: Color(0xff151c24),
     surface: Color(0xfffcfcff),
     onSurface: Color(0xff151c24),
-    surfaceVariant: Color(0xffdae3f1),
+    surfaceContainerHighest: Color(0xffdae3f1),
     onSurfaceVariant: Color(0xff3f4852),
     error: Color(0xffba1a1a),
     onError: Color(0xffffffff),

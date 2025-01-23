@@ -1,4 +1,4 @@
-package com.lucashaux.recipe_box
+package com.example.tessst
 
 import io.flutter.embedding.android.FlutterActivity
 

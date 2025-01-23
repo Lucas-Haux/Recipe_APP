@@ -3,6 +3,7 @@ import 'home_view_model.dart';
 import 'package:go_router/go_router.dart';
 import '../core/ui/search_bar_field_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../recipe/widgets/nutrition_widget.dart';
 
 // TODO should these be in viewmodel?
 TextEditingController searchController = TextEditingController();
@@ -61,11 +62,10 @@ class _FocustWidget extends StatefulWidget {
   final FocusNode focusNode;
 
   const _FocustWidget({
-    Key? key,
     required this.focusNode,
     required this.animation,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   State<_FocustWidget> createState() => __FocustWidgetState();

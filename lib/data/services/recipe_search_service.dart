@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:recipe_box/data/repositories/search_pramaters_repository.dart';
-import 'package:recipe_box/domain/enums.dart';
 
 class RecipeSearchService {
   final Ref ref; // Dependency Injection for Ref

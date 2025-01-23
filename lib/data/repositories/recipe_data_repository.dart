@@ -3,8 +3,6 @@ import '../../data/services/similar_recipe_service.dart';
 import '../../data/services/recipe_full_info_service.dart';
 import '../../domain/models/recipe_model.dart';
 import '../../domain/models/similar_recipe_model.dart';
-import '../../data/model/data_state_status_model.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 
@@ -72,7 +70,7 @@ class RecipeDataRepository extends StateNotifier<List<RecipeModel>> {
 
       return similarRecipesList;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }
