@@ -16,7 +16,7 @@ class NutritionWidget extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         left: 0,
-        right: 40,
+        right: 20,
         top: 10,
         bottom: 10,
       ),
@@ -24,7 +24,7 @@ class NutritionWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: 500,
+            height: 700,
             child: _BarChart(
               nutrients: newNutrients,
             ),
@@ -67,6 +67,16 @@ class _BarChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return BarChart(
       BarChartData(
+        extraLinesData: ExtraLinesData(
+          horizontalLines: <HorizontalLine>[
+            HorizontalLine(
+              y: _getMaxY(),
+              dashArray: defaultGridLine(0).dashArray,
+              strokeWidth: defaultGridLine(0).strokeWidth,
+              color: defaultGridLine(0).color,
+            ),
+          ],
+        ),
         rotationQuarterTurns: 1,
         titlesData: titlesData,
         barTouchData: barTouchData,
@@ -88,7 +98,7 @@ class _BarChart extends StatelessWidget {
         touchTooltipData: BarTouchTooltipData(
           getTooltipColor: (group) => Colors.transparent,
           tooltipPadding: EdgeInsets.zero,
-          tooltipMargin: 5,
+          tooltipMargin: 3,
           getTooltipItem: (
             BarChartGroupData group,
             int groupIndex,
@@ -114,13 +124,20 @@ class _BarChart extends StatelessWidget {
     );
     String text = nutrients[value.toInt()].label;
 
+    // Reduces size to fit in space
     if (text.contains('Carbohydrates')) {
       text = text.replaceFirst('Carbohydrates', 'Carbs');
     }
 
+    //Add amount value
+    text = text +
+        ' ' +
+        nutrients[value.toInt()].amount.round().toString() +
+        nutrients[value.toInt()].unit;
+
     return SideTitleWidget(
       meta: meta,
-      space: 4,
+      space: 2,
       child: Text(text, style: style),
     );
   }
@@ -130,14 +147,14 @@ class _BarChart extends StatelessWidget {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 100,
+            reservedSize: 138,
             getTitlesWidget: getNutritionTitles,
           ),
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 23,
+            reservedSize: 20,
             getTitlesWidget: getValueTitles,
           ),
         ),
@@ -153,13 +170,17 @@ class _BarChart extends StatelessWidget {
     final style = TextStyle(
       color: AppColors.contentColorBlue,
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 12,
     );
 
     return SideTitleWidget(
       meta: meta,
       space: 4,
-      child: Text(' ${meta.formattedValue}%', style: style),
+      child: Text(
+        ' ${meta.formattedValue}%',
+        textAlign: TextAlign.center,
+        style: style,
+      ),
     );
   }
 

@@ -44,12 +44,6 @@ class RecipeScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            FilledButton(
-                onPressed: () {
-                  print(recipe.nutrients?.isEmpty);
-                  print(recipe.nutrients?[5].label);
-                },
-                child: const Text('test')),
             // Image and Title Card
             SizedBox(
               width: cardWidth,
