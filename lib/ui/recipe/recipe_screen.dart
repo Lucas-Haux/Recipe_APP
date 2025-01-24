@@ -139,8 +139,7 @@ class RecipeScreen extends ConsumerWidget {
             SimilarRecipesWidget(
               id: recipe.id,
               cardWidth: cardWidth,
-              searchForSimilarRecipes:
-                  viewModel.searchSimilarRecipes(recipe.id),
+              searchForSimilarRecipes: viewModel.searchSimilarRecipes,
             ),
           ],
         ),

@@ -8,7 +8,7 @@ import '../../../domain/models/similar_recipe_model.dart';
 
 class SimilarRecipesWidget extends StatefulWidget {
   final int id;
-  final Future<List<SimilarRecipeModel>> searchForSimilarRecipes;
+  final Future<List<SimilarRecipeModel>> Function(int) searchForSimilarRecipes;
   final double cardWidth;
   const SimilarRecipesWidget({
     required this.id,
@@ -42,7 +42,8 @@ class _SimilarRecipesState extends State<SimilarRecipesWidget> {
               strokeCap: StrokeCap.round,
               child: FilledButton(
                 onPressed: () async {
-                  final newList = await widget.searchForSimilarRecipes;
+                  final newList =
+                      await widget.searchForSimilarRecipes(widget.id);
                   setState(() {
                     similarRecipes = newList;
                   });
