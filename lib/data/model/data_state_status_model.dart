@@ -1,4 +1,4 @@
-import '../../domain/enums.dart';
+enum DataStateStatus { loading, completed, error }
 
 class DataStateStatusModel<T> {
   final DataStateStatus status;

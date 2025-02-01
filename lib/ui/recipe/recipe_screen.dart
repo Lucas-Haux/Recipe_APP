@@ -1,7 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:recipe_box/data/repositories/recipe_data_repository.dart';
 
 import 'widgets/recipe_image_widget.dart';
 import 'widgets/equipment_card_widget.dart';
@@ -16,7 +15,7 @@ import 'recipe_viewmodel.dart';
 import 'package:recipe_box/domain/models/recipe_model.dart';
 import 'package:recipe_box/ui/core/ui/search_bar_field_widget.dart';
 
-double cardWidth = 370;
+double cardWidth = 371;
 
 const TextStyle _titleStyle = TextStyle(
   fontSize: 25,
@@ -29,122 +28,130 @@ class RecipeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    RecipeViewmodel viewModel =
-        ref.watch(recipeViewModelProvider(recipeListIndex));
-    RecipeModel recipe = viewModel.recipe(recipeListIndex);
+    final viewModel =
+        ref.watch(recipeViewmodelProvider(recipeListIndex).notifier);
+    final theState = ref.watch(recipeViewmodelProvider(recipeListIndex));
 
-    return Scaffold(
-      appBar: AppBar(
-        leadingWidth: 0,
-        titleSpacing: 0,
-        leading: const SizedBox(), // Remove Default Back Button
-        forceMaterialTransparency: true,
-        title: const _AppBar(),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Image and Title Card
-            SizedBox(
-              width: cardWidth,
-              child: Card(
-                color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
-                child: Column(
-                  children: [
-                    // Image
-                    RecipeImage(
-                      imageUrl: recipe.imageUrl,
-                      favoriteButton: true,
-                      cardWidth: cardWidth,
-                      key: Key('${recipe.title} image'),
-                    ),
-                    // Title
-                    Text(
-                      recipe.title,
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      style: _titleStyle,
-                    ),
-                  ],
+    if (theState.valueOrNull == null) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    } else {
+      final recipe = ref.watch(recipeViewmodelProvider(recipeListIndex)).value!;
+
+      return Scaffold(
+        appBar: AppBar(
+          leadingWidth: 0,
+          titleSpacing: 0,
+          leading: const SizedBox(), // Remove Default Back Button
+          forceMaterialTransparency: true,
+          title: const _AppBar(),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                width: cardWidth,
+                child: Card(
+                  color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
+                  child: Column(
+                    children: [
+                      // Image
+                      RecipeImage(
+                        imageUrl: recipe.imageUrl,
+                        favoriteButton: true,
+                        cardWidth: cardWidth,
+                        key: Key('${recipe.title} image'),
+                      ),
+                      // Title
+                      Text(
+                        recipe.title,
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        style: _titleStyle,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            // Diets
-            if (recipe.diets.isNotEmpty && recipe.diets[0].isNotEmpty)
-              RowOfDataCard(
-                listEnum: recipe.diets,
-                cardWidth: cardWidth,
-                key: Key('${recipe.title} diets'),
-              ),
+              // Diets
+              if (recipe.diets.isNotEmpty && recipe.diets[0].isNotEmpty)
+                RowOfDataCard(
+                  listEnum: recipe.diets,
+                  cardWidth: cardWidth,
+                  key: Key('${recipe.title} diets'),
+                ),
 
-            // Row of Serving and misc cards
-            DualRecipeCards(
+              // Row of Serving and misc cards
+              DualRecipeCards(
                 cardWidth: cardWidth,
                 recipe: recipe,
-                key: Key('${recipe.title} dualCards')),
-
-            // Cuisines
-            if (recipe.cuisines.isNotEmpty && recipe.cuisines[0].isNotEmpty)
-              RowOfDataCard(
-                  listEnum: recipe.cuisines,
-                  cardWidth: cardWidth,
-                  key: Key('${recipe.title} cuisines')),
-
-            // Dish Types
-            if (recipe.dishTypes.isNotEmpty && recipe.dishTypes[0].isNotEmpty)
-              RowOfDataCard(
-                listEnum: recipe.dishTypes,
-                cardWidth: cardWidth,
-                key: Key('${recipe.title} dishTypes'),
+                key: Key('${recipe.title} dualCards'),
               ),
 
-            // Seperation
-            const SizedBox(height: 20),
-            const Divider(),
+              // Cuisines
+              if (recipe.cuisines.isNotEmpty && recipe.cuisines[0].isNotEmpty)
+                RowOfDataCard(
+                    listEnum: recipe.cuisines,
+                    cardWidth: cardWidth,
+                    key: Key('${recipe.title} cuisines')),
 
-            EquipmentCard(
-              cardWidth: cardWidth,
-              titleStyle: _titleStyle,
-              instructions: recipe.instructions,
-              key: Key('${recipe.title} equipment'),
-            ),
-            IngredentsCard(
-              cardWidth: cardWidth,
-              titleStyle: _titleStyle,
-              ingredients: recipe.ingredients,
-              key: Key('${recipe.title} ingredents'),
-            ),
+              // Dish Types
+              if (recipe.dishTypes.isNotEmpty && recipe.dishTypes[0].isNotEmpty)
+                RowOfDataCard(
+                  listEnum: recipe.dishTypes,
+                  cardWidth: cardWidth,
+                  key: Key('${recipe.title} dishTypes'),
+                ),
 
-            // Seperation
-            const SizedBox(height: 20),
-            const Divider(),
+              // Seperation
+              const SizedBox(height: 20),
+              const Divider(),
 
-            InstructionCard(
-              getParagraphDataForRecipe: viewModel.getParagraphDataForRecipe,
-              instructions: recipe.instructions,
-              cardWidth: cardWidth,
-              titleStyle: _titleStyle,
-              id: recipe.id,
-              // TODO use view model
-              instructionsParagraph: ref
-                  .watch(recipeDataRepositoryProvider)[recipeListIndex]
-                  .instructionsParagraph,
-            ),
+              EquipmentCard(
+                cardWidth: cardWidth,
+                titleStyle: _titleStyle,
+                instructions: recipe.instructions,
+                key: Key('${recipe.title} equipment'),
+              ),
+              IngredentsCard(
+                cardWidth: cardWidth,
+                titleStyle: _titleStyle,
+                ingredients: recipe.ingredients,
+                key: Key('${recipe.title} ingredents'),
+              ),
 
-            // Seperation
-            const SizedBox(height: 20),
-            const Divider(),
+              // Seperation
+              const SizedBox(height: 20),
+              const Divider(),
 
-            SimilarRecipesWidget(
-              id: recipe.id,
-              cardWidth: cardWidth,
-              searchForSimilarRecipes: viewModel.searchSimilarRecipes,
-            ),
-          ],
+              InstructionCard(
+                getParagraphDataForRecipe: viewModel.getParagraphDataForRecipe,
+                instructions: recipe.instructions,
+                cardWidth: cardWidth,
+                titleStyle: _titleStyle,
+                // TODO use view model
+                instructionsParagraph: recipe.instructionsParagraph,
+              ),
+
+              // Seperation
+              const SizedBox(height: 20),
+              const Divider(),
+
+              SimilarRecipesWidget(
+                id: recipe.id,
+                cardWidth: cardWidth,
+                givenSimilarRecipes: recipe.similarRecipes,
+                searchForSimilarRecipes: viewModel.searchSimilarRecipes,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }
 

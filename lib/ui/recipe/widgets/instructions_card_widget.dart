@@ -6,10 +6,9 @@ import 'package:recipe_box/domain/models/recipe_model.dart';
 import '../../../domain/enums.dart';
 
 class InstructionCard extends StatefulWidget {
-  final Future<void> Function(int) getParagraphDataForRecipe;
+  final Future<void> Function() getParagraphDataForRecipe;
   final double cardWidth;
-  final String instructionsParagraph;
-  final int id;
+  final String? instructionsParagraph;
   final List<InstructionModel> instructions;
   final TextStyle titleStyle;
 
@@ -17,8 +16,7 @@ class InstructionCard extends StatefulWidget {
     required this.getParagraphDataForRecipe,
     required this.cardWidth,
     required this.instructions,
-    required this.id,
-    required this.instructionsParagraph,
+    this.instructionsParagraph,
     required this.titleStyle,
     super.key,
   });
@@ -28,10 +26,10 @@ class InstructionCard extends StatefulWidget {
 
 class InstructionCardState extends State<InstructionCard> {
   InstructionView selectedView = InstructionView.list;
-  int instructionNum = 0;
 
   @override
   Widget build(BuildContext context) {
+    int instructionNum = 0;
     return SizedBox(
       width: widget.cardWidth,
       child: Column(
@@ -64,8 +62,8 @@ class InstructionCardState extends State<InstructionCard> {
                   setState(() {
                     selectedView = newSelection.first;
                   });
-                  if (widget.instructionsParagraph.isEmpty) {
-                    await widget.getParagraphDataForRecipe(widget.id);
+                  if (widget.instructionsParagraph == null) {
+                    await widget.getParagraphDataForRecipe();
                   }
                 },
               ),
@@ -81,12 +79,11 @@ class InstructionCardState extends State<InstructionCard> {
                   instructionNum++;
 
                   return _ListInstructions(
-                    recipeInstructionsParagraph: widget.instructionsParagraph,
                     getParagraphDataForRecipe: widget.getParagraphDataForRecipe,
                     title: instruction.title,
                     steps: instruction.steps,
                     instructionNum: instructionNum,
-                    recipeID: widget.id,
+                    numberOfInsturctions: widget.instructions.length,
                     titleStyle: widget.titleStyle,
                     cardWidth: widget.cardWidth,
                   );
@@ -102,8 +99,8 @@ class InstructionCardState extends State<InstructionCard> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: widget.instructionsParagraph.isNotEmpty
-                    ? HtmlWidget((widget.instructionsParagraph))
+                child: widget.instructionsParagraph != null
+                    ? HtmlWidget((widget.instructionsParagraph!))
                     : const Center(
                         heightFactor: 2,
                         child: SizedBox(
@@ -126,12 +123,11 @@ class InstructionCardState extends State<InstructionCard> {
 }
 
 class _ListInstructions extends StatelessWidget {
-  final Future<void> Function(int) getParagraphDataForRecipe;
+  final Future<void> Function() getParagraphDataForRecipe;
   final String title;
   final List<StepModel> steps;
   final int instructionNum;
-  final int recipeID;
-  final String recipeInstructionsParagraph;
+  final int numberOfInsturctions;
   final TextStyle titleStyle;
   final double cardWidth;
   const _ListInstructions({
@@ -139,8 +135,7 @@ class _ListInstructions extends StatelessWidget {
     required this.title,
     required this.steps,
     required this.instructionNum,
-    required this.recipeID,
-    required this.recipeInstructionsParagraph,
+    required this.numberOfInsturctions,
     required this.titleStyle,
     required this.cardWidth,
   });
@@ -165,13 +160,25 @@ class _ListInstructions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String instructionTitle = extractTitle(title).isNotEmpty
-        ? extractTitle(title)
-        : '${order(instructionNum)} Instruction';
+    String instructionTitle() {
+      String extractedTitle = extractTitle(title);
+      // if recipe has instruction title
+      if (extractedTitle.isNotEmpty) {
+        return extractedTitle;
+        // if recipe only has one set of instructions
+      } else if (numberOfInsturctions < 2) {
+        return 'Instruction';
+        // if recipe has more then one set of instructions
+      } else {
+        return '${order(instructionNum)} Instruction';
+      }
+    }
 
     return Column(
       children: [
-        Text(instructionTitle, style: titleStyle),
+        const SizedBox(height: 3),
+        if (instructionNum != 1) const Divider(),
+        Text(instructionTitle(), style: titleStyle),
         const Divider(),
         Padding(
           padding: const EdgeInsets.all(10),

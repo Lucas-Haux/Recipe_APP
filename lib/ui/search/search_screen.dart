@@ -178,8 +178,9 @@ class SearchScreen extends ConsumerWidget {
 }
 
 class _FloatingActionButtons extends StatelessWidget {
+  final Future<void> Function() searchForRecipes;
+
   final void Function(String) updateQuery;
-  final VoidCallback searchForRecipes;
   final TextEditingController textEditingController;
   const _FloatingActionButtons({
     required this.updateQuery,
@@ -213,6 +214,8 @@ class _FloatingActionButtons extends StatelessWidget {
             onPressed: () {
               FocusManager.instance.primaryFocus?.unfocus(); // remove keyboard
               updateQuery(textEditingController.text);
+              // searchForRecipes();
+
               context.go('/search_results');
             },
             icon: const Icon(Icons.search),

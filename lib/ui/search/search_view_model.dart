@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe_box/data/repositories/recipe_data_repository/recipe_data_repository.dart';
 import 'package:recipe_box/data/repositories/search_pramaters_repository.dart';
 import 'package:recipe_box/domain/enums.dart';
 import 'package:recipe_box/domain/models/search_parameters_model.dart';
-import '../../../data/repositories/recipe_data_repository.dart';
 
 class SearchViewModel {
   final WidgetRef ref;
@@ -103,6 +103,6 @@ class SearchViewModel {
   }
 
   Future<void> searchForRecipes() async {
-    ref.read(recipeDataRepositoryProvider.notifier).searchForRecipes();
+    ref.read(recipeDataRepositoryProvider).searchForRecipes();
   }
 }

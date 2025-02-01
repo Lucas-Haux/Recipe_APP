@@ -2,8 +2,6 @@ abstract class DisplayableEnum {
   String get displayName;
 }
 
-enum DataStateStatus { loading, completed, error }
-
 enum MealType { dinner, lunch, breakfast, snack }
 
 enum CuisineType implements DisplayableEnum {

@@ -5,16 +5,13 @@ import 'dart:convert';
 import 'package:recipe_box/data/repositories/search_pramaters_repository.dart';
 
 class RecipeSearchService {
-  final Ref ref; // Dependency Injection for Ref
-
-  RecipeSearchService(this.ref);
+  RecipeSearchService();
 
   Future<dynamic> fetchRecipes() async {
-    final searchPramatersRepository =
-        ref.read(searchPramatersRepositoryProvider);
+    final searchPramatersRepository = SearchPramatersRepository().debugState;
 
     try {
-      const String appKey = '05f5c84cb98f42329f13b049c9f05f5a';
+      const String appKey = '1f9d617ba13041859ea773423b0e6291';
 
       final query = searchPramatersRepository.query;
       String selectedCuisines = searchPramatersRepository.selectedCuisines
@@ -47,6 +44,7 @@ class RecipeSearchService {
           'minFat=${searchPramatersRepository.minFat.toInt()}&'
           'fillIngredients=true&'
           'addRecipeInformation=true&'
+          'addRecipeInstructions=true&'
           'instructionsRequired=true&'
           'addRecipeNutrition=true&'
           'number=30&'
@@ -85,7 +83,3 @@ class RecipeSearchService {
     }
   }
 }
-
-final recipeSearchServiceProvider = Provider((ref) {
-  return RecipeSearchService(ref);
-});

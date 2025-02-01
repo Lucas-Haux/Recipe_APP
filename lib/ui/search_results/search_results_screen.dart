@@ -2,37 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../home/home_screen.dart';
-import '../../../domain/enums.dart';
+import '../../data/model/data_state_status_model.dart';
 import '../../../domain/models/recipe_model.dart';
 import 'search_results_view_model.dart';
 import '../core/ui/search_bar_field_widget.dart';
 import 'widgets/recipe_display_card_widget.dart';
 
-class SearchResultsScreen extends ConsumerStatefulWidget {
+class SearchResultsScreen extends ConsumerWidget {
   const SearchResultsScreen({super.key});
 
   @override
-  SearchResultsScreenState createState() => SearchResultsScreenState();
-}
-
-class SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
-  @override
-  void initState() {
-    super.initState();
-    // Trigger the recipe search when the tree is done building
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        ref.watch(searchResultsViewModelProvider.notifier).searchForRecipes();
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    ref.watch(searchResultsViewModelProvider); // Watch the ViewModel provider
-
+  Widget build(BuildContext context, WidgetRef ref) {
     final recipeState = ref.watch(searchResultsViewModelProvider);
 
+    print('${recipeState.valueOrNull}');
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 0,
@@ -46,7 +29,7 @@ class SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
           children: [
             Builder(
               builder: (context) {
-                if (recipeState.status == DataStateStatus.loading) {
+                if (recipeState.isLoading) {
                   return const Center(
                     heightFactor: 7,
                     child: SizedBox(
@@ -58,7 +41,7 @@ class SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                       ),
                     ),
                   );
-                } else if (recipeState.status == DataStateStatus.completed) {
+                } else if (recipeState.hasValue) {
                   int? totalRecipeResults = ref
                       .read(searchResultsViewModelProvider.notifier)
                       .getTotalRecipeResults();
@@ -66,15 +49,15 @@ class SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                   int leftIndex = -2;
                   int rightIndex = -1;
 
-                  if (recipeState.data != null) {
+                  if (recipeState.value != null) {
                     final bool showPopularBadge =
-                        _showPopularBadge(recipeState.data!);
+                        _showPopularBadge(recipeState.value!);
 
                     List<RecipeModel> leftList = [];
                     List<RecipeModel> rightList = [];
 
                     int index = 0;
-                    for (var recipe in recipeState.data!) {
+                    for (var recipe in recipeState.value!) {
                       if (index.isEven) {
                         leftList.add(recipe);
                       } else if (index.isOdd) {
@@ -148,9 +131,9 @@ class SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                   } else {
                     return const Text('No Recipe Data Found For Your Search');
                   }
-                } else if (recipeState.status == DataStateStatus.error) {
+                } else if (recipeState.hasError) {
                   return Center(
-                      child: Text('Error: ${recipeState.errorMessage}'));
+                      child: Text('Recipe List Error: ${recipeState.error}'));
                 }
                 return Container(); // Fallback for unexpected states
               },

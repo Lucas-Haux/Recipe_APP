@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 import 'recipe_image_widget.dart';
-import '../../../domain/models/similar_recipe_model.dart';
+import '../../../domain/models/recipe_model.dart';
 
 class SimilarRecipesWidget extends StatefulWidget {
   final int id;
-  final Future<List<SimilarRecipeModel>> Function(int) searchForSimilarRecipes;
+  final List<SimilarRecipeModel>? givenSimilarRecipes;
+  final Future<void> Function() searchForSimilarRecipes;
   final double cardWidth;
   const SimilarRecipesWidget({
+    this.givenSimilarRecipes,
     required this.id,
     required this.searchForSimilarRecipes,
     required this.cardWidth,
@@ -21,18 +23,18 @@ class SimilarRecipesWidget extends StatefulWidget {
 }
 
 class _SimilarRecipesState extends State<SimilarRecipesWidget> {
-  List<SimilarRecipeModel> similarRecipes = [];
-
   final PageController carouselController =
       PageController(initialPage: 1, viewportFraction: 1 / 2);
 
   @override
   Widget build(BuildContext context) {
+    List<SimilarRecipeModel>? similarRecipes = widget.givenSimilarRecipes;
+
     return SizedBox(
       width: widget.cardWidth,
       child: Column(
         children: [
-          if (similarRecipes.isEmpty)
+          if (similarRecipes == null)
             DottedBorder(
               padding:
                   const EdgeInsets.symmetric(vertical: 75, horizontal: 100),
@@ -42,18 +44,14 @@ class _SimilarRecipesState extends State<SimilarRecipesWidget> {
               strokeCap: StrokeCap.round,
               child: FilledButton(
                 onPressed: () async {
-                  final newList =
-                      await widget.searchForSimilarRecipes(widget.id);
-                  setState(() {
-                    similarRecipes = newList;
-                  });
+                  await widget.searchForSimilarRecipes();
                 },
                 child: const Text('Similar Recipes'),
               ),
             ),
 
           // Carousel
-          if (similarRecipes.isNotEmpty)
+          if (similarRecipes != null)
             ConstrainedBox(
               constraints:
                   BoxConstraints(maxHeight: 250, maxWidth: widget.cardWidth),
@@ -78,10 +76,10 @@ class _SimilarRecipesState extends State<SimilarRecipesWidget> {
                   dragStartBehavior: DragStartBehavior.start,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   allowImplicitScrolling: true,
-                  itemCount: similarRecipes.length,
+                  itemCount: similarRecipes!.length,
                   itemBuilder: (context, index) {
                     return _SimilarRecipeCard(
-                      recipe: similarRecipes[index],
+                      recipe: similarRecipes![index],
                       cardWidth: widget.cardWidth,
                     );
                   },
