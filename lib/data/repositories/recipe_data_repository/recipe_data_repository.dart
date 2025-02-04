@@ -1,3 +1,4 @@
+import 'package:recipe_box/domain/models/search_parameters_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
@@ -22,6 +23,12 @@ class RecipeException implements Exception {
 }
 
 abstract class RecipeDataRepository {
+  Future<List<RecipeModel>> getArticleListPage(
+    int pageNumber,
+    int size,
+    SearchParameters searchParamaters,
+  );
+
   Future<List<RecipeModel>> getRecipes();
 
   Future<RecipeModel> getSingleRecipe(int recipeListIndex);
@@ -80,7 +87,9 @@ class LocalRecipeDataRepository implements RecipeDataRepository {
 
       box.deleteAll(box.keys);
 
-      dynamic jsonResponse = await RecipeSearchService().fetchRecipes();
+      // dynamic jsonResponse = await RecipeSearchService().fetchRecipes(0, 10);
+
+      dynamic jsonResponse = null;
 
       List<RecipeModel> tempList = jsonResponse['results']
           .map<RecipeModel>((jsonMap) => RecipeModel.fromJson(jsonMap))
@@ -146,6 +155,42 @@ class LocalRecipeDataRepository implements RecipeDataRepository {
       print(box.values.toList()[recipeListIndex].similarRecipes?.isEmpty);
     } catch (e) {
       throw RecipeException('Error adding  Similar recipes:', e);
+    }
+  }
+
+  @override
+  Future<List<RecipeModel>> getArticleListPage(
+    int pageNumber,
+    int size,
+    SearchParameters searchParamaters,
+  ) async {
+    try {
+      print('pageNumber: $pageNumber');
+
+      final box = await _openBox();
+      print('got past box');
+
+      int offset = pageNumber * size;
+
+      print(' got past offset');
+
+      final response = await RecipeSearchService()
+          .fetchRecipes(offset, size, searchParamaters);
+      print(' got past response');
+      final results = response['results'] as List<dynamic>;
+      print(' got past results');
+
+      final recipes = results
+          .map<RecipeModel>((jsonMap) => RecipeModel.fromJson(jsonMap))
+          .toList();
+      print(' got past recipes');
+
+      box.addAll(recipes);
+      print('got past boxx add');
+      return recipes;
+    } catch (e) {
+      print(e);
+      throw e;
     }
   }
 }

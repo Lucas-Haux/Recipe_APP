@@ -3,15 +3,18 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:recipe_box/data/repositories/search_pramaters_repository.dart';
+import 'package:recipe_box/domain/models/search_parameters_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class RecipeSearchService {
   RecipeSearchService();
 
-  Future<dynamic> fetchRecipes() async {
-    final searchPramatersRepository = SearchPramatersRepository().debugState;
+  Future<dynamic> fetchRecipes(int offset, int numberOfRecipes,
+      SearchParameters searchPramatersRepository) async {
+    print('ran service ');
 
     try {
-      const String appKey = '1f9d617ba13041859ea773423b0e6291';
+      const String appKey = '096cc91305b04684ab47dfebc84bc59e';
 
       final query = searchPramatersRepository.query;
       String selectedCuisines = searchPramatersRepository.selectedCuisines
@@ -47,7 +50,8 @@ class RecipeSearchService {
           'addRecipeInstructions=true&'
           'instructionsRequired=true&'
           'addRecipeNutrition=true&'
-          'number=30&'
+          'offset=$offset&'
+          'number=$numberOfRecipes&'
           'sort=popularity';
 
       // make uri with the api endpoint and parameters
@@ -79,6 +83,7 @@ class RecipeSearchService {
         throw 'api response != 200: ${response.reasonPhrase}';
       }
     } catch (e) {
+      print(e);
       throw 'Couldnt get response from API: $e';
     }
   }

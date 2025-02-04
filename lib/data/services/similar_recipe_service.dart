@@ -4,7 +4,7 @@ import 'dart:convert';
 class SimilarRecipeService {
   Future<dynamic> fetchSimilarRecipes(int id) async {
     try {
-      const String appKey = '1f9d617ba13041859ea773423b0e6291';
+      const String appKey = '096cc91305b04684ab47dfebc84bc59e';
 
       String queryParameters = 'apiKey=$appKey&'
           'number=5';
