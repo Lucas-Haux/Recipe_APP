@@ -4,7 +4,7 @@ class MaxReadyTimeSlider extends StatefulWidget {
   final double givenPrimarySliderValue;
   final String primaryTitle;
   final TextStyle titleTextStyle;
-  final void Function(double) setValue;
+  final Function(Map<String, dynamic>) setValue;
   const MaxReadyTimeSlider({
     required this.givenPrimarySliderValue,
     required this.primaryTitle,
@@ -48,7 +48,7 @@ class MaxReadyTimeState extends State<MaxReadyTimeSlider> {
               setState(() {
                 double remainder = value.round() % 30;
                 _primarySliderValue = value.round() - remainder;
-                widget.setValue(_primarySliderValue);
+                widget.setValue({'maxTime': _primarySliderValue});
               });
             },
           ),
@@ -79,8 +79,7 @@ class MinMaxSliders extends StatefulWidget {
   final double givenMinValue;
   final double sliderMaximum;
   final double sliderMinimum;
-  final void Function(double) setMaxValue;
-  final void Function(double) setMinValue;
+  final Function(Map<String, dynamic>) updateState;
   final TextStyle titleTextStyle;
   const MinMaxSliders({
     required this.title,
@@ -88,8 +87,7 @@ class MinMaxSliders extends StatefulWidget {
     required this.givenMinValue,
     required this.sliderMaximum,
     required this.sliderMinimum,
-    required this.setMaxValue,
-    required this.setMinValue,
+    required this.updateState,
     required this.titleTextStyle,
     super.key,
   });
@@ -139,7 +137,7 @@ class _MinMaxSlidersState extends State<MinMaxSliders> {
             label: _minSliderValue.round().toString(),
             onChanged: (double newValue) {
               setState(() {
-                widget.setMaxValue(newValue);
+                widget.updateState({'min${widget.title}': newValue});
                 _minSliderValue = newValue.round().toDouble();
               });
             },
@@ -157,7 +155,7 @@ class _MinMaxSlidersState extends State<MinMaxSliders> {
             onChanged: (double newValue) {
               setState(() {
                 _maxSliderValue = newValue.round().toDouble();
-                widget.setMaxValue(newValue);
+                widget.updateState({'max${widget.title}': newValue});
               });
             },
           ),

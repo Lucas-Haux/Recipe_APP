@@ -16,8 +16,8 @@ class EquipmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Set<String> equipmentList = instructions
-        .expand((instruction) => instruction.steps)
-        .expand((step) => step.equipment)
+        .expand((instruction) => instruction.steps!)
+        .expand((step) => step.equipment!)
         .toSet();
 
     if (equipmentList.isNotEmpty) {

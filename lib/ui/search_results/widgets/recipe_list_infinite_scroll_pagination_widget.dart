@@ -1,30 +1,24 @@
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter/material.dart';
-import 'package:recipe_box/data/repositories/recipe_data_repository/recipe_data_repository.dart';
 import 'package:recipe_box/domain/models/recipe_model.dart';
-import 'package:recipe_box/domain/models/search_parameters_model.dart';
 import './recipe_display_card_widget.dart';
 
-class PagedArticleListView extends StatefulWidget {
-  const PagedArticleListView({
-    required this.repository,
-    required this.searchParamaters,
+class RecipeListInfiniteScrollPagination extends StatefulWidget {
+  const RecipeListInfiniteScrollPagination({
     this.recipes,
+    required this.getArticleListPage,
     super.key,
-  })  : assert(repository != null),
-        assert(searchParamaters != null);
-
-  final RecipeDataRepository repository;
-  final SearchParameters searchParamaters;
+  });
+  final Future<List<RecipeModel>> Function(int, int) getArticleListPage;
   final List<RecipeModel>? recipes;
 
   @override
-  _PagedArticleListViewState createState() => _PagedArticleListViewState();
+  _RecipeListInfiniteScrollPaginationState createState() =>
+      _RecipeListInfiniteScrollPaginationState();
 }
 
-class _PagedArticleListViewState extends State<PagedArticleListView> {
-  List<RecipeModel>? get _recipes => widget.recipes;
-
+class _RecipeListInfiniteScrollPaginationState
+    extends State<RecipeListInfiniteScrollPagination> {
   @override
   Widget build(BuildContext context) => RefreshIndicator(
         onRefresh: () => Future.sync(
@@ -64,21 +58,21 @@ class _PagedArticleListViewState extends State<PagedArticleListView> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final newPage = await widget.repository.getArticleListPage(
+      print('fetching new page');
+      final newPage = await widget.getArticleListPage(
         pageKey,
         8,
-        widget.searchParamaters,
       );
 
       final previouslyFetchedItemsCount =
           // 2
           _pagingController.itemList?.length ?? 0;
 
+      //TODO isLastPage
       final isLastPage = false;
       final newItems = newPage;
 
       if (isLastPage) {
-        // 3
         _pagingController.appendLastPage(newItems);
       } else {
         final nextPageKey = pageKey + 1;
@@ -86,6 +80,7 @@ class _PagedArticleListViewState extends State<PagedArticleListView> {
       }
     } catch (error) {
       // 4
+      print('infinite scroll error $error');
       _pagingController.error = error;
     }
   }

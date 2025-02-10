@@ -2,11 +2,9 @@ import 'package:recipe_box/domain/enums.dart';
 
 class SearchParameters {
   final String query;
-  final Set<CuisineType> selectedCuisines;
-  final Set<CuisineType> deselectedCuisines;
-  final Set<DietType> requiredDiets;
-  final AndOrType dietAndOr;
-  final Set<IntoleranceType> intolerances;
+  Map<CuisineType, RequireExclude> cuisines;
+  Map<DietType, AndOrType> diets;
+  Map<IntoleranceType, RequireExclude> intolerances;
   final double maxTime;
   final double maxCalories;
   final double minCalories;
@@ -19,11 +17,9 @@ class SearchParameters {
 
   SearchParameters({
     this.query = '',
-    this.selectedCuisines = const {},
-    this.deselectedCuisines = const {},
-    this.requiredDiets = const {},
-    this.dietAndOr = AndOrType.and,
-    this.intolerances = const {},
+    Map<CuisineType, RequireExclude>? cuisines,
+    Map<DietType, AndOrType>? diets,
+    Map<IntoleranceType, RequireExclude>? intolerances,
     this.maxTime = 720,
     this.maxCalories = 1000,
     this.minCalories = 0,
@@ -33,15 +29,25 @@ class SearchParameters {
     this.minProtein = 0,
     this.maxFat = 100,
     this.minFat = 0,
-  });
+  })  : cuisines = cuisines ??
+            Map.fromIterable(
+              CuisineType.values,
+              value: (_) => RequireExclude.unspecified,
+            ),
+        diets = diets ??
+            Map.fromIterable(
+              DietType.values,
+              value: (_) => AndOrType.unspecified,
+            ),
+        intolerances = intolerances ??
+            Map.fromIterable(IntoleranceType.values,
+                value: (_) => RequireExclude.unspecified);
 
   SearchParameters copyWith({
     String? query,
-    Set<CuisineType>? selectedCuisines,
-    Set<CuisineType>? deselectedCuisines,
-    Set<DietType>? requiredDiets,
-    AndOrType? dietAndOr,
-    Set<IntoleranceType>? intolerances,
+    Map<CuisineType, RequireExclude>? cuisines,
+    Map<DietType, AndOrType>? diets,
+    Map<IntoleranceType, RequireExclude>? intolerances,
     double? maxTime,
     double? maxCalories,
     double? minCalories,
@@ -54,10 +60,8 @@ class SearchParameters {
   }) {
     return SearchParameters(
       query: query ?? this.query,
-      selectedCuisines: selectedCuisines ?? this.selectedCuisines,
-      deselectedCuisines: deselectedCuisines ?? this.deselectedCuisines,
-      requiredDiets: requiredDiets ?? this.requiredDiets,
-      dietAndOr: dietAndOr ?? this.dietAndOr,
+      cuisines: cuisines ?? this.cuisines,
+      diets: diets ?? this.diets,
       intolerances: intolerances ?? this.intolerances,
       maxTime: maxTime ?? this.maxTime,
       maxCalories: maxCalories ?? this.maxCalories,

@@ -110,13 +110,13 @@ class _SimilarRecipeCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               RecipeImage(
-                imageUrl: recipe.imageUrl,
+                imageUrl: recipe.imageUrl!,
                 favoriteButton: false,
                 cardWidth: cardWidth,
               ),
               Padding(
                 padding: const EdgeInsets.all(5),
-                child: Text(recipe.title, textAlign: TextAlign.center),
+                child: Text(recipe.title!, textAlign: TextAlign.center),
               ),
             ],
           ),

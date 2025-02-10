@@ -2,6 +2,8 @@ abstract class DisplayableEnum {
   String get displayName;
 }
 
+abstract class ChipModeCollection {}
+
 enum MealType { dinner, lunch, breakfast, snack }
 
 enum CuisineType implements DisplayableEnum {
@@ -75,20 +77,17 @@ enum IntoleranceType implements DisplayableEnum {
   const IntoleranceType(this.displayName);
 }
 
-enum AndOrType implements DisplayableEnum {
-  and(","),
-  or("|");
-
-  @override
-  final String displayName;
-  const AndOrType(this.displayName);
-}
+enum AndOrType implements ChipModeCollection { and, or, unspecified }
 
 enum InstructionView {
   list,
   paragraph,
 }
 
-enum RequireExclude { require, exclude }
+enum RequireExclude implements ChipModeCollection {
+  require,
+  exclude,
+  unspecified
+}
 
 enum ChipMode { requireExclude, and, orAnd }

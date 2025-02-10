@@ -10,7 +10,7 @@ class NutritionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // removes Alcohol nutrients
     final List<NutritionModel> newNutrients = nutrients
-        .where((nutrition) => !nutrition.label.contains('Alcohol'))
+        .where((nutrition) => !nutrition.label!.contains('Alcohol'))
         .toList();
 
     return Padding(
@@ -122,7 +122,7 @@ class _BarChart extends StatelessWidget {
       fontWeight: FontWeight.bold,
       fontSize: 14,
     );
-    String text = nutrients[value.toInt()].label;
+    String text = nutrients[value.toInt()].label!;
 
     // Reduces size to fit in space
     if (text.contains('Carbohydrates')) {
@@ -132,8 +132,8 @@ class _BarChart extends StatelessWidget {
     //Add amount value
     text = text +
         ' ' +
-        nutrients[value.toInt()].amount.round().toString() +
-        nutrients[value.toInt()].unit;
+        nutrients[value.toInt()].amount!.round().toString() +
+        nutrients[value.toInt()].unit!;
 
     return SideTitleWidget(
       meta: meta,
@@ -206,7 +206,7 @@ class _BarChart extends StatelessWidget {
           x: index,
           barRods: [
             BarChartRodData(
-              toY: nutrition.percentage,
+              toY: nutrition.percentage!,
               gradient: _barsGradient,
             ),
           ],
@@ -220,8 +220,8 @@ class _BarChart extends StatelessWidget {
     // get Biggest Percentage from all nutrients
     double biggestNum = 0;
     for (NutritionModel nutrition in nutrients) {
-      if (nutrition.percentage > biggestNum) {
-        biggestNum = nutrition.percentage.roundToDouble();
+      if (nutrition.percentage! > biggestNum) {
+        biggestNum = nutrition.percentage!.roundToDouble();
       }
     }
 

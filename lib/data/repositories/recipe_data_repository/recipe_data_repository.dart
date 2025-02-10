@@ -1,69 +1,36 @@
+import 'package:path_provider/path_provider.dart';
 import 'package:recipe_box/domain/models/search_parameters_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
+import 'package:isar/isar.dart';
 
 import '../../../data/services/recipe_search_service.dart';
 import '../../../data/services/similar_recipe_service.dart';
 import '../../../data/services/recipe_full_info_service.dart';
 import '../../../domain/models/recipe_model.dart';
 import 'dart:async';
+import 'abstract_recipe_data_repository.dart';
 
 part 'recipe_data_repository.g.dart';
 
-class RecipeException implements Exception {
-  final String message;
-  final dynamic error;
-
-  RecipeException(this.message, [this.error]);
-
-  @override
-  String toString() =>
-      'RecipeException: $message${error != null ? ' ($error)' : ''}';
-}
-
-abstract class RecipeDataRepository {
-  Future<List<RecipeModel>> getArticleListPage(
-    int pageNumber,
-    int size,
-    SearchParameters searchParamaters,
-  );
-
-  Future<List<RecipeModel>> getRecipes();
-
-  Future<RecipeModel> getSingleRecipe(int recipeListIndex);
-
-  Future<void> searchForRecipes();
-
-  Future<void> replaceRecipeData(int recipeListIndex);
-
-  Future<void> addSimilarRecipesToRecipe(int recipeListIndex);
-}
-
 @Riverpod(keepAlive: true)
-RecipeDataRepository recipeDataRepository(Ref ref) =>
+AbstractRecipeDataRepository recipeDataRepository(Ref ref) =>
     LocalRecipeDataRepository();
 
-class LocalRecipeDataRepository implements RecipeDataRepository {
-  static const String _boxName = 'recipesListBox';
+class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
+  late Future<Isar> recipeDataBase;
 
-  Future<Box<RecipeModel>> _openBox() async {
-    try {
-      if (Hive.isBoxOpen(_boxName)) {
-        return Hive.box<RecipeModel>(_boxName);
-      }
-      return await Hive.openBox<RecipeModel>(_boxName);
-    } catch (e) {
-      throw RecipeException('Failed to open recipesList Box', e);
-    }
+  LocalRecipeDataRepository() {
+    recipeDataBase = openDB();
   }
 
   @override
   Future<List<RecipeModel>> getRecipes() async {
     try {
-      final box = await _openBox();
-      print(box.values.toList().length);
-      return box.values.toList();
+      final isar = await recipeDataBase;
+
+      final recipe = await isar.recipeModels.where().findAll();
+      return recipe;
     } catch (e) {
       throw RecipeException('Failed to get Recipes', e);
     }
@@ -72,32 +39,41 @@ class LocalRecipeDataRepository implements RecipeDataRepository {
   @override
   Future<RecipeModel> getSingleRecipe(int recipeListIndex) async {
     try {
-      final box = await _openBox();
-      print('yes1');
-      return box.values.toList()[recipeListIndex];
+      final isar = await recipeDataBase;
+
+      final RecipeModel? recipe = await isar.recipeModels.get(recipeListIndex);
+      return recipe!;
     } catch (e) {
       throw RecipeException('Failed to get single recipe', e);
     }
   }
 
   @override
-  Future<void> searchForRecipes() async {
+  Future<List<RecipeModel>> searchForRecipes(
+    int pageNumber,
+    int size,
+    SearchParameters searchParamaters,
+  ) async {
     try {
-      final box = await _openBox();
+      final isar = await recipeDataBase;
 
-      box.deleteAll(box.keys);
+      final int offset = pageNumber * size;
 
-      // dynamic jsonResponse = await RecipeSearchService().fetchRecipes(0, 10);
+      //Get Api Response
+      final response = await RecipeSearchService()
+          .fetchRecipes(offset, size, searchParamaters);
 
-      dynamic jsonResponse = null;
-
-      List<RecipeModel> tempList = jsonResponse['results']
+      //Convert to List<RecipeModel>
+      final results = response['results'] as List<dynamic>;
+      List<RecipeModel> recipes = results
           .map<RecipeModel>((jsonMap) => RecipeModel.fromJson(jsonMap))
           .toList();
 
-      for (var recipe in tempList) {
-        box.add(recipe);
-      }
+      //Add List to DataBase
+      await isar.writeTxn(() async {
+        isar.recipeModels.putAll(recipes);
+      });
+      return recipes;
     } catch (e) {
       throw RecipeException('Error searching for recipe:', e);
     }
@@ -106,24 +82,18 @@ class LocalRecipeDataRepository implements RecipeDataRepository {
   @override
   Future<void> replaceRecipeData(int recipeListIndex) async {
     try {
-      final box = await _openBox();
+      final isar = await recipeDataBase;
 
-      // Check if recipeList is valid
-      if (recipeListIndex < 0 || recipeListIndex >= box.length) {
-        throw RecipeException('Invalid recipe index: $recipeListIndex');
-      }
-
-      final oldRecipe = box.getAt(recipeListIndex);
-      if (oldRecipe == null) {
-        throw RecipeException('No recipe found at index: $recipeListIndex');
-      }
-
-      // Fetch updated recipe data
-      final jsonResponse =
-          await RecipeFullInfoService().fetchFullRecipe(oldRecipe.id);
+      // Get Api Response
+      final jsonResponse = await RecipeFullInfoService().fetchFullRecipe(
+          isar.recipeModels.getSync(recipeListIndex)!.recipeId);
+      // Convert to new RecipeModel
       final newRecipe = RecipeModel.fromJson(jsonResponse);
-      // Replace the recipe without deleting to avoid shifting indexes
-      await box.putAt(recipeListIndex, newRecipe);
+
+      // Replace Recipe with new recipe in database
+      await isar.writeTxn(() async {
+        isar.recipeModels.putByIndexSync(recipeListIndex.toString(), newRecipe);
+      });
     } catch (e) {
       throw RecipeException('Error replacing recipe data:', e);
     }
@@ -132,65 +102,42 @@ class LocalRecipeDataRepository implements RecipeDataRepository {
   @override
   Future<void> addSimilarRecipesToRecipe(int recipeListIndex) async {
     try {
-      final box = await _openBox();
+      final isar = await recipeDataBase;
 
-      final oldRecipe = box.values.toList()[recipeListIndex];
+      // Get Api Response
+      final jsonResponse = await SimilarRecipeService().fetchSimilarRecipes(
+          isar.recipeModels.getSync(recipeListIndex)!.recipeId);
+      // Convert to Lists<SimilarRecipeModel>
+      final List<SimilarRecipeModel> similarRecipes =
+          SimilarRecipeModel.fromJson(jsonResponse) as List<SimilarRecipeModel>;
 
-      final jsonResponse =
-          await SimilarRecipeService().fetchSimilarRecipes(oldRecipe.id);
+      // Get the current recipe of recipeListIndex
+      final RecipeModel? oldRecipe =
+          await isar.recipeModels.get(recipeListIndex);
+      // make new RecipeModel thats clones oldRecipe with new similarRecipes
+      final RecipeModel newRecipe =
+          oldRecipe!.copyWith(similarRecipes: similarRecipes);
 
-      final List<SimilarRecipeModel> newList = [];
-
-      for (var response in jsonResponse) {
-        var similarRecipe = SimilarRecipeModel.fromJson(response);
-        newList.add(similarRecipe);
-      }
-
-      print('1');
-      print(box.values.toList()[recipeListIndex].similarRecipes?.isEmpty);
-
-      box.putAt(recipeListIndex, oldRecipe.copyWith(similarRecipes: newList));
-      print('2');
-
-      print(box.values.toList()[recipeListIndex].similarRecipes?.isEmpty);
+      // Replace Recipe with new recipe in database
+      await isar.writeTxn(() async {
+        isar.recipeModels.putByIndexSync(recipeListIndex.toString(), newRecipe);
+      });
     } catch (e) {
       throw RecipeException('Error adding  Similar recipes:', e);
     }
   }
 
-  @override
-  Future<List<RecipeModel>> getArticleListPage(
-    int pageNumber,
-    int size,
-    SearchParameters searchParamaters,
-  ) async {
+  Future<Isar> openDB() async {
     try {
-      print('pageNumber: $pageNumber');
+      if (Isar.instanceNames.isEmpty) {
+        return await Isar.open([RecipeModelSchema],
+            directory: (await getApplicationDocumentsDirectory()).path,
+            inspector: true);
+      }
 
-      final box = await _openBox();
-      print('got past box');
-
-      int offset = pageNumber * size;
-
-      print(' got past offset');
-
-      final response = await RecipeSearchService()
-          .fetchRecipes(offset, size, searchParamaters);
-      print(' got past response');
-      final results = response['results'] as List<dynamic>;
-      print(' got past results');
-
-      final recipes = results
-          .map<RecipeModel>((jsonMap) => RecipeModel.fromJson(jsonMap))
-          .toList();
-      print(' got past recipes');
-
-      box.addAll(recipes);
-      print('got past boxx add');
-      return recipes;
+      return Future.value(Isar.getInstance());
     } catch (e) {
-      print(e);
-      throw e;
+      throw 'fail to open DB $e';
     }
   }
 }

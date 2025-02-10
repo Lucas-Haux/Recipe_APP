@@ -12,7 +12,6 @@ import 'widgets/similar_recipes_widget.dart';
 
 import 'recipe_viewmodel.dart';
 
-import 'package:recipe_box/domain/models/recipe_model.dart';
 import 'package:recipe_box/ui/core/ui/search_bar_field_widget.dart';
 
 double cardWidth = 371;

@@ -80,8 +80,8 @@ class InstructionCardState extends State<InstructionCard> {
 
                   return _ListInstructions(
                     getParagraphDataForRecipe: widget.getParagraphDataForRecipe,
-                    title: instruction.title,
-                    steps: instruction.steps,
+                    title: instruction.title!,
+                    steps: instruction.steps!,
                     instructionNum: instructionNum,
                     numberOfInsturctions: widget.instructions.length,
                     titleStyle: widget.titleStyle,
@@ -264,7 +264,7 @@ class __StepInstructionState extends State<_StepInstruction> {
               child: SizedBox(
                 width: widget.cardWidth / 1.345,
                 child: Text(
-                  widget.step.stepInstruction,
+                  widget.step.stepInstruction!,
                   style: TextStyle(
                     fontSize: 14,
                     decoration: isDone
@@ -297,7 +297,7 @@ class __StepInstructionState extends State<_StepInstruction> {
                 FilledButton(
                   onPressed: () {
                     Clipboard.setData(
-                        ClipboardData(text: widget.step.stepInstruction));
+                        ClipboardData(text: widget.step.stepInstruction!));
                     setState(() {
                       isHidden = true;
                     });

@@ -1,100 +1,75 @@
 import 'package:flutter/material.dart';
 import '../../../domain/enums.dart';
 
-class ExpandableChipsCard<T extends DisplayableEnum> extends StatefulWidget {
+class ExpandableChipsCard<RecipeParameter extends DisplayableEnum,
+    ParameterValue extends ChipModeCollection> extends StatefulWidget {
   final ChipMode chipMode;
   final String title;
-  final List<T> enumValues;
-  final Set<T> givenSelectedEnums;
-  final Set<T>? givenDeselectedEnums;
-  final void Function(T) updateSelectedEnums;
-  final void Function(T)? updateDeselectedEnums;
+  // shouldnt need this no more
+  final Map<RecipeParameter, ChipModeCollection> givenEnums;
+  final void Function(Map<String, dynamic>) updateState;
   final AndOrType? defualtAndOr;
-  final void Function(AndOrType)? updateAndOr;
   const ExpandableChipsCard({
     required this.chipMode,
     required this.title,
-    required this.enumValues,
-    required this.givenSelectedEnums,
-    this.givenDeselectedEnums,
-    required this.updateSelectedEnums,
-    this.updateDeselectedEnums,
+    required this.givenEnums,
+    required this.updateState,
     this.defualtAndOr,
-    this.updateAndOr,
     super.key,
   });
 
   @override
-  ExpandableChipsState<T> createState() => ExpandableChipsState<T>();
+  ExpandableChipsState<RecipeParameter, ParameterValue> createState() =>
+      ExpandableChipsState<RecipeParameter, ParameterValue>();
 }
 
-class ExpandableChipsState<T extends DisplayableEnum>
-    extends State<ExpandableChipsCard<T>> {
+class ExpandableChipsState<RecipeParameter extends DisplayableEnum,
+        ParameterValue extends ChipModeCollection>
+    extends State<ExpandableChipsCard<RecipeParameter, ParameterValue>> {
   RequireExclude selectedRequireExcludeMode = RequireExclude.require;
+  AndOrType selectedAndOr = AndOrType.and;
 
   @override
   Widget build(BuildContext context) {
-    Set<T> selectedEnums = widget.givenSelectedEnums; // Tracks chips
-    Set<T> deselectedEnums = {};
-    if (widget.chipMode == ChipMode.requireExclude) {
-      deselectedEnums = widget.givenDeselectedEnums!; // Tracks chips
-    }
-    AndOrType? selectedAndOr;
-    if (widget.chipMode == ChipMode.orAnd) {
-      selectedAndOr = widget.defualtAndOr!;
-    }
+    final List<RecipeParameter> enumValues = widget.givenEnums.keys.toList();
 
-    Color getTextColor(T value) {
-      if (selectedEnums.contains(value)) {
+    TextStyle titleTextStyle = const TextStyle(fontSize: 25);
+
+    ButtonStyle segmentedButtonStyle = ButtonStyle(backgroundColor:
+        WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+      if (states.contains(WidgetState.selected)) {
+        return Theme.of(context)
+            .colorScheme
+            .primaryContainer; // Color when button is pressed
+      }
+      return Theme.of(context).colorScheme.onSecondary; // Default color
+    }));
+
+    // Change button Text color based on value
+    Color getTextColor(RecipeParameter value) {
+      final dataBaseValue = widget.givenEnums[value];
+      if (dataBaseValue == RequireExclude.require ||
+          dataBaseValue == AndOrType.and) {
         return Colors.green;
-      } else if (deselectedEnums.contains(value)) {
+      } else if (dataBaseValue == RequireExclude.exclude) {
         return Colors.red;
+      } else if (dataBaseValue == AndOrType.or) {
+        return Colors.blue;
       } else {
+        // TODO use system text color?
         return Colors.white;
       }
     }
 
-    Color getBGColor(T value) {
-      if (selectedEnums.contains(value)) {
-        return Colors.green.withOpacity(0.5);
-      } else if (deselectedEnums.contains(value)) {
-        return Colors.red.withOpacity(0.5);
-      } else {
+    // Change button background color based on value
+    Color getBGColor(RecipeParameter value) {
+      final textColor = getTextColor(value);
+      if (textColor == Colors.white) {
         return Theme.of(context).colorScheme.tertiaryContainer;
+      } else {
+        return textColor.withAlpha(115); // return the same as text but darker
       }
     }
-
-    void requireExcludeOnSelect(T value) {
-      if (selectedRequireExcludeMode == RequireExclude.require) {
-        // Update list of selectedEnums
-        setState(() {
-          widget.updateSelectedEnums(value);
-        });
-        // Change state of the chip
-        if (selectedEnums.contains(value)) {
-          selectedEnums.remove(value);
-        } else if (deselectedEnums.contains(value)) {
-          deselectedEnums.remove(value);
-        } else {
-          selectedEnums.add(value);
-        }
-      } else if (selectedRequireExcludeMode == RequireExclude.exclude) {
-        // Update list of deselectedEnums
-        setState(() {
-          widget.updateDeselectedEnums!(value);
-        });
-        // Change state of the chip
-        if (deselectedEnums.contains(value)) {
-          deselectedEnums.remove(value);
-        } else if (selectedEnums.contains(value)) {
-          selectedEnums.remove(value);
-        } else {
-          deselectedEnums.add(value);
-        }
-      }
-    }
-
-    TextStyle titleTextStyle = const TextStyle(fontSize: 25);
 
     return Padding(
       padding: const EdgeInsets.all(10),
@@ -105,35 +80,36 @@ class ExpandableChipsState<T extends DisplayableEnum>
           textAlign: TextAlign.center,
         ),
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
         collapsedShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
         maintainState: true,
         enableFeedback: true,
-        showTrailingIcon: false,
+        showTrailingIcon: true,
+        tilePadding: EdgeInsets.only(right: 16, left: 63),
         collapsedBackgroundColor:
             Theme.of(context).colorScheme.onSecondaryFixed,
         backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         expandedAlignment: Alignment.center,
         dense: false,
         children: [
-          // Require Exclude Button
+          // RequireExclude SegmentedButton
           if (widget.chipMode == ChipMode.requireExclude)
             SegmentedButton<RequireExclude>(
+              showSelectedIcon: false,
               segments: const <ButtonSegment<RequireExclude>>[
                 ButtonSegment(
                   label: Text('Require'),
                   value: RequireExclude.require,
+                  tooltip:
+                      'Requires Selected Options to be in Every Recipe Result',
                 ),
                 ButtonSegment(
                   label: Text('Exclude'),
                   value: RequireExclude.exclude,
+                  tooltip: 'Excludes Selected Options in Every Recipe Result',
                 ),
               ],
               selected: ({selectedRequireExcludeMode}),
@@ -142,29 +118,52 @@ class ExpandableChipsState<T extends DisplayableEnum>
                   selectedRequireExcludeMode = newSelection.first;
                 });
               },
+              style: segmentedButtonStyle,
             ),
 
-          // And Or Button
+          // And Or SegmentedButton
           if (widget.chipMode == ChipMode.orAnd)
             SegmentedButton<AndOrType>(
+              showSelectedIcon: false,
               segments: const <ButtonSegment<AndOrType>>[
-                ButtonSegment(label: Text('And'), value: AndOrType.and),
-                ButtonSegment(label: Text('Or'), value: AndOrType.or),
+                ButtonSegment(
+                    label: Text('And'),
+                    value: AndOrType.and,
+                    tooltip:
+                        'Every Recipe Result Requires Every Selected Option'),
+                ButtonSegment(
+                    label: Text('Or'),
+                    value: AndOrType.or,
+                    tooltip:
+                        'Every Recipe Result Requires at Least One of the Selected Options'),
               ],
-              selected: ({selectedAndOr!}),
+              selected: ({selectedAndOr}),
               onSelectionChanged: (newSelection) {
                 setState(() {
                   selectedAndOr = newSelection.first;
                 });
-                widget.updateAndOr!(newSelection.first);
+                // makes it so chip buttons cant be `and` and `or` at the same time
+                final dataBaseEnums = widget.givenEnums;
+                for (var recipeParameter in widget.givenEnums.keys) {
+                  if (dataBaseEnums[recipeParameter] != AndOrType.unspecified &&
+                      dataBaseEnums[recipeParameter] != selectedAndOr) {
+                    widget.updateState({
+                      widget.title: {recipeParameter: selectedAndOr}
+                    });
+                  }
+                }
+                // widget.updateState({'selectedAndOr': newSelection.first});
               },
+              style: segmentedButtonStyle,
             ),
+
+          // ChoiceChips
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
+            padding: const EdgeInsets.only(left: 7, right: 7, bottom: 7),
             child: Wrap(
               spacing: 8,
               alignment: WrapAlignment.center,
-              children: widget.enumValues.map(
+              children: enumValues.map(
                 (value) {
                   return ChoiceChip(
                     label: Text(
@@ -173,19 +172,43 @@ class ExpandableChipsState<T extends DisplayableEnum>
                     ),
                     color: WidgetStatePropertyAll(getBGColor(value)),
                     showCheckmark: false,
-                    selected: selectedEnums.contains(value) ||
-                        deselectedEnums.contains(value),
+                    selected: false, //
                     onSelected: (bool selected) {
+                      // if requireExclude
+                      final dataBaseValue = widget.givenEnums[value];
                       if (widget.chipMode == ChipMode.requireExclude) {
-                        requireExcludeOnSelect(value);
-                      } else {
-                        setState(() {
-                          widget.updateSelectedEnums(value);
-                        });
-                        if (selectedEnums.contains(value)) {
-                          selectedEnums.remove(value);
+                        if (dataBaseValue == RequireExclude.unspecified) {
+                          widget.updateState({
+                            widget.title: {value: selectedRequireExcludeMode}
+                          });
                         } else {
-                          selectedEnums.add(value);
+                          widget.updateState({
+                            widget.title: {value: RequireExclude.unspecified}
+                          });
+                        }
+                      } else
+                      // if and or
+                      if (widget.chipMode == ChipMode.orAnd) {
+                        if (dataBaseValue == AndOrType.unspecified) {
+                          widget.updateState({
+                            widget.title: {value: selectedAndOr}
+                          });
+                        } else {
+                          widget.updateState({
+                            widget.title: {value: AndOrType.unspecified}
+                          });
+                        }
+                      } else
+                      // if and
+                      if (widget.chipMode == ChipMode.and) {
+                        if (dataBaseValue == RequireExclude.unspecified) {
+                          widget.updateState({
+                            widget.title: {value: RequireExclude.exclude}
+                          });
+                        } else {
+                          widget.updateState({
+                            widget.title: {value: RequireExclude.unspecified}
+                          });
                         }
                       }
                     },

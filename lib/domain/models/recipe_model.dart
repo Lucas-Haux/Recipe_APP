@@ -1,87 +1,64 @@
 import 'package:basic_utils/basic_utils.dart';
-import 'package:hive/hive.dart';
+
+import 'package:isar/isar.dart';
 
 part 'recipe_model.g.dart';
 
-@HiveType(typeId: 0) // Assign a unique typeId for this model
+@collection
 class RecipeModel {
-  @HiveField(0)
-  final int id;
+  Id id = Isar.autoIncrement;
+  final int recipeId;
 
-  @HiveField(1)
   final String title;
 
-  @HiveField(2)
   final String imageUrl;
 
-  @HiveField(3)
   final String sourceName;
 
-  @HiveField(4)
   final String sourceUrl;
 
-  @HiveField(5)
   final int time;
 
-  @HiveField(6)
   final int servings;
 
-  @HiveField(7)
   final double pricePerServing;
 
-  @HiveField(8)
   final bool popular;
 
-  @HiveField(9)
   final bool vegetarian;
 
-  @HiveField(10)
   final bool vegan;
 
-  @HiveField(11)
-  final List<dynamic> cuisines;
+  final List<String> cuisines;
 
-  @HiveField(12)
-  final List<dynamic> dishTypes;
+  final List<String> dishTypes;
 
-  @HiveField(13)
-  final List<dynamic> diets;
+  final List<String> diets;
 
-  @HiveField(14)
   final List<String> ingredients;
 
-  @HiveField(15)
   final List<InstructionModel> instructions;
 
-  @HiveField(16)
   final String calories;
 
-  @HiveField(17)
   final String protein;
 
-  @HiveField(18)
   final String fat;
 
-  @HiveField(19)
   final int healthScore;
 
-  @HiveField(20)
   final int weightWatcher;
 
-  @HiveField(21)
   final String summary;
 
-  @HiveField(22)
   final String? instructionsParagraph;
 
-  @HiveField(23)
   final List<NutritionModel>? nutrients;
 
-  @HiveField(24)
   final List<SimilarRecipeModel>? similarRecipes;
 
   RecipeModel({
-    required this.id,
+    required this.recipeId,
     required this.title,
     required this.imageUrl,
     required this.sourceName,
@@ -110,7 +87,7 @@ class RecipeModel {
 
   factory RecipeModel.fromJson(Map<String, dynamic> jsonData) {
     return RecipeModel(
-      id: jsonData['id'],
+      recipeId: jsonData['id'],
       title: jsonData['title'],
       imageUrl: _convertImage(jsonData['image']),
       sourceName: jsonData['sourceName'],
@@ -135,13 +112,13 @@ class RecipeModel {
       summary: jsonData['summary'],
       instructionsParagraph: jsonData['instructions'],
       nutrients:
-          (_checkIfJsonDataPresent(jsonData['nutrition']['nutrients']) as List)
+          (_checkIfJsonDataPresent2(jsonData['nutrition']['nutrients']) as List)
               .map((nutrient) => NutritionModel.fromJson(nutrient))
               .toList(),
     );
   }
   RecipeModel copyWith({
-    int? id,
+    int? recipeId,
     String? title,
     String? imageUrl,
     String? sourceName,
@@ -152,9 +129,9 @@ class RecipeModel {
     bool? popular,
     bool? vegetarian,
     bool? vegan,
-    List<dynamic>? cuisines,
-    List<dynamic>? dishTypes,
-    List<dynamic>? diets,
+    List<String>? cuisines,
+    List<String>? dishTypes,
+    List<String>? diets,
     List<String>? ingredients,
     List<InstructionModel>? instructions,
     String? calories,
@@ -168,7 +145,7 @@ class RecipeModel {
     List<SimilarRecipeModel>? similarRecipes,
   }) {
     return RecipeModel(
-      id: id ?? this.id,
+      recipeId: recipeId ?? this.recipeId,
       title: title ?? this.title,
       imageUrl: imageUrl ?? this.imageUrl,
       sourceName: sourceName ?? this.sourceName,
@@ -198,15 +175,13 @@ class RecipeModel {
   }
 }
 
-@HiveType(typeId: 1)
+@embedded
 class InstructionModel {
-  @HiveField(0)
-  final String title;
-  @HiveField(1)
-  final List<StepModel> steps;
+  String? title;
+  List<StepModel>? steps;
   InstructionModel({
-    required this.title,
-    required this.steps,
+    this.title,
+    this.steps,
   });
   factory InstructionModel.fromJson(Map<String, dynamic> jsonData) {
     return InstructionModel(
@@ -214,22 +189,17 @@ class InstructionModel {
   }
 }
 
-@HiveType(typeId: 2)
+@embedded
 class StepModel {
-  @HiveField(0)
-  final int stepNumber;
-  @HiveField(1)
-  final String stepInstruction;
-  @HiveField(2)
-  final List<String> ingredents;
-  @HiveField(3)
-  final List<String> equipment;
-  @HiveField(4)
+  int? stepNumber;
+  String? stepInstruction;
+  List<String>? ingredents;
+  List<String>? equipment;
   StepModel({
-    required this.ingredents,
-    required this.equipment,
-    required this.stepNumber,
-    required this.stepInstruction,
+    this.ingredents,
+    this.equipment,
+    this.stepNumber,
+    this.stepInstruction,
   });
 
   factory StepModel.fromJson(Map<String, dynamic> jsonData) {
@@ -244,21 +214,17 @@ class StepModel {
   }
 }
 
-@HiveType(typeId: 3)
+@embedded
 class NutritionModel {
-  @HiveField(0)
-  final String label;
-  @HiveField(1)
-  final double amount;
-  @HiveField(2)
-  final String unit;
-  @HiveField(3)
-  final double percentage;
+  String? label;
+  double? amount;
+  String? unit;
+  double? percentage;
   NutritionModel({
-    required this.label,
-    required this.amount,
-    required this.unit,
-    required this.percentage,
+    this.label,
+    this.amount,
+    this.unit,
+    this.percentage,
   });
 
   factory NutritionModel.fromJson(Map<String, dynamic> jsonData) {
@@ -271,30 +237,25 @@ class NutritionModel {
   }
 }
 
-@HiveType(typeId: 4)
+@embedded
 class SimilarRecipeModel {
-  @HiveField(0)
-  final int id;
-  @HiveField(1)
-  final String title;
-  @HiveField(2)
-  final int time;
-  @HiveField(3)
-  final int servings;
-  @HiveField(4)
-  final String imageUrl;
+  int? recipeId;
+  String? title;
+  int? time;
+  int? servings;
+  String? imageUrl;
 
   SimilarRecipeModel({
-    required this.id,
-    required this.title,
-    required this.time,
-    required this.servings,
-    required this.imageUrl,
+    this.recipeId,
+    this.title,
+    this.time,
+    this.servings,
+    this.imageUrl,
   });
 
   factory SimilarRecipeModel.fromJson(Map<String, dynamic> jsonData) {
     return SimilarRecipeModel(
-      id: jsonData['id'],
+      recipeId: jsonData['id'],
       title: jsonData['title'],
       time: jsonData['readyInMinutes'],
       servings: jsonData['servings'],
@@ -303,8 +264,8 @@ class SimilarRecipeModel {
   }
 }
 
-String _constructImageUrl(int id, String imageType) {
-  return 'https://img.spoonacular.com/recipes/$id-312x231.$imageType';
+String _constructImageUrl(int recipeId, String imageType) {
+  return 'https://img.spoonacular.com/recipes/$recipeId-312x231.$imageType';
 }
 
 List<InstructionModel> _returnListOfInstructions(
@@ -326,7 +287,21 @@ List<StepModel> _returnListOfSteps(Map<String, dynamic> jsonData) {
   return steps;
 }
 
-List<dynamic> _checkIfJsonDataPresent(dynamic jsonData) {
+List<String> _checkIfJsonDataPresent(dynamic jsonData) {
+  if (jsonData != null && jsonData.length > 0) {
+    print('running check');
+    List<String> templist = [];
+    for (var item in jsonData) {
+      String test = item.toString();
+      templist.add(test);
+    }
+    return templist;
+  } else {
+    return [''];
+  }
+}
+
+List<dynamic> _checkIfJsonDataPresent2(dynamic jsonData) {
   if (jsonData != null && jsonData.length > 0) {
     return List<dynamic>.from(jsonData);
   } else {

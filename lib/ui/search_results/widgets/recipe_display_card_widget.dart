@@ -22,7 +22,7 @@ class RecipeDisplayCard extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           context.pushNamed('Recipe', extra: {
-            'recipeListIndex': recipeListIndex,
+            'recipeListIndex': recipeListIndex + 1,
             'id': recipe.id.toString(),
           });
         },

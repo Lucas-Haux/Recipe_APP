@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_box/data/repositories/recipe_data_repository/recipe_data_repository.dart';
-import 'package:recipe_box/data/repositories/search_pramaters_repository.dart';
+import 'package:recipe_box/data/repositories/search_pramaters_repository/search_pramaters_repository.dart';
 
 import '../home/home_screen.dart';
 import '../../data/model/data_state_status_model.dart';
@@ -10,16 +10,15 @@ import 'search_results_view_model.dart';
 import '../core/ui/search_bar_field_widget.dart';
 import 'widgets/recipe_display_card_widget.dart';
 
-import './widgets/test_widget.dart';
+import './widgets/recipe_list_infinite_scroll_pagination_widget.dart';
 
 class SearchResultsScreen extends ConsumerWidget {
   const SearchResultsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recipeState = ref.watch(searchResultsViewModelProvider);
+    final recipeState = ref.watch(searchResultsViewModelProvider.notifier);
 
-    print('${recipeState.valueOrNull}');
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 0,
@@ -27,9 +26,8 @@ class SearchResultsScreen extends ConsumerWidget {
         leading: const SizedBox(),
         title: _AppBar(),
       ),
-      body: PagedArticleListView(
-        searchParamaters: ref.watch(searchPramatersRepositoryProvider),
-        repository: ref.watch(recipeDataRepositoryProvider),
+      body: RecipeListInfiniteScrollPagination(
+        getArticleListPage: recipeState.getArticleListPage,
       ),
     );
   }
