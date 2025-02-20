@@ -101,7 +101,7 @@ class _IngredientsInputState extends State<IngredientsInputCard> {
         ),
         maintainState: true,
         enableFeedback: true,
-        showTrailingIcon: false,
+        showTrailingIcon: true,
         collapsedBackgroundColor:
             Theme.of(context).colorScheme.onSecondaryFixed,
         backgroundColor: Theme.of(context).colorScheme.secondaryContainer,

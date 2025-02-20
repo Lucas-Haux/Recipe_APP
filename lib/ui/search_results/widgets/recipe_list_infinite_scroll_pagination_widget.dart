@@ -9,27 +9,25 @@ class RecipeListInfiniteScrollPagination extends StatefulWidget {
     required this.getArticleListPage,
     super.key,
   });
-  final Future<List<RecipeModel>> Function(int, int) getArticleListPage;
+  final Future<List<RecipeModel>> Function(num, num) getArticleListPage;
   final List<RecipeModel>? recipes;
 
   @override
-  _RecipeListInfiniteScrollPaginationState createState() =>
-      _RecipeListInfiniteScrollPaginationState();
+  RecipeListInfiniteScrollPaginationState createState() =>
+      RecipeListInfiniteScrollPaginationState();
 }
 
-class _RecipeListInfiniteScrollPaginationState
+class RecipeListInfiniteScrollPaginationState
     extends State<RecipeListInfiniteScrollPagination> {
   @override
   Widget build(BuildContext context) => RefreshIndicator(
         onRefresh: () => Future.sync(
           () => _pagingController.refresh(),
         ),
-        child: PagedGridView(
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 250,
-              mainAxisExtent: 375,
-              mainAxisSpacing: 18,
-              childAspectRatio: 1),
+        child: PagedMasonryGridView.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
           builderDelegate: PagedChildBuilderDelegate<RecipeModel>(
             itemBuilder: (context, recipe, index) => RecipeDisplayCard(
               recipe: recipe,
@@ -44,23 +42,23 @@ class _RecipeListInfiniteScrollPaginationState
         ),
       );
 
-  final _pagingController = PagingController<int, RecipeModel>(
+  final _pagingController = PagingController<num, RecipeModel>(
     firstPageKey: 0,
   );
 
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) async {
-      await _fetchPage(pageKey);
+      await _fetchPage(pageKey.toInt());
     });
     super.initState();
   }
 
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(num pageKey) async {
     try {
       print('fetching new page');
       final newPage = await widget.getArticleListPage(
-        pageKey,
+        pageKey.toInt(),
         8,
       );
 
@@ -76,11 +74,11 @@ class _RecipeListInfiniteScrollPaginationState
         _pagingController.appendLastPage(newItems);
       } else {
         final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(newItems, nextPageKey);
+        _pagingController.appendPage(newItems, nextPageKey.toInt());
       }
-    } catch (error) {
+    } catch (error, stackTrack) {
       // 4
-      print('infinite scroll error $error');
+      debugPrint('infinite scroll error $error /n \n $stackTrack');
       _pagingController.error = error;
     }
   }

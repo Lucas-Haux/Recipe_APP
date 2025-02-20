@@ -206,7 +206,7 @@ class _BarChart extends StatelessWidget {
           x: index,
           barRods: [
             BarChartRodData(
-              toY: nutrition.percentage!,
+              toY: nutrition.percentage!.toDouble(),
               gradient: _barsGradient,
             ),
           ],

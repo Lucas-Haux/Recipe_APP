@@ -14,8 +14,8 @@ class SearchResultsViewModel extends _$SearchResultsViewModel {
   FutureOr<void> build() {}
 
   Future<List<RecipeModel>> getArticleListPage(
-    int pageNumber,
-    int size,
+    num pageNumber,
+    num size,
   ) {
     try {
       SearchParameters searchParamaters =
@@ -29,10 +29,5 @@ class SearchResultsViewModel extends _$SearchResultsViewModel {
     } catch (e) {
       throw 'failed get article list page search thing $e';
     }
-  }
-
-  int? getTotalRecipeResults() {
-    return 420;
-    // return ref.read(recipeDataRepositoryProvider).totalRecipeResults;
   }
 }

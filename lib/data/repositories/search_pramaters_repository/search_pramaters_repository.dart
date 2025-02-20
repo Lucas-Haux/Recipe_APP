@@ -7,7 +7,7 @@ import '../../../domain/models/search_parameters_model.dart';
 
 part 'search_pramaters_repository.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: false)
 AbstractSearchParamatersRepository searchParametersRepository(Ref ref) =>
     LocalSearchParametersRepository();
 

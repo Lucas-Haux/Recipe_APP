@@ -45,7 +45,7 @@ const RecipeModelSchema = CollectionSchema(
     r'healthScore': PropertySchema(
       id: 5,
       name: r'healthScore',
-      type: IsarType.long,
+      type: IsarType.double,
     ),
     r'imageUrl': PropertySchema(
       id: 6,
@@ -264,7 +264,7 @@ void _recipeModelSerialize(
   writer.writeStringList(offsets[2], object.diets);
   writer.writeStringList(offsets[3], object.dishTypes);
   writer.writeString(offsets[4], object.fat);
-  writer.writeLong(offsets[5], object.healthScore);
+  writer.writeDouble(offsets[5], object.healthScore);
   writer.writeString(offsets[6], object.imageUrl);
   writer.writeStringList(offsets[7], object.ingredients);
   writer.writeObjectList<InstructionModel>(
@@ -313,7 +313,7 @@ RecipeModel _recipeModelDeserialize(
     diets: reader.readStringList(offsets[2]) ?? [],
     dishTypes: reader.readStringList(offsets[3]) ?? [],
     fat: reader.readString(offsets[4]),
-    healthScore: reader.readLong(offsets[5]),
+    healthScore: reader.readDouble(offsets[5]),
     imageUrl: reader.readString(offsets[6]),
     ingredients: reader.readStringList(offsets[7]) ?? [],
     instructions: reader.readObjectList<InstructionModel>(
@@ -372,7 +372,7 @@ P _recipeModelDeserializeProp<P>(
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
@@ -1466,49 +1466,58 @@ extension RecipeModelQueryFilter
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      healthScoreEqualTo(int value) {
+      healthScoreEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'healthScore',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
       healthScoreGreaterThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'healthScore',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
       healthScoreLessThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'healthScore',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
       healthScoreBetween(
-    int lower,
-    int upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1517,6 +1526,7 @@ extension RecipeModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
@@ -4050,7 +4060,7 @@ extension RecipeModelQueryProperty
     });
   }
 
-  QueryBuilder<RecipeModel, int, QQueryOperations> healthScoreProperty() {
+  QueryBuilder<RecipeModel, double, QQueryOperations> healthScoreProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'healthScore');
     });

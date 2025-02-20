@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:recipe_box/domain/models/search_parameters_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,7 +14,7 @@ import 'abstract_recipe_data_repository.dart';
 
 part 'recipe_data_repository.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: false)
 AbstractRecipeDataRepository recipeDataRepository(Ref ref) =>
     LocalRecipeDataRepository();
 
@@ -39,10 +40,13 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
   @override
   Future<RecipeModel> getSingleRecipe(int recipeListIndex) async {
     try {
+      print('ran this');
       final isar = await recipeDataBase;
+      print('got box');
 
-      final RecipeModel? recipe = await isar.recipeModels.get(recipeListIndex);
-      return recipe!;
+      final recipes = await isar.recipeModels.where().findAll();
+
+      return recipes[recipeListIndex];
     } catch (e) {
       throw RecipeException('Failed to get single recipe', e);
     }
@@ -50,14 +54,14 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
 
   @override
   Future<List<RecipeModel>> searchForRecipes(
-    int pageNumber,
-    int size,
+    num pageNumber,
+    num size,
     SearchParameters searchParamaters,
   ) async {
     try {
       final isar = await recipeDataBase;
 
-      final int offset = pageNumber * size;
+      final num offset = pageNumber.toDouble() * size;
 
       //Get Api Response
       final response = await RecipeSearchService()
@@ -74,8 +78,10 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
         isar.recipeModels.putAll(recipes);
       });
       return recipes;
-    } catch (e) {
-      throw RecipeException('Error searching for recipe:', e);
+    } catch (e, stackTrace) {
+      debugPrint('$stackTrace');
+      throw e;
+      // throw RecipeException('Error searching for recipe: ', e, stackTrace);
     }
   }
 
@@ -138,6 +144,17 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
       return Future.value(Isar.getInstance());
     } catch (e) {
       throw 'fail to open DB $e';
+    }
+  }
+
+  @override
+  Future<void> clearDB() async {
+    try {
+      final isar = await recipeDataBase;
+      await isar.writeTxn(() => isar.clear());
+      await openDB();
+    } catch (e) {
+      throw 'failed to clearDB: $e';
     }
   }
 }

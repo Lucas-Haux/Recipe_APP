@@ -107,7 +107,7 @@ class _MicInfoCard extends StatelessWidget {
   final int time;
   final List<String> ingredients;
   final int weightWatcher;
-  final int healthScore;
+  final double healthScore;
   final List<NutritionModel> nutrients;
   const _MicInfoCard({
     required this.cardWidth,

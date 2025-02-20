@@ -5,18 +5,22 @@ import 'dart:async';
 class RecipeException implements Exception {
   final String message;
   final dynamic error;
+  final dynamic stackTrace;
 
-  RecipeException(this.message, [this.error]);
+  RecipeException(this.message, [this.error, this.stackTrace]);
 
   @override
-  String toString() =>
-      'RecipeException: $message${error != null ? ' ($error)' : ''}';
+  String toString() {
+    return 'RecipeException: $message'
+        '${error != null ? ' (Error: $error)' : ''}'
+        '${stackTrace != null ? '\nStackTrace: $stackTrace' : ''}';
+  }
 }
 
 abstract class AbstractRecipeDataRepository {
   Future<List<RecipeModel>> searchForRecipes(
-    int pageNumber,
-    int size,
+    num pageNumber,
+    num size,
     SearchParameters searchParamaters,
   );
 
@@ -27,4 +31,6 @@ abstract class AbstractRecipeDataRepository {
   Future<void> replaceRecipeData(int recipeListIndex);
 
   Future<void> addSimilarRecipesToRecipe(int recipeListIndex);
+
+  Future<void> clearDB();
 }

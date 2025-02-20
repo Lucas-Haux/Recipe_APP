@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe_box/data/repositories/recipe_data_repository/recipe_data_repository.dart';
 import 'package:recipe_box/data/repositories/search_pramaters_repository/search_pramaters_repository.dart';
 
 import 'package:recipe_box/domain/models/search_parameters_model.dart';
@@ -12,6 +13,10 @@ class SearchViewModel extends _$SearchViewModel {
   SearchParameters build() {
     print('ran build');
     return ref.watch(searchParametersRepositoryProvider).getSearchParameters();
+  }
+
+  void clearDB() {
+    ref.read(recipeDataRepositoryProvider).clearDB();
   }
 
   void updateSearchParameters(Map<String, dynamic> updates) {

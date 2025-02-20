@@ -10,12 +10,15 @@ part 'recipe_viewmodel.g.dart';
 class RecipeViewmodel extends _$RecipeViewmodel {
   @override
   FutureOr<RecipeModel> build(int recipeListIndex) async {
-    print('viewmodel as recipeListIndex: $recipeListIndex');
-    print('worked');
-
-    return await ref
-        .watch(recipeDataRepositoryProvider)
-        .getSingleRecipe(recipeListIndex);
+    try {
+      print('ran build()');
+      final recipe = await ref
+          .watch(recipeDataRepositoryProvider)
+          .getSingleRecipe(recipeListIndex);
+      return recipe;
+    } catch (e) {
+      throw e;
+    }
   }
 
   // Used for similar recipes

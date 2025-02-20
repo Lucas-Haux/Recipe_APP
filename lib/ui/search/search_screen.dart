@@ -30,6 +30,7 @@ class SearchScreen extends ConsumerWidget {
       floatingActionButton: _FloatingActionButtons(
         textEditingController: searchController,
         updateQuery: searchViewModel.updateSearchParameters,
+        clearDB: ref.watch(searchViewModelProvider.notifier).clearDB,
       ),
       body: CustomScrollView(
         slivers: <Widget>[
@@ -82,6 +83,7 @@ class SearchScreen extends ConsumerWidget {
                   givenEnums: searchParameters.cuisines,
                   updateState: searchViewModel.updateSearchParameters,
                 ),
+
                 // Diets
                 ExpandableChipsCard(
                   chipMode: ChipMode.orAnd,
@@ -89,12 +91,15 @@ class SearchScreen extends ConsumerWidget {
                   givenEnums: searchParameters.diets,
                   updateState: searchViewModel.updateSearchParameters,
                 ),
+
+                // Intolerances
                 ExpandableChipsCard(
                   chipMode: ChipMode.and,
                   title: 'Intolerances',
                   givenEnums: searchParameters.intolerances,
                   updateState: searchViewModel.updateSearchParameters,
                 ),
+
                 // Ingredients
                 IngredientsInputCard(
                   onChanged: (String test) {
@@ -102,6 +107,7 @@ class SearchScreen extends ConsumerWidget {
                   },
                   titleTextStyle: titleTextStyle,
                 ),
+
                 // Max Ready Time
                 MaxReadyTimeSlider(
                   givenPrimarySliderValue: searchParameters.maxTime,
@@ -165,10 +171,11 @@ class SearchScreen extends ConsumerWidget {
 
 class _FloatingActionButtons extends StatelessWidget {
   final Function(Map<String, dynamic>) updateQuery;
-
+  final Function clearDB;
   final TextEditingController textEditingController;
   const _FloatingActionButtons({
     required this.updateQuery,
+    required this.clearDB,
     required this.textEditingController,
   });
   @override
@@ -197,6 +204,7 @@ class _FloatingActionButtons extends StatelessWidget {
             heroTag: 'SearchButton',
             onPressed: () {
               FocusManager.instance.primaryFocus?.unfocus(); // remove keyboard
+              clearDB(); // removes all the present data on the database
               updateQuery({'query': textEditingController.text});
 
               // searchForRecipes();

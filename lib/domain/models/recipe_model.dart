@@ -45,7 +45,7 @@ class RecipeModel {
 
   final String fat;
 
-  final int healthScore;
+  final double healthScore;
 
   final int weightWatcher;
 
@@ -94,7 +94,8 @@ class RecipeModel {
       sourceUrl: jsonData['sourceUrl'],
       time: jsonData['readyInMinutes'],
       servings: jsonData['servings'],
-      pricePerServing: jsonData['pricePerServing'] / 100,
+      // TODO divide by 100
+      pricePerServing: jsonData['pricePerServing'],
       popular: jsonData['veryPopular'],
       vegan: jsonData['vegan'],
       vegetarian: jsonData['vegetarian'],
@@ -137,7 +138,7 @@ class RecipeModel {
     String? calories,
     String? protein,
     String? fat,
-    int? healthScore,
+    double? healthScore,
     int? weightWatcher,
     String? summary,
     String? instructionsParagraph,
