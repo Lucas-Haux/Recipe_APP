@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_box/domain/enums.dart';
 import 'package:recipe_box/domain/models/search_parameters_model.dart';
@@ -20,17 +21,16 @@ abstract class AbstractSearchParamatersRepository {
     String? query,
     AndOrType? dietAndOr,
     double? maxTime,
-    double? maxCalories,
-    double? minCalories,
-    double? maxServings,
-    double? minServings,
-    double? maxProtein,
-    double? minProtein,
-    double? maxFat,
-    double? minFat,
+    RangeValues? calories,
+    RangeValues? servings,
+    RangeValues? protein,
+    RangeValues? fat,
+    Map<MealType, AndOrType>? meals,
     Map<CuisineType, RequireExclude>? cuisines,
     Map<DietType, AndOrType>? diets,
+    Map<EquipmentType, AndOrType>? equipment,
     Map<IntoleranceType, RequireExclude>? intolerances,
+    Map<String, RequireExclude>? ingredients,
   });
 
   resetToDefaults();

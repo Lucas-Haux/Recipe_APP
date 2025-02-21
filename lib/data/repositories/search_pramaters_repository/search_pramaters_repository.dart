@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_box/data/repositories/search_pramaters_repository/abstract_search_pramaters_repository.dart';
 import 'package:recipe_box/domain/enums.dart';
@@ -27,20 +28,20 @@ class LocalSearchParametersRepository
     String? query,
     AndOrType? dietAndOr,
     double? maxTime,
-    double? maxCalories,
-    double? minCalories,
-    double? maxServings,
-    double? minServings,
-    double? maxProtein,
-    double? minProtein,
-    double? maxFat,
-    double? minFat,
-    Map<DietType, AndOrType>? diets,
+    RangeValues? calories,
+    RangeValues? servings,
+    RangeValues? protein,
+    RangeValues? fat,
+    Map<MealType, AndOrType>? meals,
     Map<CuisineType, RequireExclude>? cuisines,
+    Map<DietType, AndOrType>? diets,
+    Map<EquipmentType, AndOrType>? equipment,
     Map<IntoleranceType, RequireExclude>? intolerances,
+    Map<String, RequireExclude>? ingredients,
   }) {
     try {
       dynamic newMap;
+      // TODO remove the amount of if statements
 
       if (cuisines != null) {
         // copy
@@ -49,7 +50,6 @@ class LocalSearchParametersRepository
         newMap.update(cuisines.keys.first,
             (existingValue) => cuisines[cuisines.keys.first]!);
       } else if (diets != null) {
-        print('!!!!!!!!!!!!!! Diets is not null in repo');
         // copy
         newMap = searchParameters!.diets;
         newMap.update(
@@ -58,29 +58,42 @@ class LocalSearchParametersRepository
         newMap = searchParameters!.intolerances;
         newMap.update(intolerances.keys.first,
             (existingValue) => intolerances[intolerances.keys.first]!);
+      } else if (meals != null) {
+        newMap = searchParameters!.meals;
+        newMap.update(
+            meals.keys.first, (existingValue) => meals[meals.keys.first]!);
+      } else if (equipment != null) {
+        newMap = searchParameters!.equipment;
+        newMap.update(equipment.keys.first,
+            (existingValue) => equipment[equipment.keys.first]!);
       }
 
       searchParameters = searchParameters!.copyWith(
         query: query ?? searchParameters!.query,
         maxTime: maxTime ?? searchParameters!.maxTime,
-        maxCalories: maxCalories ?? searchParameters!.maxCalories,
-        minCalories: minCalories ?? searchParameters!.minCalories,
-        maxServings: maxServings ?? searchParameters!.maxServings,
-        minServings: minServings ?? searchParameters!.minServings,
-        maxProtein: maxProtein ?? searchParameters!.maxProtein,
-        minProtein: minProtein ?? searchParameters!.minProtein,
-        maxFat: maxFat ?? searchParameters!.maxFat,
-        minFat: minFat ?? searchParameters!.minFat,
+        calories: calories ?? searchParameters!.calories,
+        servings: servings ?? searchParameters!.servings,
+        protein: protein ?? searchParameters!.protein,
+        fat: fat ?? searchParameters!.fat,
+        meals: meals != null
+            ? (newMap ?? searchParameters!.meals)
+            : searchParameters!.meals,
         cuisines: cuisines != null
             ? (newMap ?? searchParameters!.cuisines)
             : searchParameters!.cuisines,
         diets: diets != null
             ? (newMap ?? searchParameters!.diets)
             : searchParameters!.diets,
+        equipment: equipment != null
+            ? (newMap ?? searchParameters!.equipment)
+            : searchParameters!.equipment,
         intolerances: intolerances != null
             ? (newMap ?? searchParameters!.intolerances)
             : searchParameters!.intolerances,
+        ingredients: ingredients,
       );
+      print('!!!!!!!!!!!!');
+      print(searchParameters!.ingredients);
     } catch (e) {
       throw e;
     }

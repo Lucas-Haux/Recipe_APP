@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_box/data/repositories/recipe_data_repository/recipe_data_repository.dart';
 import 'package:recipe_box/data/repositories/search_pramaters_repository/search_pramaters_repository.dart';
+import 'package:recipe_box/domain/enums.dart';
 
 import 'package:recipe_box/domain/models/search_parameters_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,35 +20,77 @@ class SearchViewModel extends _$SearchViewModel {
     ref.read(recipeDataRepositoryProvider).clearDB();
   }
 
-  void updateSearchParameters(Map<String, dynamic> updates) {
+  void updateSearchParameters(Map<String, dynamic> newParameter) {
     try {
       print('view model update rna');
 
-      print('nah ${updates.keys.first}');
+      print('nah ${newParameter.keys.first}');
       ref.watch(searchParametersRepositoryProvider).updateState(
-            query: updates['query'],
-            dietAndOr: updates['dietAndOr'],
-            maxTime: updates['maxTime'],
-            maxCalories: updates['maxCalories'],
-            minCalories: updates['minCalories'],
-            maxServings: updates['maxServings'],
-            minServings: updates['minServings'],
-            maxProtein: updates['maxProtein'],
-            minProtein: updates['minProtein'],
-            maxFat: updates['maxFat'],
-            minFat: updates['minFat'],
-            cuisines: updates['Cuisines'],
-            diets: updates['Diets'],
-            intolerances: updates['Intolerances'],
+            query: newParameter['query'],
+            dietAndOr: newParameter['dietAndOr'],
+            maxTime: newParameter['maxTime'],
+            calories: newParameter['calories'],
+            servings: newParameter['servings'],
+            protein: newParameter['protein'],
+            fat: newParameter['fat'],
+            meals: newParameter['Meal Type'],
+            cuisines: newParameter['Cuisines'],
+            diets: newParameter['Diets'],
+            equipment: newParameter['Equipment'],
+            ingredients: newParameter['Ingredients'],
+            intolerances: newParameter['Intolerances'],
           );
       state =
           ref.watch(searchParametersRepositoryProvider).getSearchParameters();
+      print('viewmodel ingredients: ${state.ingredients}');
     } catch (e) {
       throw e;
     }
   }
 
-  Future<void> searchForRecipes() async {
-    throw UnimplementedError();
+  void addIngredient() {
+    Map<String, RequireExclude> newEntries = {'': RequireExclude.require};
+
+    Map<String, RequireExclude> ingredients = state.ingredients!;
+    ingredients.addEntries(newEntries.entries);
+
+    updateSearchParameters({'Ingredients': ingredients});
+  }
+
+  void updateIngredientName(
+    String oldName,
+    String newName,
+    RequireExclude value,
+  ) {
+    Map<String, RequireExclude> ingredients = state.ingredients!;
+    final updatedIngredients = <String, RequireExclude>{};
+
+    ingredients.forEach((key, value) {
+      if (key != oldName) {
+        // add the entry without changes
+        updatedIngredients[key] = value;
+      } else if (key == oldName) {
+        // add the entry with the new name
+        updatedIngredients[newName] = value;
+      }
+    });
+
+    updateSearchParameters({'Ingredients': updatedIngredients});
+  }
+
+  void updateIngredientValue(String name, RequireExclude newValue) {
+    Map<String, RequireExclude> ingredients = state.ingredients!;
+    ingredients.update(name, (value) => newValue);
+
+    print('updated value: ${state.ingredients}');
+
+    updateSearchParameters({'Ingredients': ingredients});
+  }
+
+  void removeIngredient(String name) {
+    Map<String, RequireExclude> ingredients = state.ingredients!;
+    ingredients.remove(name);
+
+    updateSearchParameters({'Ingredients': ingredients});
   }
 }

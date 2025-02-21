@@ -1,77 +1,83 @@
+import 'package:flutter/material.dart';
 import 'package:recipe_box/domain/enums.dart';
 
 class SearchParameters {
   final String query;
+  Map<MealType, AndOrType> meals;
   Map<CuisineType, RequireExclude> cuisines;
   Map<DietType, AndOrType> diets;
+  Map<EquipmentType, AndOrType> equipment;
   Map<IntoleranceType, RequireExclude> intolerances;
+  Map<String, RequireExclude> ingredients;
   final double maxTime;
-  final double maxCalories;
-  final double minCalories;
-  final double maxServings;
-  final double minServings;
-  final double maxProtein;
-  final double minProtein;
-  final double maxFat;
-  final double minFat;
+  final RangeValues calories;
+  final RangeValues servings;
+  final RangeValues protein;
+  final RangeValues fat;
 
   SearchParameters({
     this.query = '',
+    Map<MealType, AndOrType>? meals,
     Map<CuisineType, RequireExclude>? cuisines,
     Map<DietType, AndOrType>? diets,
+    Map<EquipmentType, AndOrType>? equipment,
     Map<IntoleranceType, RequireExclude>? intolerances,
+    Map<String, RequireExclude>? ingredients,
     this.maxTime = 720,
-    this.maxCalories = 1000,
-    this.minCalories = 0,
-    this.maxServings = 100,
-    this.minServings = 0,
-    this.maxProtein = 100,
-    this.minProtein = 0,
-    this.maxFat = 100,
-    this.minFat = 0,
+    this.calories = const RangeValues(0, 1000),
+    this.servings = const RangeValues(0, 100),
+    this.protein = const RangeValues(0, 100),
+    this.fat = const RangeValues(0, 100),
   })  : cuisines = cuisines ??
             Map.fromIterable(
               CuisineType.values,
               value: (_) => RequireExclude.unspecified,
+            ),
+        meals = meals ??
+            Map.fromIterable(
+              MealType.values,
+              value: (_) => AndOrType.unspecified,
             ),
         diets = diets ??
             Map.fromIterable(
               DietType.values,
               value: (_) => AndOrType.unspecified,
             ),
+        equipment = equipment ??
+            Map.fromIterable(EquipmentType.values,
+                value: (_) => AndOrType.unspecified),
+        ingredients = ingredients ?? {'': RequireExclude.exclude},
         intolerances = intolerances ??
             Map.fromIterable(IntoleranceType.values,
                 value: (_) => RequireExclude.unspecified);
 
   SearchParameters copyWith({
     String? query,
+    Map<MealType, AndOrType>? meals,
     Map<CuisineType, RequireExclude>? cuisines,
     Map<DietType, AndOrType>? diets,
+    Map<EquipmentType, AndOrType>? equipment,
     Map<IntoleranceType, RequireExclude>? intolerances,
+    Map<String, RequireExclude>? ingredients,
     double? maxTime,
-    double? maxCalories,
-    double? minCalories,
-    double? maxServings,
-    double? minServings,
-    double? maxProtein,
-    double? minProtein,
-    double? maxFat,
-    double? minFat,
+    RangeValues? calories,
+    RangeValues? servings,
+    RangeValues? protein,
+    RangeValues? fat,
   }) {
     return SearchParameters(
       query: query ?? this.query,
+      meals: meals ?? this.meals,
       cuisines: cuisines ?? this.cuisines,
       diets: diets ?? this.diets,
+      equipment: equipment ?? this.equipment,
       intolerances: intolerances ?? this.intolerances,
+      ingredients: ingredients ?? this.ingredients,
       maxTime: maxTime ?? this.maxTime,
-      maxCalories: maxCalories ?? this.maxCalories,
-      minCalories: minCalories ?? this.minCalories,
-      maxServings: maxServings ?? this.maxServings,
-      minServings: minServings ?? this.minServings,
-      maxProtein: maxProtein ?? this.maxProtein,
-      minProtein: minProtein ?? this.minProtein,
-      maxFat: maxFat ?? this.maxFat,
-      minFat: minFat ?? this.minProtein,
+      calories: calories ?? this.calories,
+      servings: servings ?? this.servings,
+      protein: protein ?? this.protein,
+      fat: fat ?? this.fat,
     );
   }
 }

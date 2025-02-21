@@ -1,11 +1,8 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:recipe_box/data/repositories/search_pramaters_repository/search_pramaters_repository.dart';
 import 'package:recipe_box/domain/enums.dart';
 import 'package:recipe_box/domain/models/search_parameters_model.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class RecipeSearchService {
   RecipeSearchService();
@@ -19,6 +16,11 @@ class RecipeSearchService {
 
       final query = searchPramatersRepository.query;
       // For every cuisines in the map that is set to require add the cuisine display name to the string
+      String mealTypes = searchPramatersRepository.meals.keys
+          .where((key) => searchPramatersRepository.meals[key] == AndOrType.or)
+          .map((meals) => meals.displayName)
+          .join(',');
+
       String includedcuisines = searchPramatersRepository.cuisines.keys
           .where((key) =>
               searchPramatersRepository.cuisines[key] == RequireExclude.require)
@@ -34,6 +36,12 @@ class RecipeSearchService {
           .where((value) => value != AndOrType.unspecified)
           .cast<AndOrType?>()
           .firstWhere((_) => true, orElse: () => null);
+
+      String equipment = searchPramatersRepository.equipment.keys
+          .where(
+              (key) => searchPramatersRepository.equipment[key] == AndOrType.or)
+          .map((equipments) => equipments.displayName)
+          .join(',');
 
       String requiredDiets = '';
 
@@ -55,6 +63,17 @@ class RecipeSearchService {
             .map((diets) => diets.displayName)
             .join(diestValueString!);
       }
+      String includeIngredients = searchPramatersRepository.ingredients.keys
+          .where((key) =>
+              searchPramatersRepository.ingredients[key] ==
+              RequireExclude.require)
+          .join(',');
+
+      String excludeIngredients = searchPramatersRepository.ingredients.keys
+          .where((key) =>
+              searchPramatersRepository.ingredients[key] ==
+              RequireExclude.exclude)
+          .join(',');
 
       String intolerances = searchPramatersRepository.intolerances.keys
           .where((key) =>
@@ -66,20 +85,25 @@ class RecipeSearchService {
       // Combine all the parameters
       String queryParameters = 'query=${Uri.encodeComponent(query.trim())}&'
           'apiKey=$appKey&'
+          'type=$mealTypes&'
           // TODO this doenst acutally require all the cuisines, it requires the recipe to have one of the list. Need to change the UI and Enums to say include instead of required
+
           'cuisine=$includedcuisines&'
           'excludeCuisine=$excludedCuisines&'
           'diet=$requiredDiets&'
           'intolerances=$intolerances&'
+          'equipment=$equipment&'
           'maxReadyTime=${searchPramatersRepository.maxTime.toInt()}&'
-          'maxServings=${searchPramatersRepository.maxServings.toInt()}&'
-          'minServings=${searchPramatersRepository.minServings.toInt()}&'
-          'maxCalories=${searchPramatersRepository.maxCalories.toInt()}&'
-          'minCalories=${searchPramatersRepository.minCalories.toInt()}&'
-          'maxProtein=${searchPramatersRepository.maxProtein.toInt()}&'
-          'minProtein=${searchPramatersRepository.minProtein.toInt()}&'
-          'maxFat=${searchPramatersRepository.maxFat.toInt()}&'
-          'minFat=${searchPramatersRepository.minFat.toInt()}&'
+          'maxServings=${searchPramatersRepository.servings.end.toInt()}&'
+          'minServings=${searchPramatersRepository.servings.start.toInt()}&'
+          'maxCalories=${searchPramatersRepository.calories.end.toInt()}&'
+          'minCalories=${searchPramatersRepository.calories.start.toInt()}&'
+          'maxProtein=${searchPramatersRepository.protein.end.toInt()}&'
+          'minProtein=${searchPramatersRepository.protein.start.toInt()}&'
+          'maxFat=${searchPramatersRepository.fat.end.toInt()}&'
+          'minFat=${searchPramatersRepository.fat.start.toInt()}&'
+          'includeIngredients=$includeIngredients&'
+          'excludeIngredients=$excludeIngredients&'
           'fillIngredients=true&'
           'addRecipeInformation=true&'
           'addRecipeInstructions=true&'

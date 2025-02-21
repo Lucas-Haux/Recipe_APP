@@ -35,15 +35,16 @@ class ExpandableChipsState<RecipeParameter extends DisplayableEnum,
 
     TextStyle titleTextStyle = const TextStyle(fontSize: 25);
 
-    ButtonStyle segmentedButtonStyle = ButtonStyle(backgroundColor:
-        WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
-      if (states.contains(WidgetState.selected)) {
-        return Theme.of(context)
-            .colorScheme
-            .primaryContainer; // Color when button is pressed
-      }
-      return Theme.of(context).colorScheme.onSecondary; // Default color
-    }));
+    ButtonStyle segmentedButtonStyle = ButtonStyle(
+      backgroundColor: WidgetStateProperty.resolveWith<Color>(
+        (Set<WidgetState> states) {
+          if (states.contains(WidgetState.selected)) {
+            return Theme.of(context).colorScheme.primaryContainer;
+          }
+          return Theme.of(context).colorScheme.onSecondary; // Default color
+        },
+      ),
+    );
 
     // Change button Text color based on value
     Color getTextColor(RecipeParameter value) {
@@ -174,6 +175,7 @@ class ExpandableChipsState<RecipeParameter extends DisplayableEnum,
                     showCheckmark: false,
                     selected: false, //
                     onSelected: (bool selected) {
+                      // TODO remove the amount of if statements
                       // if requireExclude
                       final dataBaseValue = widget.givenEnums[value];
                       if (widget.chipMode == ChipMode.requireExclude) {
@@ -208,6 +210,17 @@ class ExpandableChipsState<RecipeParameter extends DisplayableEnum,
                         } else {
                           widget.updateState({
                             widget.title: {value: RequireExclude.unspecified}
+                          });
+                        }
+                      }
+                      if (widget.chipMode == ChipMode.or) {
+                        if (dataBaseValue == AndOrType.unspecified) {
+                          widget.updateState({
+                            widget.title: {value: AndOrType.or}
+                          });
+                        } else {
+                          widget.updateState({
+                            widget.title: {value: AndOrType.unspecified}
                           });
                         }
                       }

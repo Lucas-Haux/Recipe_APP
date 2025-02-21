@@ -35,24 +35,27 @@ class MaxReadyTimeState extends State<MaxReadyTimeSlider> {
         ),
       ),
       margin: const EdgeInsets.all(10),
-      child: Column(
-        children: <Widget>[
-          Text(widget.primaryTitle, style: widget.titleTextStyle),
-          Slider(
-            value: _primarySliderValue,
-            min: 30,
-            max: 720,
-            divisions: 360,
-            label: minutesToHourMin(_primarySliderValue.round()),
-            onChanged: (double value) {
-              setState(() {
-                double remainder = value.round() % 30;
-                _primarySliderValue = value.round() - remainder;
-                widget.setValue({'maxTime': _primarySliderValue});
-              });
-            },
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            Text(widget.primaryTitle, style: widget.titleTextStyle),
+            Slider(
+              value: _primarySliderValue,
+              min: 30,
+              max: 720,
+              divisions: 360,
+              label: minutesToHourMin(_primarySliderValue.round()),
+              onChanged: (double value) {
+                setState(() {
+                  double remainder = value.round() % 30;
+                  _primarySliderValue = value.round() - remainder;
+                  widget.setValue({'maxTime': _primarySliderValue});
+                });
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -121,45 +124,38 @@ class _MinMaxSlidersState extends State<MinMaxSliders> {
         ),
       ),
       margin: const EdgeInsets.all(10),
-      child: Column(
-        children: <Widget>[
-          Text(widget.title, style: widget.titleTextStyle),
-          const Divider(),
-
-          // Min
-          Text('Minimum', style: secondaryTitleStyle),
-          Slider(
-            value: _minSliderValue,
-            min: widget.sliderMinimum,
-            max: widget.sliderMaximum,
-            divisions: 100,
-            secondaryTrackValue: _maxSliderValue,
-            label: _minSliderValue.round().toString(),
-            onChanged: (double newValue) {
-              setState(() {
-                widget.updateState({'min${widget.title}': newValue});
-                _minSliderValue = newValue.round().toDouble();
-              });
-            },
-          ),
-
-          // Max
-          Text('Maximum', style: secondaryTitleStyle),
-          Slider(
-            value: _maxSliderValue,
-            min: widget.sliderMinimum,
-            max: widget.sliderMaximum,
-            divisions: 100,
-            secondaryTrackValue: _minSliderValue,
-            label: _maxSliderValue.round().toString(),
-            onChanged: (double newValue) {
-              setState(() {
-                _maxSliderValue = newValue.round().toDouble();
-                widget.updateState({'max${widget.title}': newValue});
-              });
-            },
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            Text(widget.title, style: widget.titleTextStyle),
+            const Divider(),
+            SliderTheme(
+              data: SliderThemeData(
+                valueIndicatorColor: Theme.of(context).colorScheme.primary,
+                rangeValueIndicatorShape:
+                    PaddleRangeSliderValueIndicatorShape(),
+              ),
+              child: RangeSlider(
+                values: RangeValues(_minSliderValue, _maxSliderValue),
+                onChanged: (RangeValues newValue) {
+                  setState(() {
+                    widget.updateState({widget.title: newValue});
+                    _maxSliderValue = newValue.end.round().toDouble();
+                    _minSliderValue = newValue.start.round().toDouble();
+                  });
+                },
+                min: widget.sliderMinimum,
+                max: widget.sliderMaximum,
+                divisions: 100,
+                labels: RangeLabels(
+                  _minSliderValue.round().toString(),
+                  _maxSliderValue.round().toString(),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

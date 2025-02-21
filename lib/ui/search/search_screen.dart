@@ -26,6 +26,8 @@ class SearchScreen extends ConsumerWidget {
     final SearchParameters searchParameters =
         ref.watch(searchViewModelProvider);
 
+    print('%%%%%%%%%%%%%%%%%%%%%SCREEN REBUIlD%%%%%%%%%%%%%%%%%%%%%%');
+
     return Scaffold(
       floatingActionButton: _FloatingActionButtons(
         textEditingController: searchController,
@@ -74,8 +76,18 @@ class SearchScreen extends ConsumerWidget {
             hasScrollBody: false,
             key: const Key('SearchParameters'),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 15),
+
+                // Meal Type
+                ExpandableChipsCard(
+                  chipMode: ChipMode.or,
+                  title: 'Meal Type',
+                  givenEnums: searchParameters.meals,
+                  updateState: searchViewModel.updateSearchParameters,
+                ),
+
                 // Cuisines
                 ExpandableChipsCard(
                   chipMode: ChipMode.requireExclude,
@@ -92,6 +104,14 @@ class SearchScreen extends ConsumerWidget {
                   updateState: searchViewModel.updateSearchParameters,
                 ),
 
+                // Equipment
+                ExpandableChipsCard(
+                  chipMode: ChipMode.or,
+                  title: 'Equipment',
+                  givenEnums: searchParameters.equipment,
+                  updateState: searchViewModel.updateSearchParameters,
+                ),
+
                 // Intolerances
                 ExpandableChipsCard(
                   chipMode: ChipMode.and,
@@ -102,9 +122,11 @@ class SearchScreen extends ConsumerWidget {
 
                 // Ingredients
                 IngredientsInputCard(
-                  onChanged: (String test) {
-                    // Your implementation here
-                  },
+                  removeIngredient: searchViewModel.removeIngredient,
+                  updateName: searchViewModel.updateIngredientName,
+                  addIngredient: searchViewModel.addIngredient,
+                  updateValue: searchViewModel.updateIngredientValue,
+                  givenIngredients: searchParameters.ingredients,
                   titleTextStyle: titleTextStyle,
                 ),
 
@@ -119,8 +141,8 @@ class SearchScreen extends ConsumerWidget {
                 // Servings
                 MinMaxSliders(
                   title: 'Servings',
-                  givenMaxValue: searchParameters.maxServings,
-                  givenMinValue: searchParameters.minServings,
+                  givenMaxValue: searchParameters.servings.end,
+                  givenMinValue: searchParameters.servings.start,
                   updateState: searchViewModel.updateSearchParameters,
                   sliderMaximum: 100,
                   sliderMinimum: 0,
@@ -129,9 +151,9 @@ class SearchScreen extends ConsumerWidget {
 
                 // Carbs
                 MinMaxSliders(
-                  title: 'Carbs',
-                  givenMaxValue: searchParameters.maxCalories,
-                  givenMinValue: searchParameters.minCalories,
+                  title: 'Calories',
+                  givenMaxValue: searchParameters.calories.end,
+                  givenMinValue: searchParameters.calories.start,
                   updateState: searchViewModel.updateSearchParameters,
                   sliderMaximum: 1000,
                   sliderMinimum: 0,
@@ -141,8 +163,8 @@ class SearchScreen extends ConsumerWidget {
                 // Protein
                 MinMaxSliders(
                   title: 'Protein',
-                  givenMaxValue: searchParameters.maxProtein,
-                  givenMinValue: searchParameters.minProtein,
+                  givenMaxValue: searchParameters.protein.end,
+                  givenMinValue: searchParameters.protein.start,
                   updateState: searchViewModel.updateSearchParameters,
                   sliderMaximum: 100,
                   sliderMinimum: 0,
@@ -152,8 +174,8 @@ class SearchScreen extends ConsumerWidget {
                 // Fat
                 MinMaxSliders(
                   title: 'Fat',
-                  givenMaxValue: searchParameters.maxFat,
-                  givenMinValue: searchParameters.minFat,
+                  givenMaxValue: searchParameters.fat.end,
+                  givenMinValue: searchParameters.fat.start,
                   updateState: searchViewModel.updateSearchParameters,
                   sliderMaximum: 100,
                   sliderMinimum: 0,
