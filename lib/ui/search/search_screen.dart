@@ -133,7 +133,7 @@ class SearchScreen extends ConsumerWidget {
                 // Max Ready Time
                 MaxReadyTimeSlider(
                   givenPrimarySliderValue: searchParameters.maxTime,
-                  primaryTitle: 'Max Ready Time',
+                  primaryTitle: 'Max Prep & Cook Time',
                   titleTextStyle: titleTextStyle,
                   setValue: searchViewModel.updateSearchParameters,
                 ),
