@@ -167,7 +167,7 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
       final isar = await recipeDataBase;
 
       if (await isar.recipeModels.count() > 0) {
-        await isar.writeTxnSync(() async {
+        await isar.writeTxn(() async {
           await isar.clear();
         });
       }

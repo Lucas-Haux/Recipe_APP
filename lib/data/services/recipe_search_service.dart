@@ -12,7 +12,7 @@ class RecipeSearchService {
     print('ran service ');
 
     try {
-      const String appKey = '096cc91305b04684ab47dfebc84bc59e';
+      const String appKey = '1f9d617ba13041859ea773423b0e6291';
 
       final query = searchPramatersRepository.query;
       // For every cuisines in the map that is set to require add the cuisine display name to the string

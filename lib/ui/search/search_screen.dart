@@ -224,9 +224,9 @@ class _FloatingActionButtons extends StatelessWidget {
           //Search
           FloatingActionButton.extended(
             heroTag: 'SearchButton',
-            onPressed: () {
+            onPressed: () async {
               FocusManager.instance.primaryFocus?.unfocus(); // remove keyboard
-              clearDB(); // removes all the present data on the database
+              await clearDB(); // removes all the present data on the database
               updateQuery({'query': textEditingController.text});
 
               // searchForRecipes();
