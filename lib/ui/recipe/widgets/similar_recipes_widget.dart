@@ -23,72 +23,50 @@ class SimilarRecipesWidget extends StatefulWidget {
 }
 
 class _SimilarRecipesState extends State<SimilarRecipesWidget> {
-  final PageController carouselController =
-      PageController(initialPage: 1, viewportFraction: 1 / 2);
-
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.sizeOf(context).height;
+
     List<SimilarRecipeModel>? similarRecipes = widget.givenSimilarRecipes;
 
-    return SizedBox(
-      width: widget.cardWidth,
-      child: Column(
-        children: [
-          if (similarRecipes == null)
-            DottedBorder(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 75, horizontal: 100),
-              dashPattern: const [6, 10],
-              color: Theme.of(context).colorScheme.outlineVariant,
-              strokeWidth: 2,
-              strokeCap: StrokeCap.round,
-              child: FilledButton(
-                onPressed: () async {
-                  await widget.searchForSimilarRecipes();
-                },
-                child: const Text('Similar Recipes'),
-              ),
-            ),
+    CarouselController carouselController =
+        CarouselController(initialItem: (similarRecipes?.length ?? 2) ~/ 2);
 
-          // Carousel
-          if (similarRecipes != null)
-            ConstrainedBox(
-              constraints:
-                  BoxConstraints(maxHeight: 250, maxWidth: widget.cardWidth),
-              child: ShaderMask(
-                shaderCallback: (Rect bounds) {
-                  return const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black,
-                      Colors.black,
-                      Colors.transparent,
-                    ],
-                    stops: [0.0, 0.1, 0.9, 1],
-                  ).createShader(bounds);
-                },
-                blendMode: BlendMode.dstIn,
-                child: PageView.builder(
-                  controller: carouselController,
-                  pageSnapping: false,
-                  dragStartBehavior: DragStartBehavior.start,
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  allowImplicitScrolling: true,
-                  itemCount: similarRecipes!.length,
-                  itemBuilder: (context, index) {
-                    return _SimilarRecipeCard(
-                      recipe: similarRecipes![index],
-                      cardWidth: widget.cardWidth,
-                    );
-                  },
-                ),
-              ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (similarRecipes == null)
+          DottedBorder(
+            padding: const EdgeInsets.symmetric(vertical: 75, horizontal: 100),
+            dashPattern: const [6, 10],
+            color: Theme.of(context).colorScheme.outlineVariant,
+            strokeWidth: 2,
+            strokeCap: StrokeCap.round,
+            child: FilledButton(
+              onPressed: () async {
+                await widget.searchForSimilarRecipes();
+              },
+              child: const Text('Similar Recipes'),
             ),
-          const SizedBox(height: 10),
-        ],
-      ),
+          ),
+
+        // Carousel
+        if (similarRecipes != null)
+          ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: height / 4.5),
+            child: CarouselView.weighted(
+              controller: carouselController,
+              shrinkExtent: 500,
+              itemSnapping: true,
+              flexWeights: const <int>[2, 3, 2],
+              children: similarRecipes.map((SimilarRecipeModel recipe) {
+                return _SimilarRecipeCard(
+                    recipe: recipe, cardWidth: widget.cardWidth);
+              }).toList(),
+            ),
+          ),
+        const SizedBox(height: 10),
+      ],
     );
   }
 }
@@ -101,24 +79,33 @@ class _SimilarRecipeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: GestureDetector(
-        onTap: () {},
-        child: Card(
-          color: Theme.of(context).colorScheme.onSecondary,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              RecipeImage(
-                imageUrl: recipe.imageUrl!,
-                favoriteButton: false,
-                cardWidth: cardWidth,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(5),
-                child: Text(recipe.title!, textAlign: TextAlign.center),
-              ),
-            ],
+        onTap: () {
+          // TODO
+          throw UnimplementedError("Similar Recipe Card Tap");
+        },
+        child: SizedBox(
+          height: 50,
+          child: Card(
+            color: Theme.of(context).colorScheme.onSecondary,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RecipeImage(
+                  imageUrl: recipe.imageUrl!,
+                  favoriteButton: false,
+                  cardWidth: cardWidth,
+                ),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Text(recipe.title!,
+                      textAlign: TextAlign.center, maxLines: 3),
+                ),
+                Spacer(),
+              ],
+            ),
           ),
         ),
       ),
