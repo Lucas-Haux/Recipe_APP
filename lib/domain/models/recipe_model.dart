@@ -6,7 +6,7 @@ part 'recipe_model.g.dart';
 
 @collection
 class RecipeModel {
-  Id id = Isar.autoIncrement;
+  Id? id = Isar.autoIncrement;
   final int recipeId;
 
   final String title;
@@ -55,7 +55,7 @@ class RecipeModel {
 
   final List<NutritionModel>? nutrients;
 
-  final List<SimilarRecipeModel>? similarRecipes;
+  List<SimilarRecipeModel>? similarRecipes;
 
   RecipeModel({
     required this.recipeId,

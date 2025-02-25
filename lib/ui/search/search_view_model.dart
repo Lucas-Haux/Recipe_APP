@@ -12,7 +12,6 @@ part 'search_view_model.g.dart';
 class SearchViewModel extends _$SearchViewModel {
   @override
   SearchParameters build() {
-    print('ran build');
     return ref.watch(searchParametersRepositoryProvider).getSearchParameters();
   }
 
@@ -81,8 +80,6 @@ class SearchViewModel extends _$SearchViewModel {
   void updateIngredientValue(String name, RequireExclude newValue) {
     Map<String, RequireExclude> ingredients = state.ingredients!;
     ingredients.update(name, (value) => newValue);
-
-    print('updated value: ${state.ingredients}');
 
     updateSearchParameters({'Ingredients': ingredients});
   }

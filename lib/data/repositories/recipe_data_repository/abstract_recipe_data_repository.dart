@@ -28,7 +28,7 @@ abstract class AbstractRecipeDataRepository {
 
   Future<RecipeModel> getSingleRecipe(int recipeListIndex);
 
-  Future<void> replaceRecipeData(int recipeListIndex);
+  Future<void> replaceRecipeDataWithFullData(int recipeListIndex);
 
   Future<void> addSimilarRecipesToRecipe(int recipeListIndex);
 

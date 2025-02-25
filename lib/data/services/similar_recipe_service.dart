@@ -29,10 +29,7 @@ class SimilarRecipeService {
       print('-----------');
 
       if (response.statusCode == 200) {
-        final recipeResponseData = jsonDecode(response.body);
-
-        return recipeResponseData;
-        // Handle the response recipeResponseData
+        return jsonDecode(utf8.decode(response.bodyBytes));
       } else {
         throw 'api response != 200: ${response.reasonPhrase}';
       }

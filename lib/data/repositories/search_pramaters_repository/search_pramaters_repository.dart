@@ -21,7 +21,17 @@ class LocalSearchParametersRepository
   }
 
   @override
-  SearchParameters getSearchParameters() => searchParameters!;
+  SearchParameters getSearchParameters() {
+    try {
+      if (searchParameters == null) {
+        throw "searchParamaters is null";
+      }
+
+      return searchParameters!;
+    } catch (e) {
+      throw "****** Failed to get searchParamaters in searchParamaters repo $e";
+    }
+  }
 
   @override
   void updateState({

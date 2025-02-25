@@ -16,12 +16,16 @@ class SearchResultsViewModel extends _$SearchResultsViewModel {
   Future<List<RecipeModel>> getArticleListPage(
     num pageNumber,
     num size,
-  ) {
+  ) async {
     try {
-      SearchParameters searchParamaters =
-          ref.watch(searchParametersRepositoryProvider).getSearchParameters();
+      print("ran search_results viewmodel");
+      SearchParameters searchParamaters = await ref
+          .watch(searchParametersRepositoryProvider)
+          .getSearchParameters();
 
-      return ref.read(recipeDataRepositoryProvider).searchForRecipes(
+      print("got searchParamaters");
+
+      return await ref.read(recipeDataRepositoryProvider).searchForRecipes(
             pageNumber,
             size,
             searchParamaters,

@@ -11,45 +11,40 @@ class RecipeViewmodel extends _$RecipeViewmodel {
   @override
   FutureOr<RecipeModel> build(int recipeListIndex) async {
     try {
-      print('ran build()');
       final recipe = await ref
           .watch(recipeDataRepositoryProvider)
           .getSingleRecipe(recipeListIndex);
       return recipe;
     } catch (e) {
-      throw e;
+      throw "Failed to build recipe_viewmodel $e";
     }
   }
 
   // Used for similar recipes
   Future<void> searchSimilarRecipes() async {
     try {
-      //state = const AsyncLoading();
+      await ref
+          .watch(recipeDataRepositoryProvider)
+          .addSimilarRecipesToRecipe(recipeListIndex + 1);
 
-      //state = await AsyncValue.guard(() async {
-      //await repository.addSimilarRecipesToRecipe(recipeListIndex);
-      //return repository.getSingleRecipe(recipeListIndex);
-      throw UnimplementedError();
-      //});
-
-      // build(recipeListIndex);
+      state = AsyncValue.data(await ref
+          .watch(recipeDataRepositoryProvider)
+          .getSingleRecipe(recipeListIndex));
     } catch (e) {
       throw '$e';
     }
   }
 
   // Used for Instruction Paragraph view
-  Future<void> getParagraphDataForRecipe() async {
+  Future<void> getMissingDataForRecipe() async {
     try {
-      //state = const AsyncLoading();
+      await ref
+          .watch(recipeDataRepositoryProvider)
+          .replaceRecipeDataWithFullData(recipeListIndex + 1);
 
-      //state = await AsyncValue.guard(() async {
-      //await repository.replaceRecipeData(recipeListIndex);
-      //return repository.getSingleRecipe(recipeListIndex);
-      //});
-
-      throw UnimplementedError();
-      //build(recipeListIndex)
+      state = AsyncValue.data(await ref
+          .watch(recipeDataRepositoryProvider)
+          .getSingleRecipe(recipeListIndex));
     } catch (e) {
       throw '$e';
     }

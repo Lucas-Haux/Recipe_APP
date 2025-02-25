@@ -128,7 +128,7 @@ class RecipeScreen extends ConsumerWidget {
             const Divider(),
 
             InstructionCard(
-              getParagraphDataForRecipe: viewModel.getParagraphDataForRecipe,
+              getParagraphDataForRecipe: viewModel.getMissingDataForRecipe,
               instructions: recipe.instructions,
               cardWidth: cardWidth,
               titleStyle: _titleStyle,
@@ -141,7 +141,7 @@ class RecipeScreen extends ConsumerWidget {
             const Divider(),
 
             SimilarRecipesWidget(
-              id: recipe.id,
+              id: recipe.id!,
               cardWidth: cardWidth,
               givenSimilarRecipes: recipe.similarRecipes,
               searchForSimilarRecipes: viewModel.searchSimilarRecipes,

@@ -59,7 +59,12 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
     SearchParameters searchParamaters,
   ) async {
     try {
+      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+
       final isar = await recipeDataBase;
+      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+
+      print('did this fail?');
 
       final num offset = pageNumber.toDouble() * size;
 
@@ -75,30 +80,32 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
 
       //Add List to DataBase
       await isar.writeTxn(() async {
-        isar.recipeModels.putAll(recipes);
+        await isar.recipeModels.putAll(recipes);
       });
       return recipes;
     } catch (e, stackTrace) {
       debugPrint('$stackTrace');
-      throw e;
-      // throw RecipeException('Error searching for recipe: ', e, stackTrace);
+      throw RecipeException('Error searching for recipe: ', e, stackTrace);
     }
   }
 
   @override
-  Future<void> replaceRecipeData(int recipeListIndex) async {
+  Future<void> replaceRecipeDataWithFullData(int index) async {
     try {
       final isar = await recipeDataBase;
 
       // Get Api Response
-      final jsonResponse = await RecipeFullInfoService().fetchFullRecipe(
-          isar.recipeModels.getSync(recipeListIndex)!.recipeId);
+      final jsonResponse = await RecipeFullInfoService()
+          .fetchFullRecipe(isar.recipeModels.getSync(index)!.recipeId);
       // Convert to new RecipeModel
-      final newRecipe = RecipeModel.fromJson(jsonResponse);
+      RecipeModel newRecipe = RecipeModel.fromJson(
+        jsonResponse,
+      );
 
       // Replace Recipe with new recipe in database
-      await isar.writeTxn(() async {
-        isar.recipeModels.putByIndexSync(recipeListIndex.toString(), newRecipe);
+      await isar.writeTxnSync(() async {
+        newRecipe.id = index;
+        isar.recipeModels.putSync(newRecipe);
       });
     } catch (e) {
       throw RecipeException('Error replacing recipe data:', e);
@@ -106,42 +113,49 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
   }
 
   @override
-  Future<void> addSimilarRecipesToRecipe(int recipeListIndex) async {
+  Future<void> addSimilarRecipesToRecipe(int index) async {
     try {
       final isar = await recipeDataBase;
 
-      // Get Api Response
-      final jsonResponse = await SimilarRecipeService().fetchSimilarRecipes(
-          isar.recipeModels.getSync(recipeListIndex)!.recipeId);
-      // Convert to Lists<SimilarRecipeModel>
-      final List<SimilarRecipeModel> similarRecipes =
-          SimilarRecipeModel.fromJson(jsonResponse) as List<SimilarRecipeModel>;
+      final jsonResponse = await SimilarRecipeService()
+          .fetchSimilarRecipes(isar.recipeModels.getSync(index)!.recipeId);
 
-      // Get the current recipe of recipeListIndex
-      final RecipeModel? oldRecipe =
-          await isar.recipeModels.get(recipeListIndex);
-      // make new RecipeModel thats clones oldRecipe with new similarRecipes
-      final RecipeModel newRecipe =
-          oldRecipe!.copyWith(similarRecipes: similarRecipes);
+      // get list of similarRecipes from json response
+      List<SimilarRecipeModel> similarRecipes = [];
+      for (var recipe in jsonResponse) {
+        similarRecipes.add(SimilarRecipeModel.fromJson(recipe));
+      }
+
+      final RecipeModel? newRecipe =
+          await isar.recipeModels.where().idEqualTo(index).findFirst();
+
+      if (newRecipe != null) {
+        await isar.writeTxnSync(() async {
+          newRecipe.similarRecipes = similarRecipes;
+          isar.recipeModels.putSync(newRecipe);
+        });
+      } else {
+        throw "cant find recipe with id";
+      }
 
       // Replace Recipe with new recipe in database
-      await isar.writeTxn(() async {
-        isar.recipeModels.putByIndexSync(recipeListIndex.toString(), newRecipe);
-      });
-    } catch (e) {
-      throw RecipeException('Error adding  Similar recipes:', e);
+    } catch (e, stackTrace) {
+      throw RecipeException('Error adding  Similar recipes:', e, stackTrace);
     }
   }
 
   Future<Isar> openDB() async {
     try {
       if (Isar.instanceNames.isEmpty) {
-        return await Isar.open([RecipeModelSchema],
-            directory: (await getApplicationDocumentsDirectory()).path,
-            inspector: true);
+        print("(((((((((((( Bro is empty ))))))))))))");
+        return Isar.openSync(
+          [RecipeModelSchema],
+          directory: (await getApplicationDocumentsDirectory()).path,
+          inspector: true,
+        );
+      } else {
+        return Future.value(Isar.getInstance());
       }
-
-      return Future.value(Isar.getInstance());
     } catch (e) {
       throw 'fail to open DB $e';
     }
@@ -151,8 +165,12 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
   Future<void> clearDB() async {
     try {
       final isar = await recipeDataBase;
-      await isar.writeTxn(() => isar.clear());
-      await openDB();
+
+      if (await isar.recipeModels.count() > 0) {
+        await isar.writeTxnSync(() async {
+          await isar.clear();
+        });
+      }
     } catch (e) {
       throw 'failed to clearDB: $e';
     }
