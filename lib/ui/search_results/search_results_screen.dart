@@ -17,7 +17,8 @@ class SearchResultsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recipeState = ref.watch(searchResultsViewModelProvider.notifier);
+    final viewModel = ref.watch(searchResultsViewModelProvider.notifier);
+    final recipeState = ref.watch(searchResultsViewModelProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -25,9 +26,30 @@ class SearchResultsScreen extends ConsumerWidget {
         titleSpacing: 0,
         leading: const SizedBox(),
         title: _AppBar(),
+        bottom: recipeState.hasValue
+            ? PreferredSize(
+                preferredSize: Size(10, 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                        "Total Results: ${recipeState.value?.totalResults.toString()}"),
+                    Text(
+                        "Used Tokens: ${recipeState.value?.usedTokens.toString()}"),
+                  ],
+                ),
+              )
+            : null,
+        bottomOpacity: 0.7,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20),
+          ),
+        ),
       ),
       body: RecipeListInfiniteScrollPagination(
-        getArticleListPage: recipeState.getArticleListPage,
+        getArticleListPage: viewModel.getArticleListPage,
       ),
     );
   }

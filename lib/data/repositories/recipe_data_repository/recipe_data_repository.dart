@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:recipe_box/data/model/recipe_search_data_model.dart';
 import 'package:recipe_box/domain/models/search_parameters_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,18 +54,13 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
   }
 
   @override
-  Future<List<RecipeModel>> searchForRecipes(
+  Future<RecipeSearchDataModel> searchForRecipes(
     num pageNumber,
     num size,
     SearchParameters searchParamaters,
   ) async {
     try {
-      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-
       final isar = await recipeDataBase;
-      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-
-      print('did this fail?');
 
       final num offset = pageNumber.toDouble() * size;
 
@@ -82,7 +78,18 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
       await isar.writeTxn(() async {
         await isar.recipeModels.putAll(recipes);
       });
-      return recipes;
+
+      print("88888888888888888888888 HERE 88888888888888888888888");
+
+      RecipeSearchDataModel recipeSearchDataModel = RecipeSearchDataModel(
+        recipeData: recipes,
+        totalResults: response['totalResults'],
+        usedTokens: response['usedTokens'],
+      );
+
+      print('it works :)))');
+
+      return recipeSearchDataModel;
     } catch (e, stackTrace) {
       debugPrint('$stackTrace');
       throw RecipeException('Error searching for recipe: ', e, stackTrace);

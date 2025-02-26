@@ -136,6 +136,10 @@ class RecipeSearchService {
       if (response.statusCode == 200) {
         final recipeResponseData = jsonDecode(utf8.decode(response.bodyBytes));
 
+        // Add used tokens to data
+        recipeResponseData['usedTokens'] =
+            double.parse(response.headers['x-api-quota-request'] ?? '999');
+
         return recipeResponseData;
         // Handle the response recipeResponseData
       } else {

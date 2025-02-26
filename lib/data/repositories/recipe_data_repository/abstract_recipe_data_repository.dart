@@ -1,3 +1,4 @@
+import 'package:recipe_box/data/model/recipe_search_data_model.dart';
 import 'package:recipe_box/domain/models/recipe_model.dart';
 import 'package:recipe_box/domain/models/search_parameters_model.dart';
 import 'dart:async';
@@ -18,7 +19,7 @@ class RecipeException implements Exception {
 }
 
 abstract class AbstractRecipeDataRepository {
-  Future<List<RecipeModel>> searchForRecipes(
+  Future<RecipeSearchDataModel> searchForRecipes(
     num pageNumber,
     num size,
     SearchParameters searchParamaters,

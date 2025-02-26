@@ -7,12 +7,12 @@ part of 'search_results_view_model.dart';
 // **************************************************************************
 
 String _$searchResultsViewModelHash() =>
-    r'55077579ff50d1d5c58ded8c4a1759a9861b2ce4';
+    r'51fdb0ce7da788f40ac1e87c233f3e15c63d0d67';
 
 /// See also [SearchResultsViewModel].
 @ProviderFor(SearchResultsViewModel)
-final searchResultsViewModelProvider =
-    AutoDisposeAsyncNotifierProvider<SearchResultsViewModel, void>.internal(
+final searchResultsViewModelProvider = AutoDisposeNotifierProvider<
+    SearchResultsViewModel, AsyncValue<RecipeSearchDataModel>>.internal(
   SearchResultsViewModel.new,
   name: r'searchResultsViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,7 @@ final searchResultsViewModelProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$SearchResultsViewModel = AutoDisposeAsyncNotifier<void>;
+typedef _$SearchResultsViewModel
+    = AutoDisposeNotifier<AsyncValue<RecipeSearchDataModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

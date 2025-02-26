@@ -1,5 +1,6 @@
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter/material.dart';
+import 'package:recipe_box/data/model/recipe_search_data_model.dart';
 import 'package:recipe_box/domain/models/recipe_model.dart';
 import './recipe_display_card_widget.dart';
 
@@ -56,13 +57,10 @@ class RecipeListInfiniteScrollPaginationState
 
   Future<void> _fetchPage(num pageKey) async {
     try {
-      print('fetching new page');
       final newPage = await widget.getArticleListPage(
         pageKey.toInt(),
         8,
       );
-
-      print('did it fial here');
 
       final previouslyFetchedItemsCount =
           // 2

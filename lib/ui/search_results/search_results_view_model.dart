@@ -1,3 +1,4 @@
+import 'package:recipe_box/data/model/recipe_search_data_model.dart';
 import 'package:recipe_box/data/repositories/recipe_data_repository/recipe_data_repository.dart';
 import 'package:recipe_box/data/repositories/search_pramaters_repository/search_pramaters_repository.dart';
 import 'package:recipe_box/domain/models/search_parameters_model.dart';
@@ -11,7 +12,9 @@ part 'search_results_view_model.g.dart';
 @riverpod
 class SearchResultsViewModel extends _$SearchResultsViewModel {
   @override
-  FutureOr<void> build() {}
+  AsyncValue<RecipeSearchDataModel> build() {
+    return AsyncLoading();
+  }
 
   Future<List<RecipeModel>> getArticleListPage(
     num pageNumber,
@@ -25,11 +28,20 @@ class SearchResultsViewModel extends _$SearchResultsViewModel {
 
       print("got searchParamaters");
 
-      return await ref.read(recipeDataRepositoryProvider).searchForRecipes(
-            pageNumber,
-            size,
-            searchParamaters,
-          );
+      RecipeSearchDataModel response =
+          await ref.read(recipeDataRepositoryProvider).searchForRecipes(
+                pageNumber,
+                size,
+                searchParamaters,
+              );
+
+      if (state.hasValue) {
+        response.usedTokens = state.value!.usedTokens + response.usedTokens;
+      }
+
+      state = AsyncData(response);
+
+      return response.recipeData;
     } catch (e) {
       throw 'failed get article list page search thing $e';
     }
