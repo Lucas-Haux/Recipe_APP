@@ -3,7 +3,6 @@ import 'home_view_model.dart';
 import 'package:go_router/go_router.dart';
 import '../core/ui/search_bar_field_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../recipe/widgets/nutrition_widget.dart';
 
 // TODO should these be in viewmodel?
 TextEditingController searchController = TextEditingController();

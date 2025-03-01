@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_box/ui/recipe/widgets/nutrition_bar_chart_widget.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-import 'nutrition_widget.dart';
 import '../../../domain/models/recipe_model.dart';
 
 class DualRecipeCards extends StatelessWidget {
@@ -159,10 +159,14 @@ class _MicInfoCard extends StatelessWidget {
             FilledButton(
               onPressed: () {
                 showDialog(
-                    useSafeArea: false,
-                    context: context,
-                    builder: (BuildContext context) =>
-                        Dialog(child: NutritionWidget(nutrients: nutrients)));
+                  useSafeArea: false,
+                  context: context,
+                  builder: (BuildContext context) => Dialog(
+                    child: NutritionBarChartWidget(nutrients: nutrients),
+                    insetPadding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  ),
+                );
               },
               child: const Text('Nutrition Data'),
             ),
