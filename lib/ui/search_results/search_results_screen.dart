@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recipe_box/data/repositories/recipe_data_repository/recipe_data_repository.dart';
-import 'package:recipe_box/data/repositories/search_pramaters_repository/search_pramaters_repository.dart';
-
-import '../home/home_screen.dart';
-import '../../data/model/data_state_status_model.dart';
 import '../../../domain/models/recipe_model.dart';
 import 'search_results_view_model.dart';
 import '../core/ui/search_bar_field_widget.dart';
-import 'widgets/recipe_display_card_widget.dart';
 
 import './widgets/recipe_list_infinite_scroll_pagination_widget.dart';
+
+TextEditingController searchController = TextEditingController();
 
 class SearchResultsScreen extends ConsumerWidget {
   const SearchResultsScreen({super.key});
@@ -71,12 +67,10 @@ class _AppBar extends StatelessWidget {
             width: 300,
             child: Hero(
               tag: 'SearchBar',
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                child: SearchBarFieldWidget(
-                  goToSearchPage: true,
-                  controller: searchController,
-                ),
+              child: SearchBarFieldWidget(
+                key: const ValueKey('SearchBar'),
+                searchPage: false,
+                controller: searchController,
               ),
             ),
           ),
@@ -86,8 +80,7 @@ class _AppBar extends StatelessWidget {
           Hero(
             tag: const Key('HomeButton'),
             child: IconButton(
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen())),
+              onPressed: () => Navigator.pushNamed(context, '/'),
               icon: Icon(
                 Icons.home,
                 size: 30,

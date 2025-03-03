@@ -1,25 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-class SearchBarFieldWidget extends StatefulWidget {
-  final bool goToSearchPage;
-  final void Function()? onTap;
-  final VoidCallback? searchForRecipes;
-  final TextEditingController controller;
+class SearchBarFieldWidget extends StatelessWidget {
+  final bool searchPage;
+  final TextEditingController? controller;
 
   const SearchBarFieldWidget({
     super.key,
-    required this.goToSearchPage,
-    required this.controller,
-    this.onTap,
-    this.searchForRecipes,
+    required this.searchPage,
+    this.controller,
   });
 
-  @override
-  State<SearchBarFieldWidget> createState() => _SearchBarFieldWidget();
-}
-
-class _SearchBarFieldWidget extends State<SearchBarFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -27,10 +17,10 @@ class _SearchBarFieldWidget extends State<SearchBarFieldWidget> {
       child: Stack(
         children: [
           TextField(
-            controller: widget.controller,
-            autofocus: !widget.goToSearchPage,
+            controller: controller,
+            autofocus: searchPage,
             onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-            readOnly: widget.goToSearchPage,
+            readOnly: !searchPage,
             textAlignVertical: TextAlignVertical.bottom,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.text,
@@ -65,17 +55,12 @@ class _SearchBarFieldWidget extends State<SearchBarFieldWidget> {
                     width: 1),
               ),
             ),
-            onSubmitted: (_) async {
-              if (widget.searchForRecipes != null) {
-                widget.searchForRecipes!();
-              }
+            onSubmitted: (_) {
+              Navigator.pushNamed(context, '/searchPage/searchResults');
             },
             onTap: () {
-              FocusManager.instance.primaryFocus?.unfocus(); // remove keyboard
-              if (widget.goToSearchPage == true) {
-                context.go('/search');
-              } else {
-                widget.onTap;
+              if (!searchPage) {
+                Navigator.pushNamed(context, '/searchPage');
               }
             },
           ),

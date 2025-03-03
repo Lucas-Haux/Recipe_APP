@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_box/domain/models/search_parameters_model.dart';
-import 'package:recipe_box/ui/search_results/search_results_view_model.dart';
 
 import '../../../domain/enums.dart';
 import 'search_view_model.dart';
@@ -14,10 +13,8 @@ import '../core/ui/search_bar_field_widget.dart';
 TextStyle titleTextStyle = const TextStyle(fontSize: 25);
 
 class SearchScreen extends ConsumerWidget {
-  final TextEditingController searchController;
   const SearchScreen({
     super.key,
-    required this.searchController,
   });
 
   @override
@@ -26,6 +23,7 @@ class SearchScreen extends ConsumerWidget {
     final SearchParameters searchParameters =
         ref.watch(searchViewModelProvider);
 
+    TextEditingController searchController = TextEditingController();
     print('%%%%%%%%%%%%%%%%%%%%%SCREEN REBUIlD%%%%%%%%%%%%%%%%%%%%%%');
 
     return Scaffold(
@@ -64,9 +62,8 @@ class SearchScreen extends ConsumerWidget {
                   tag: 'SearchBar',
                   child: SearchBarFieldWidget(
                     key: const ValueKey('SearchBar'),
-                    goToSearchPage: false,
+                    searchPage: true,
                     controller: searchController,
-                    onTap: null,
                   ),
                 ),
               ),
@@ -216,8 +213,7 @@ class _FloatingActionButtons extends StatelessWidget {
               backgroundColor: Theme.of(context).colorScheme.onPrimary,
               child: const Icon(Icons.home),
               onPressed: () {
-                print('go home');
-                context.go('/');
+                Navigator.pushNamed(context, '/');
               },
             ),
           ),
@@ -231,7 +227,7 @@ class _FloatingActionButtons extends StatelessWidget {
 
               // searchForRecipes();
 
-              context.go('/search_results');
+              Navigator.pushNamed(context, '/searchPage/searchResults');
             },
             icon: const Icon(Icons.search),
             extendedPadding: const EdgeInsets.only(left: 15, right: 15),

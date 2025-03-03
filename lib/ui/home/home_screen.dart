@@ -29,7 +29,7 @@ class HomeScreen extends ConsumerWidget {
                 tag: 'SearchBar',
                 child: SearchBarFieldWidget(
                   key: const ValueKey('SearchBar'),
-                  goToSearchPage: true,
+                  searchPage: false,
                   controller: searchController,
                 ),
               ),
@@ -42,7 +42,7 @@ class HomeScreen extends ConsumerWidget {
             // Test Button
             FilledButton(
               onPressed: () {
-                context.go('/search');
+                context.go('/searchPage');
                 ref.read(homeViewModelProvider.notifier).addToFavorites();
               },
               child: const Text('test'),

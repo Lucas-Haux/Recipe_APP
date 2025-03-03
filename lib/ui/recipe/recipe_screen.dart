@@ -1,4 +1,3 @@
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +14,8 @@ import 'recipe_viewmodel.dart';
 import 'package:recipe_box/ui/core/ui/search_bar_field_widget.dart';
 
 double cardWidth = 371;
+
+TextEditingController searchController = TextEditingController();
 
 const TextStyle _titleStyle = TextStyle(
   fontSize: 25,
@@ -33,6 +34,13 @@ class RecipeScreen extends ConsumerWidget {
 
     while (theState.valueOrNull == null) {
       return Scaffold(
+        appBar: AppBar(
+          leadingWidth: 0,
+          titleSpacing: 0,
+          leading: const SizedBox(), // Remove Default Back Button
+          forceMaterialTransparency: true,
+          title: const _AppBar(),
+        ),
         body: Center(
           child: CircularProgressIndicator(),
         ),
@@ -168,7 +176,7 @@ class _AppBar extends StatelessWidget {
 
           // Back Button
           IconButton(
-            onPressed: () => context.pop(),
+            onPressed: () => Navigator.pop(context),
             icon: Icon(
               Icons.arrow_back,
               size: 30,
@@ -184,12 +192,10 @@ class _AppBar extends StatelessWidget {
             width: 250,
             child: Hero(
               tag: 'SearchBar',
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                child: SearchBarFieldWidget(
-                  goToSearchPage: true,
-                  controller: TextEditingController(),
-                ),
+              child: SearchBarFieldWidget(
+                key: const ValueKey('SearchBar'),
+                searchPage: false,
+                controller: searchController,
               ),
             ),
           ),
@@ -200,7 +206,7 @@ class _AppBar extends StatelessWidget {
           Hero(
             tag: const Key('HomeButton'),
             child: IconButton(
-              onPressed: () => context.go('/'),
+              onPressed: () => Navigator.pushNamed(context, '/'),
               icon: Icon(
                 Icons.home,
                 size: 30,

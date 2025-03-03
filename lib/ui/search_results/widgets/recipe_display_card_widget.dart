@@ -21,11 +21,11 @@ class RecipeDisplayCard extends StatelessWidget {
       width: 185,
       child: GestureDetector(
         onTap: () {
-          context.pushNamed('Recipe', extra: {
-            'recipeListIndex': recipeListIndex,
-            'id': recipe.recipeId.toString(),
-          });
-          print('pushed');
+          Navigator.pushNamed(
+            context,
+            '/searchPage/searchResults/recipe',
+            arguments: recipeListIndex,
+          );
         },
         child: Card(
           margin: const EdgeInsets.all(5),
