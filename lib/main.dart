@@ -26,11 +26,11 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       theme: themeData,
       darkTheme: themeData,
-      onGenerateRoute: (settings) {
+      onGenerateRoute: (homePage) {
         return PageRouteBuilder(
-          settings: settings,
+          settings: homePage,
           pageBuilder: (context, animation, secondaryAnimation) {
-            switch (settings.name) {
+            switch (homePage.name) {
               case '/':
                 return const HomeScreen();
               case '/searchPage':
@@ -38,10 +38,15 @@ class MainApp extends StatelessWidget {
               case '/searchPage/searchResults':
                 return const SearchResultsScreen();
               case '/searchPage/searchResults/recipe':
-                final args = settings.arguments as int?;
-                return RecipeScreen(recipeListIndex: args ?? 0);
+                final Map<String, dynamic> args =
+                    homePage.arguments as Map<String, dynamic>;
+                return RecipeScreen(
+                  recipeListIndex: args['recipeListIndex'],
+                  title: args['title'],
+                  imageUrl: args['imageUrl'],
+                );
               default:
-                return const HomeScreen(); // Default fallback
+                return const HomeScreen();
             }
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -50,8 +55,7 @@ class MainApp extends StatelessWidget {
               child: child,
             );
           },
-          transitionDuration:
-              const Duration(milliseconds: 800), // Slower Hero animation
+          transitionDuration: const Duration(milliseconds: 500),
         );
       },
     );

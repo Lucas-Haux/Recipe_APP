@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:badges/badges.dart' as badges;
 
 import '../../../domain/models/recipe_model.dart';
@@ -16,62 +18,72 @@ class RecipeDisplayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 185,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            '/searchPage/searchResults/recipe',
-            arguments: recipeListIndex,
-          );
-        },
-        child: Card(
-          margin: const EdgeInsets.all(5),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _RecipeImage(
-                imageUrl: recipe.imageUrl,
-                time: recipe.time,
-                popular: recipe.popular,
-                showPopularBadge: showPopularBadge,
-              ),
-              const SizedBox(height: 3),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: Text(
-                  recipe.title,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+    return Hero(
+      tag: "$recipeListIndex Card",
+      child: SizedBox(
+        width: 185,
+        child: GestureDetector(
+          onTap: () {
+            final Map<String, dynamic> argument = {
+              "recipeListIndex": recipeListIndex,
+              "imageUrl": recipe.imageUrl,
+              "title": recipe.title,
+            };
+            Navigator.pushNamed(
+              context,
+              '/searchPage/searchResults/recipe',
+              arguments: argument,
+            );
+          },
+          child: Card(
+            margin: const EdgeInsets.all(5),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _RecipeImage(
+                  imageUrl: recipe.imageUrl,
+                  time: recipe.time,
+                  popular: recipe.popular,
+                  showPopularBadge: showPopularBadge,
+                  recipeListIndex: recipeListIndex,
+                ),
+                const SizedBox(height: 3),
+                // Title
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: AutoSizeText(
+                    recipe.title,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const Divider(),
+                const Text(
+                  'Per Serving:',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 7),
+                Text(
+                  recipe.calories,
                   textAlign: TextAlign.center,
                 ),
-              ),
-              const Divider(),
-              const Text(
-                'Per Serving:',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 7),
-              Text(
-                recipe.calories,
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                recipe.protein,
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                recipe.fat,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-            ],
+                Text(
+                  recipe.protein,
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  recipe.fat,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
           ),
         ),
       ),
@@ -84,11 +96,14 @@ class _RecipeImage extends StatelessWidget {
   final int time;
   final bool popular;
   final bool showPopularBadge;
+  final int recipeListIndex;
+
   const _RecipeImage({
     required this.imageUrl,
     required this.time,
     required this.popular,
     required this.showPopularBadge,
+    required this.recipeListIndex,
   });
 
   @override
