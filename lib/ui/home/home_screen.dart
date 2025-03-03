@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'home_view_model.dart';
-import 'package:go_router/go_router.dart';
 import '../core/ui/search_bar_field_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -42,7 +41,6 @@ class HomeScreen extends ConsumerWidget {
             // Test Button
             FilledButton(
               onPressed: () {
-                context.go('/searchPage');
                 ref.read(homeViewModelProvider.notifier).addToFavorites();
               },
               child: const Text('test'),

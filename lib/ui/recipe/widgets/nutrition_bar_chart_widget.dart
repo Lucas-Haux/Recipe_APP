@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:recipe_box/domain/models/recipe_model.dart';
 
 class NutritionBarChartWidget extends StatelessWidget {
@@ -16,7 +15,7 @@ class NutritionBarChartWidget extends StatelessWidget {
         .toList();
 
     return GestureDetector(
-      onTap: context.pop,
+      onTap: () => Navigator.pop(context),
       child: Padding(
         padding: EdgeInsets.only(
           left: 0,

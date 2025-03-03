@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
-import 'package:go_router/go_router.dart';
 
 import '../../../domain/models/recipe_model.dart';
 
