@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe_box/data/repositories/favorites_repository/favorites_repository.dart';
 import '../../../domain/models/recipe_model.dart';
 import '../../data/repositories/recipe_data_repository/recipe_data_repository.dart';
 
@@ -15,11 +16,17 @@ class RecipeViewmodel extends _$RecipeViewmodel {
       final recipe = await ref
           .watch(recipeDataRepositoryProvider)
           .getSingleRecipe(recipeListIndex);
+      isFavoirte = await ref
+          .watch(favoritesRepositoryProvider)
+          .checkIfRecipeIsFavorite(recipe.recipeId);
+
       return recipe;
     } catch (e) {
       throw "Failed to build recipe_viewmodel $e";
     }
   }
+
+  late bool isFavoirte;
 
   // Used for similar recipes
   Future<void> searchSimilarRecipes() async {

@@ -2,8 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:recipe_box/ui/core/ui/recipe_display_card_widget.dart';
 
-import 'recipe_image_widget.dart';
 import '../../../domain/models/recipe_model.dart';
 
 class SimilarRecipesWidget extends StatefulWidget {
@@ -53,62 +53,24 @@ class _SimilarRecipesState extends State<SimilarRecipesWidget> {
         // Carousel
         if (similarRecipes != null)
           ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: height / 4.5),
+            constraints: BoxConstraints(maxHeight: height / 4.0),
             child: CarouselView.weighted(
               controller: carouselController,
               shrinkExtent: 500,
               itemSnapping: true,
               flexWeights: const <int>[2, 3, 2],
               children: similarRecipes.map((SimilarRecipeModel recipe) {
-                return _SimilarRecipeCard(
-                    recipe: recipe, cardWidth: widget.cardWidth);
+                return RecipeDisplayCardWidget(
+                    imageUrl: recipe.imageUrl!,
+                    title: recipe.title!,
+                    recipeId: recipe.recipeId!,
+                    height: 50,
+                    cardWidth: widget.cardWidth);
               }).toList(),
             ),
           ),
         const SizedBox(height: 10),
       ],
-    );
-  }
-}
-
-class _SimilarRecipeCard extends StatelessWidget {
-  final SimilarRecipeModel recipe;
-  final double cardWidth;
-  const _SimilarRecipeCard({required this.recipe, required this.cardWidth});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: GestureDetector(
-        onTap: () {
-          // TODO
-          throw UnimplementedError("Similar Recipe Card Tap");
-        },
-        child: SizedBox(
-          height: 50,
-          child: Card(
-            color: Theme.of(context).colorScheme.onSecondary,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                RecipeImage(
-                  imageUrl: recipe.imageUrl!,
-                  favoriteButton: false,
-                  cardWidth: cardWidth,
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Text(recipe.title!,
-                      textAlign: TextAlign.center, maxLines: 3),
-                ),
-                Spacer(),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

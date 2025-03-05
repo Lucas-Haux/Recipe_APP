@@ -1,35 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe_box/domain/models/recipe_model.dart';
+import 'package:recipe_box/ui/recipe/recipe_favorites_viewmodel.dart';
 
-class RecipeImage extends StatelessWidget {
+class RecipeImageWidget extends ConsumerWidget {
   final String imageUrl;
-  final bool favoriteButton;
+  final RecipeModel? recipe;
   final double cardWidth;
-  const RecipeImage({
+  const RecipeImageWidget({
+    this.recipe,
     required this.imageUrl,
-    required this.favoriteButton,
     required this.cardWidth,
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModel =
+        ref.watch(recipeFavoritesViewmodelProvider(recipe).notifier);
+    final isFavorite =
+        ref.watch(recipeFavoritesViewmodelProvider(recipe)).value;
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
+          // Image
+          // TODO need to cache the image
           Image.network(
             imageUrl,
             width: cardWidth,
           ),
+
           // favorites button
-          if (favoriteButton == true)
+          if (isFavorite != null)
             Align(
               alignment: Alignment.bottomRight,
               child: IconButton(
                 onPressed: () {
-                  print('favorite button pressed');
-                  // change favorite state of recipe id
+                  if (isFavorite) {
+                    viewModel.removeFavorite();
+                  } else {
+                    viewModel.addFavorite();
+                  }
                 },
                 color: Colors.redAccent,
                 icon: const Icon(
@@ -40,8 +53,7 @@ class RecipeImage extends StatelessWidget {
                   Icons.favorite,
                   size: 35,
                 ),
-                isSelected:
-                    false, // need to change to favorite state of recipe id
+                isSelected: isFavorite,
               ),
             ),
         ],

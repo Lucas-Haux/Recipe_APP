@@ -2,8 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:recipe_box/ui/core/ui/recipe_display_card_widget.dart';
+import 'package:recipe_box/ui/core/ui/recipe_image_widget.dart';
 
-import 'widgets/recipe_image_widget.dart';
 import 'widgets/equipment_card_widget.dart';
 import 'widgets/ingredents_card_widget.dart';
 import 'widgets/row_of_data_card_widget.dart';
@@ -56,28 +57,11 @@ class RecipeScreen extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: cardWidth,
-                  child: Card(
-                    color:
-                        Theme.of(context).colorScheme.onSecondaryFixedVariant,
-                    child: Column(
-                      children: [
-                        // Image
-                        RecipeImage(
-                          imageUrl: imageUrl,
-                          favoriteButton: true,
-                          cardWidth: cardWidth,
-                        ),
-                        // Title
-                        AutoSizeText(
-                          title,
-                          textAlign: TextAlign.center,
-                          style: _titleStyle,
-                        ),
-                      ],
-                    ),
-                  ),
+                RecipeDisplayCardWidget(
+                  title: title,
+                  imageUrl: imageUrl,
+                  cardWidth: cardWidth,
+                  titleStyle: _titleStyle,
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height / 5),
                 SizedBox(
@@ -110,28 +94,13 @@ class RecipeScreen extends ConsumerWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                width: cardWidth,
-                child: Card(
-                  color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
-                  child: Column(
-                    children: [
-                      // Image
-                      RecipeImage(
-                        imageUrl: recipe.imageUrl,
-                        favoriteButton: true,
-                        cardWidth: cardWidth,
-                        key: Key('${recipe.title} image'),
-                      ),
-                      // Title
-                      AutoSizeText(
-                        recipe.title,
-                        textAlign: TextAlign.center,
-                        style: _titleStyle,
-                      ),
-                    ],
-                  ),
-                ),
+              RecipeDisplayCardWidget(
+                imageUrl: recipe.imageUrl,
+                title: recipe.title,
+                recipeId: recipe.recipeId,
+                cardWidth: cardWidth,
+                height: 50,
+                titleStyle: _titleStyle,
               ),
 
               // Diets

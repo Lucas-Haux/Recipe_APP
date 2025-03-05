@@ -153,15 +153,15 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
 
   Future<Isar> openDB() async {
     try {
-      if (Isar.instanceNames.isEmpty) {
-        print("(((((((((((( Bro is empty ))))))))))))");
+      if (Isar.instanceNames.contains("RecipeSearchDataBase")) {
+        return Future.value(Isar.getInstance("RecipeSearchDataBase"));
+      } else {
         return Isar.openSync(
           [RecipeModelSchema],
+          name: "RecipeSearchDataBase",
           directory: (await getApplicationDocumentsDirectory()).path,
           inspector: true,
         );
-      } else {
-        return Future.value(Isar.getInstance());
       }
     } catch (e) {
       throw 'fail to open DB $e';

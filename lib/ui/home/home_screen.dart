@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home_view_model.dart';
+import 'package:recipe_box/domain/models/recipe_model.dart';
+import 'package:recipe_box/ui/core/ui/recipe_display_card_widget.dart';
+import 'home_viewmodel.dart';
 import '../core/ui/search_bar_field_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +13,10 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final favoritesList = ref.watch(homeViewModelProvider);
+    final favoritesList = ref.watch(homeViewModelProvider).value;
+    final double height = MediaQuery.sizeOf(context).height;
+    CarouselController carouselController =
+        CarouselController(initialItem: (favoritesList?.length ?? 2) ~/ 2);
 
     return Scaffold(
       body: Center(
@@ -34,63 +39,30 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             const Spacer(),
+            Divider(),
+            if (favoritesList != null)
+              ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: height / 4.5),
+                child: CarouselView.weighted(
+                  controller: carouselController,
+                  shrinkExtent: 500,
+                  itemSnapping: true,
+                  flexWeights: const <int>[2, 3, 2],
+                  children: favoritesList.map((RecipeModel recipe) {
+                    return RecipeDisplayCardWidget(
+                      title: recipe.title,
+                      imageUrl: recipe.imageUrl,
+                      recipeId: recipe.recipeId,
+                      cardWidth: 350,
+                    );
+                  }).toList(),
+                ),
+              ),
 
-            // Favorites
-            Text('${favoritesList.length}'),
-
-            // Test Button
-            FilledButton(
-              onPressed: () {
-                ref.read(homeViewModelProvider.notifier).addToFavorites();
-              },
-              child: const Text('test'),
-            ),
             const Spacer(),
           ],
         ),
       ),
     );
   }
-}
-
-class _FocustWidget extends StatefulWidget {
-  final Widget child;
-  final Animation<double> animation;
-  final FocusNode focusNode;
-
-  const _FocustWidget({
-    required this.focusNode,
-    required this.animation,
-    required this.child,
-  });
-
-  @override
-  State<_FocustWidget> createState() => __FocustWidgetState();
-}
-
-class __FocustWidgetState extends State<_FocustWidget> {
-  @override
-  void initState() {
-    super.initState();
-    widget.animation.addStatusListener(_status);
-
-    ///Check for the animation state
-  }
-
-  void _status(AnimationStatus status) {
-    if (status == AnimationStatus.completed) {
-      Future.microtask(() => mounted ? widget.focusNode.requestFocus() : null);
-    }
-  }
-
-  @override
-  void dispose() {
-    widget.animation.removeStatusListener(_status);
-
-    /// dispose the listener
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => widget.child;
 }
