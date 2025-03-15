@@ -32,7 +32,7 @@ class SearchResultsScreen extends ConsumerWidget {
                     Text(
                         "Total Results: ${recipeState.value?.totalResults.toString()}"),
                     Text(
-                        "Used Tokens: ${recipeState.value?.usedTokens.toString()}"),
+                        "Used Tokens: ${recipeState.value?.usedTokens.round().toString()}"),
                   ],
                 ),
               )
