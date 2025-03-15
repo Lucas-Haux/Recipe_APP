@@ -21,9 +21,6 @@ class SearchViewModel extends _$SearchViewModel {
 
   void updateSearchParameters(Map<String, dynamic> newParameter) {
     try {
-      print('view model update rna');
-
-      print('nah ${newParameter.keys.first}');
       ref.watch(searchParametersRepositoryProvider).updateState(
             query: newParameter['query'],
             dietAndOr: newParameter['dietAndOr'],
@@ -41,7 +38,6 @@ class SearchViewModel extends _$SearchViewModel {
           );
       state =
           ref.watch(searchParametersRepositoryProvider).getSearchParameters();
-      print('viewmodel ingredients: ${state.ingredients}');
     } catch (e) {
       throw e;
     }

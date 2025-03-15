@@ -22,7 +22,8 @@ class SearchScreen extends ConsumerWidget {
     final SearchParameters searchParameters =
         ref.watch(searchViewModelProvider);
 
-    TextEditingController searchController = TextEditingController();
+    TextEditingController searchController =
+        TextEditingController(text: searchParameters.query);
     print('%%%%%%%%%%%%%%%%%%%%%SCREEN REBUIlD%%%%%%%%%%%%%%%%%%%%%%');
 
     return Scaffold(
@@ -63,6 +64,7 @@ class SearchScreen extends ConsumerWidget {
                     key: const ValueKey('SearchBar'),
                     searchPage: true,
                     controller: searchController,
+                    updateQuery: searchViewModel.updateSearchParameters,
                   ),
                 ),
               ),

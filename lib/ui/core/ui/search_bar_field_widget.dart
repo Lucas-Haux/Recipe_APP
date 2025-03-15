@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class SearchBarFieldWidget extends StatelessWidget {
   final bool searchPage;
   final TextEditingController? controller;
+  final Function(Map<String, dynamic>)? updateQuery;
 
   const SearchBarFieldWidget({
     super.key,
     required this.searchPage,
+    this.updateQuery,
     this.controller,
   });
 
@@ -19,7 +21,6 @@ class SearchBarFieldWidget extends StatelessWidget {
           TextField(
             controller: controller,
             autofocus: searchPage,
-            onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
             readOnly: !searchPage,
             textAlignVertical: TextAlignVertical.bottom,
             textAlign: TextAlign.center,
@@ -55,7 +56,16 @@ class SearchBarFieldWidget extends StatelessWidget {
                     width: 1),
               ),
             ),
+            onTapOutside: (_) {
+              if (updateQuery != null) {
+                updateQuery!({'query': controller!.value.text});
+              }
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             onSubmitted: (_) {
+              if (updateQuery != null) {
+                updateQuery!({'query': controller!.value.text});
+              }
               Navigator.pushNamed(context, '/searchPage/searchResults');
             },
             onTap: () {
