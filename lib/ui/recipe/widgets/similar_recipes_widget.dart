@@ -61,10 +61,10 @@ class _SimilarRecipesState extends State<SimilarRecipesWidget> {
               flexWeights: const <int>[2, 3, 2],
               children: similarRecipes.map((SimilarRecipeModel recipe) {
                 return RecipeDisplayCardWidget(
+                    expand: true,
                     imageUrl: recipe.imageUrl!,
                     title: recipe.title!,
                     recipeId: recipe.recipeId!,
-                    height: 50,
                     cardWidth: widget.cardWidth);
               }).toList(),
             ),

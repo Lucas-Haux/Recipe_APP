@@ -58,6 +58,7 @@ class RecipeScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 RecipeDisplayCardWidget(
+                  expand: false,
                   title: title,
                   imageUrl: imageUrl,
                   cardWidth: cardWidth,
@@ -95,11 +96,12 @@ class RecipeScreen extends ConsumerWidget {
           child: Column(
             children: [
               RecipeDisplayCardWidget(
+                expand: false,
+                recipe: recipe,
                 imageUrl: recipe.imageUrl,
                 title: recipe.title,
                 recipeId: recipe.recipeId,
                 cardWidth: cardWidth,
-                height: 50,
                 titleStyle: _titleStyle,
               ),
 

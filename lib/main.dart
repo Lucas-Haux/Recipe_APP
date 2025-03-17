@@ -14,6 +14,7 @@ late ThemeData themeData;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   themeData = await ThemeRepository().getAppTheme();
+  print(themeData.cardTheme.shape.toString());
 
   development.main();
 }

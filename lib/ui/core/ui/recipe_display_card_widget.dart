@@ -1,21 +1,26 @@
+import 'dart:ffi';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_box/domain/models/recipe_model.dart';
 import 'package:recipe_box/ui/core/ui/recipe_image_widget.dart';
 
 class RecipeDisplayCardWidget extends StatelessWidget {
+  final RecipeModel? recipe;
   final int? recipeId;
   final String title;
   final String imageUrl;
-  final double? height;
+  final bool expand;
   final double cardWidth;
   final TextStyle? titleStyle;
   const RecipeDisplayCardWidget({
+    this.recipe,
     required this.title,
     this.recipeId,
     required this.imageUrl,
     this.titleStyle,
     required this.cardWidth,
-    this.height,
+    required this.expand,
     super.key,
   });
 
@@ -26,37 +31,52 @@ class RecipeDisplayCardWidget extends StatelessWidget {
         // TODO
         throw UnimplementedError("Similar Recipe Card Tap");
       },
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 5),
-        child: SizedBox(
-          width: cardWidth,
-          child: Card(
-            color: Theme.of(context).colorScheme.onSecondary,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                //Image
-                RecipeImageWidget(
-                  imageUrl: imageUrl,
-                  cardWidth: cardWidth,
-                ),
+      child: SizedBox(
+        width: cardWidth,
+        child: Card(
+          margin: EdgeInsets.all(0),
+          color: Theme.of(context).colorScheme.onSecondary,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              //Image
+              RecipeImageWidget(
+                recipe: recipe,
+                imageUrl: imageUrl,
+                cardWidth: cardWidth,
+              ),
 
-                //Spacer(),
+              //Spacer(),
 
-                // Title
-                Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: titleStyle,
-                    maxLines: 3,
+              // Title
+              if (expand == true)
+                Expanded(
+                  child: Center(
+                    child: AutoSizeText(
+                      title,
+                      minFontSize: 0.1,
+                      maxFontSize: 20,
+                      stepGranularity: 0.1,
+                      textAlign: TextAlign.center,
+                      style: titleStyle,
+                      //maxLines: 3,
+                    ),
                   ),
                 ),
-
-                // Spacer(),
-              ],
-            ),
+              if (expand != true)
+                Padding(
+                  padding: EdgeInsets.all(5),
+                  child: AutoSizeText(
+                    title,
+                    minFontSize: 0.1,
+                    maxFontSize: 20,
+                    stepGranularity: 0.1,
+                    textAlign: TextAlign.center,
+                    style: titleStyle,
+                    //maxLines: 3,
+                  ),
+                ),
+            ],
           ),
         ),
       ),
