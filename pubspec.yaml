@@ -61,6 +61,7 @@ dependencies:
     hosted: https://pub.isar-community.dev/
   auto_size_text: ^3.0.0
   smooth_page_indicator: ^1.2.1
+  widget_and_text_animator: ^1.1.5
 
 dev_dependencies:
   flutter_test:

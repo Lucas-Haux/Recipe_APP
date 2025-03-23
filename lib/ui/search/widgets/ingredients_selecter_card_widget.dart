@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
+
 import '../../../domain/enums.dart';
 
 class IngredientsInputCard extends StatefulWidget {
@@ -28,6 +31,20 @@ class IngredientsInputCard extends StatefulWidget {
 class _IngredientsInputState extends State<IngredientsInputCard> {
   @override
   Widget build(BuildContext context) {
+    bool isModified() {
+      final values = widget.givenIngredients;
+
+      if (values != null && values.isNotEmpty) {
+        if (values.keys.first.isNotEmpty) {
+          return true;
+        }
+      } else {
+        return false;
+      }
+
+      return false;
+    }
+
     return Padding(
       padding: const EdgeInsets.all(10),
       child: ExpansionTile(
@@ -37,6 +54,41 @@ class _IngredientsInputState extends State<IngredientsInputCard> {
           style: widget.titleTextStyle,
           textAlign: TextAlign.center,
         ),
+        subtitle: WidgetAnimator(
+          incomingEffect: WidgetTransitionEffects.incomingSlideInFromLeft(),
+          outgoingEffect: WidgetTransitionEffects.outgoingSlideOutToLeft(),
+          child: isModified()
+              ? Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 90, vertical: 10),
+                  child: Container(
+                    height: 20,
+                    decoration: ShapeDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          strokeAlign: 2,
+                          width: 2,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                    ),
+                    child: Row(
+                      spacing: 2,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.edit_rounded, size: 15),
+                        Text(
+                          'Modified',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : null,
+        ),
+
         tilePadding: EdgeInsets.only(right: 16, left: 63),
 
         shape: const RoundedRectangleBorder(

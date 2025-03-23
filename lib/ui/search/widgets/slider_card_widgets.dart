@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class MaxReadyTimeSlider extends StatefulWidget {
   final double givenPrimarySliderValue;
   final String primaryTitle;
   final TextStyle titleTextStyle;
   final Function(Map<String, dynamic>) setValue;
+  final bool Function() isModified;
   const MaxReadyTimeSlider({
     required this.givenPrimarySliderValue,
     required this.primaryTitle,
+    required this.isModified,
     required this.titleTextStyle,
     required this.setValue,
     super.key,
@@ -39,7 +42,25 @@ class MaxReadyTimeState extends State<MaxReadyTimeSlider> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
-            Text(widget.primaryTitle, style: widget.titleTextStyle),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(widget.primaryTitle, style: widget.titleTextStyle),
+                WidgetAnimator(
+                  incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
+                  outgoingEffect: WidgetTransitionEffects.outgoingScaleDown(),
+                  child: widget.isModified()
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Icon(
+                            Icons.edit_rounded,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        )
+                      : null,
+                )
+              ],
+            ),
             Slider(
               value: _primarySliderValue,
               min: 30,
@@ -78,6 +99,7 @@ class MaxReadyTimeState extends State<MaxReadyTimeSlider> {
 
 class MinMaxSliders extends StatefulWidget {
   final String title;
+  final bool Function() isModified;
   final double givenMaxValue;
   final double givenMinValue;
   final double sliderMaximum;
@@ -90,6 +112,7 @@ class MinMaxSliders extends StatefulWidget {
     required this.givenMinValue,
     required this.sliderMaximum,
     required this.sliderMinimum,
+    required this.isModified,
     required this.updateState,
     required this.titleTextStyle,
     super.key,
@@ -128,7 +151,25 @@ class _MinMaxSlidersState extends State<MinMaxSliders> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
-            Text(widget.title, style: widget.titleTextStyle),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(widget.title, style: widget.titleTextStyle),
+                WidgetAnimator(
+                  incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
+                  outgoingEffect: WidgetTransitionEffects.outgoingScaleDown(),
+                  child: widget.isModified()
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Icon(
+                            Icons.edit_rounded,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        )
+                      : null,
+                )
+              ],
+            ),
             const Divider(),
             SliderTheme(
               data: SliderThemeData(

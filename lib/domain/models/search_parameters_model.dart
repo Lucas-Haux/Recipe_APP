@@ -24,7 +24,7 @@ class SearchParameters {
     Map<IntoleranceType, RequireExclude>? intolerances,
     Map<String, RequireExclude>? ingredients,
     this.maxTime = 720,
-    this.calories = const RangeValues(0, 1000),
+    this.calories = const RangeValues(0, 2000),
     this.servings = const RangeValues(0, 100),
     this.protein = const RangeValues(0, 100),
     this.fat = const RangeValues(0, 100),
@@ -48,8 +48,10 @@ class SearchParameters {
                 value: (_) => AndOrType.unspecified),
         ingredients = ingredients ?? {'': RequireExclude.exclude},
         intolerances = intolerances ??
-            Map.fromIterable(IntoleranceType.values,
-                value: (_) => RequireExclude.unspecified);
+            Map.fromIterable(
+              IntoleranceType.values,
+              value: (_) => RequireExclude.unspecified,
+            );
 
   SearchParameters copyWith({
     String? query,

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
+
 import '../../../domain/enums.dart';
 
 class ExpandableChipsCard<RecipeParameter extends DisplayableEnum,
@@ -46,6 +49,19 @@ class ExpandableChipsState<RecipeParameter extends DisplayableEnum,
       ),
     );
 
+    bool isModified() {
+      final values = widget.givenEnums.values.toSet();
+
+      if (values.contains(RequireExclude.require) ||
+          values.contains(RequireExclude.exclude) ||
+          values.contains(AndOrType.and) ||
+          values.contains(AndOrType.or)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
     // Change button Text color based on value
     Color getTextColor(RecipeParameter value) {
       final dataBaseValue = widget.givenEnums[value];
@@ -79,6 +95,40 @@ class ExpandableChipsState<RecipeParameter extends DisplayableEnum,
           widget.title,
           style: titleTextStyle,
           textAlign: TextAlign.center,
+        ),
+        subtitle: WidgetAnimator(
+          incomingEffect: WidgetTransitionEffects.incomingSlideInFromLeft(),
+          outgoingEffect: WidgetTransitionEffects.outgoingSlideOutToLeft(),
+          child: isModified()
+              ? Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 90, vertical: 10),
+                  child: Container(
+                    height: 20,
+                    decoration: ShapeDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          strokeAlign: 2,
+                          width: 2,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                    ),
+                    child: Row(
+                      spacing: 2,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.edit_rounded, size: 15),
+                        Text(
+                          'Modified',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : null,
         ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20)),
