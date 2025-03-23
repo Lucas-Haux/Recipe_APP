@@ -55,7 +55,7 @@ class RecipeModel {
 
   final List<NutritionModel>? nutrients;
 
-  List<SimilarRecipeModel>? similarRecipes;
+  final List<SimilarRecipeModel>? similarRecipes;
 
   RecipeModel({
     required this.recipeId,
@@ -82,7 +82,7 @@ class RecipeModel {
     required this.summary,
     this.instructionsParagraph,
     this.nutrients,
-    this.similarRecipes,
+    this.similarRecipes = null,
   });
 
   factory RecipeModel.fromJson(Map<String, dynamic> jsonData) {

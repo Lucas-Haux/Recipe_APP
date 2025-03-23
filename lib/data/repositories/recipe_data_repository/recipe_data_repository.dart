@@ -133,13 +133,15 @@ class LocalRecipeDataRepository implements AbstractRecipeDataRepository {
         similarRecipes.add(SimilarRecipeModel.fromJson(recipe));
       }
 
-      final RecipeModel? newRecipe =
+      RecipeModel? newRecipe =
           await isar.recipeModels.where().idEqualTo(index).findFirst();
 
       if (newRecipe != null) {
+        newRecipe = newRecipe.copyWith(similarRecipes: similarRecipes);
+
         await isar.writeTxnSync(() async {
-          newRecipe.similarRecipes = similarRecipes;
-          isar.recipeModels.putSync(newRecipe);
+          newRecipe!.id = index;
+          isar.recipeModels.putSync(newRecipe!);
         });
       } else {
         throw "cant find recipe with id";

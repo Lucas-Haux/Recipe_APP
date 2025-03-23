@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_box/data/repositories/favorites_repository/favorites_repository.dart';
 import '../../../domain/models/recipe_model.dart';
 import '../../data/repositories/recipe_data_repository/recipe_data_repository.dart';

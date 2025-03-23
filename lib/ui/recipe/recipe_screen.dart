@@ -105,6 +105,8 @@ class RecipeScreen extends ConsumerWidget {
                 titleStyle: _titleStyle,
               ),
 
+              const SizedBox(height: 3),
+
               // Diets
               if (recipe.diets.isNotEmpty && recipe.diets[0].isNotEmpty)
                 RowOfDataCard(
@@ -170,9 +172,9 @@ class RecipeScreen extends ConsumerWidget {
               const Divider(),
 
               SimilarRecipesWidget(
-                id: recipe.id!,
+                recipeId: recipe.id!,
                 cardWidth: cardWidth,
-                givenSimilarRecipes: recipe.similarRecipes,
+                similarRecipesList: recipe.similarRecipes,
                 searchForSimilarRecipes: viewModel.searchSimilarRecipes,
               ),
             ],
