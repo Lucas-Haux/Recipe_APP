@@ -12,7 +12,7 @@ class RecipeSearchService {
     print('ran service ');
 
     try {
-      const String appKey = '1f9d617ba13041859ea773423b0e6291';
+      const String appKey = '096cc91305b04684ab47dfebc84bc59e';
 
       final query = searchPramatersRepository.query;
       // For every cuisines in the map that is set to require add the cuisine display name to the string
@@ -83,8 +83,10 @@ class RecipeSearchService {
           .join(',');
 
       // Combine all the parameters
-      String queryParameters = 'query=${Uri.encodeComponent(query.trim())}&'
-          'apiKey=$appKey&'
+      String queryParameters = 'apiKey=$appKey&'
+          'titleMatch="${Uri.encodeComponent(query.trim())}"&'
+          'query="${Uri.encodeComponent(query.trim())}"&'
+          //'titleMatch=${Uri.encodeComponent(query.trim())}&'
           'type=$mealTypes&'
           // TODO this doenst acutally require all the cuisines, it requires the recipe to have one of the list. Need to change the UI and Enums to say include instead of required
 
@@ -111,7 +113,7 @@ class RecipeSearchService {
           'addRecipeNutrition=true&'
           'offset=${offset.toInt()}&'
           'number=$numberOfRecipes&'
-          'sort=popularity';
+          'sort=meta-score';
 
       // make uri with the api endpoint and parameters
       final Uri uri =
