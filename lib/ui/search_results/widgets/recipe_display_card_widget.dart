@@ -63,24 +63,25 @@ class RecipeDisplayCard extends StatelessWidget {
                   ),
                 ),
                 const Divider(),
-                const Text(
+                Text(
                   'Per Serving:',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                    letterSpacing: 0.5,
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
                 ),
                 const SizedBox(height: 7),
-                Text(
-                  recipe.calories,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  recipe.protein,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  recipe.fat,
-                  textAlign: TextAlign.center,
-                ),
+
+                _NumbersTextRichText(
+                    start: recipe.calories.toString(),
+                    end: (recipe.calories > 1) ? ' Calories' : ' Calorie'),
+                _NumbersTextRichText(
+                    start: '${recipe.protein}g', end: ' of Protein'),
+                _NumbersTextRichText(start: '${recipe.fat}g', end: ' of Fat'),
+
                 const SizedBox(height: 10),
               ],
             ),
@@ -199,6 +200,45 @@ class _RecipeImage extends StatelessWidget {
                 ),
               ),
             ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NumbersTextRichText extends StatelessWidget {
+  final String start;
+  final String end;
+  const _NumbersTextRichText({
+    required this.start,
+    required this.end,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    double _fontSize = 15;
+    return Padding(
+      padding: EdgeInsets.only(bottom: 1.5, top: 1.5),
+      child: RichText(
+        text: TextSpan(
+          children: <TextSpan>[
+            // Numbers
+            TextSpan(
+              text: start,
+              style: TextStyle(
+                fontSize: _fontSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            TextSpan(
+              text: end,
+              style: TextStyle(
+                fontSize: _fontSize,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
           ],
         ),
       ),

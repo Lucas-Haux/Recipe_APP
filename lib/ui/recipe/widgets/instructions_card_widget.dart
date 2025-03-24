@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import 'package:recipe_box/domain/models/recipe_model.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../../domain/enums.dart';
 
 class InstructionCard extends StatefulWidget {
@@ -37,42 +39,33 @@ class InstructionCardState extends State<InstructionCard> {
           const SizedBox(height: 5),
 
           // InstructionView Picker Button
-          Card(
-            color: Theme.of(context).colorScheme.onSecondaryFixed,
-            margin: const EdgeInsets.all(0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: SegmentedButton<InstructionView>(
-                showSelectedIcon: false,
-                segments: const <ButtonSegment<InstructionView>>[
-                  ButtonSegment(
-                    value: InstructionView.list,
-                    label: Text('List'),
-                  ),
-                  ButtonSegment(
-                    value: InstructionView.paragraph,
-                    label: Text('Paragraph'),
-                  ),
-                ],
-                selected: {selectedView},
-                onSelectionChanged: (newSelection) async {
-                  setState(() {
-                    selectedView = newSelection.first;
-                  });
-                  if (widget.instructionsParagraph == null) {
-                    await widget.getParagraphDataForRecipe();
-                  }
-                },
+          SegmentedButton<InstructionView>(
+            showSelectedIcon: false,
+            segments: const <ButtonSegment<InstructionView>>[
+              ButtonSegment(
+                value: InstructionView.list,
+                label: Text('List'),
               ),
-            ),
+              ButtonSegment(
+                value: InstructionView.paragraph,
+                label: Text('Paragraph'),
+              ),
+            ],
+            selected: {selectedView},
+            onSelectionChanged: (newSelection) async {
+              setState(() {
+                selectedView = newSelection.first;
+              });
+              if (widget.instructionsParagraph == null) {
+                await widget.getParagraphDataForRecipe();
+              }
+            },
           ),
 
           // List view
           if (selectedView == InstructionView.list) ...[
             Card(
+              margin: EdgeInsets.only(top: 0, left: 4, right: 4),
               color: Theme.of(context).colorScheme.onSecondaryFixed,
               child: Column(
                 children: widget.instructions.map<Widget>((instruction) {
@@ -95,12 +88,15 @@ class InstructionCardState extends State<InstructionCard> {
           // Paragraph view
           if (selectedView == InstructionView.paragraph) ...[
             Card(
+              margin: EdgeInsets.only(top: 0, left: 4, right: 4),
               color: Theme.of(context).colorScheme.onSecondaryFixed,
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: widget.instructionsParagraph != null
-                    ? HtmlWidget((widget.instructionsParagraph!))
+                    ? HtmlWidget(
+                        widget.instructionsParagraph!,
+                      )
                     : const Center(
                         heightFactor: 2,
                         child: SizedBox(
@@ -279,6 +275,7 @@ class __StepInstructionState extends State<_StepInstruction> {
             visible: !isHidden,
             child: Row(
               children: [
+                // Mark Done Button
                 FilledButton(
                   onPressed: () => setState(() {
                     if (isDone == true) {
@@ -290,10 +287,11 @@ class __StepInstructionState extends State<_StepInstruction> {
                   }),
                   style: buttonStyle,
                   child: Icon(
-                    isDone ? Icons.cancel_outlined : Icons.done,
+                    isDone ? Icons.remove_done_rounded : Icons.done_rounded,
                     size: 18,
                   ),
                 ),
+                // Copy to Clipboard
                 FilledButton(
                   onPressed: () {
                     Clipboard.setData(
@@ -302,7 +300,10 @@ class __StepInstructionState extends State<_StepInstruction> {
                       isHidden = true;
                     });
                   },
-                  style: buttonStyle,
+                  style: buttonStyle.copyWith(
+                    backgroundColor: WidgetStatePropertyAll(
+                        Theme.of(context).colorScheme.tertiary),
+                  ),
                   child: const Icon(Icons.copy, size: 18),
                 ),
               ],

@@ -20,7 +20,7 @@ const RecipeModelSchema = CollectionSchema(
     r'calories': PropertySchema(
       id: 0,
       name: r'calories',
-      type: IsarType.string,
+      type: IsarType.long,
     ),
     r'cuisines': PropertySchema(
       id: 1,
@@ -40,7 +40,7 @@ const RecipeModelSchema = CollectionSchema(
     r'fat': PropertySchema(
       id: 4,
       name: r'fat',
-      type: IsarType.string,
+      type: IsarType.long,
     ),
     r'healthScore': PropertySchema(
       id: 5,
@@ -87,7 +87,7 @@ const RecipeModelSchema = CollectionSchema(
     r'protein': PropertySchema(
       id: 13,
       name: r'protein',
-      type: IsarType.string,
+      type: IsarType.long,
     ),
     r'recipeId': PropertySchema(
       id: 14,
@@ -171,7 +171,6 @@ int _recipeModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.calories.length * 3;
   bytesCount += 3 + object.cuisines.length * 3;
   {
     for (var i = 0; i < object.cuisines.length; i++) {
@@ -193,7 +192,6 @@ int _recipeModelEstimateSize(
       bytesCount += value.length * 3;
     }
   }
-  bytesCount += 3 + object.fat.length * 3;
   bytesCount += 3 + object.imageUrl.length * 3;
   bytesCount += 3 + object.ingredients.length * 3;
   {
@@ -231,7 +229,6 @@ int _recipeModelEstimateSize(
       }
     }
   }
-  bytesCount += 3 + object.protein.length * 3;
   {
     final list = object.similarRecipes;
     if (list != null) {
@@ -259,11 +256,11 @@ void _recipeModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.calories);
+  writer.writeLong(offsets[0], object.calories);
   writer.writeStringList(offsets[1], object.cuisines);
   writer.writeStringList(offsets[2], object.diets);
   writer.writeStringList(offsets[3], object.dishTypes);
-  writer.writeString(offsets[4], object.fat);
+  writer.writeLong(offsets[4], object.fat);
   writer.writeDouble(offsets[5], object.healthScore);
   writer.writeString(offsets[6], object.imageUrl);
   writer.writeStringList(offsets[7], object.ingredients);
@@ -282,7 +279,7 @@ void _recipeModelSerialize(
   );
   writer.writeBool(offsets[11], object.popular);
   writer.writeDouble(offsets[12], object.pricePerServing);
-  writer.writeString(offsets[13], object.protein);
+  writer.writeLong(offsets[13], object.protein);
   writer.writeLong(offsets[14], object.recipeId);
   writer.writeLong(offsets[15], object.servings);
   writer.writeObjectList<SimilarRecipeModel>(
@@ -308,11 +305,11 @@ RecipeModel _recipeModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = RecipeModel(
-    calories: reader.readString(offsets[0]),
+    calories: reader.readLong(offsets[0]),
     cuisines: reader.readStringList(offsets[1]) ?? [],
     diets: reader.readStringList(offsets[2]) ?? [],
     dishTypes: reader.readStringList(offsets[3]) ?? [],
-    fat: reader.readString(offsets[4]),
+    fat: reader.readLong(offsets[4]),
     healthScore: reader.readDouble(offsets[5]),
     imageUrl: reader.readString(offsets[6]),
     ingredients: reader.readStringList(offsets[7]) ?? [],
@@ -332,7 +329,7 @@ RecipeModel _recipeModelDeserialize(
     ),
     popular: reader.readBool(offsets[11]),
     pricePerServing: reader.readDouble(offsets[12]),
-    protein: reader.readString(offsets[13]),
+    protein: reader.readLong(offsets[13]),
     recipeId: reader.readLong(offsets[14]),
     servings: reader.readLong(offsets[15]),
     similarRecipes: reader.readObjectList<SimilarRecipeModel>(
@@ -362,7 +359,7 @@ P _recipeModelDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 1:
       return (reader.readStringList(offset) ?? []) as P;
     case 2:
@@ -370,7 +367,7 @@ P _recipeModelDeserializeProp<P>(
     case 3:
       return (reader.readStringList(offset) ?? []) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 5:
       return (reader.readDouble(offset)) as P;
     case 6:
@@ -399,7 +396,7 @@ P _recipeModelDeserializeProp<P>(
     case 12:
       return (reader.readDouble(offset)) as P;
     case 13:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 14:
       return (reader.readLong(offset)) as P;
     case 15:
@@ -526,56 +523,48 @@ extension RecipeModelQueryWhere
 extension RecipeModelQueryFilter
     on QueryBuilder<RecipeModel, RecipeModel, QFilterCondition> {
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> caloriesEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'calories',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
       caloriesGreaterThan(
-    String value, {
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'calories',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
       caloriesLessThan(
-    String value, {
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'calories',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> caloriesBetween(
-    String lower,
-    String upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -584,78 +573,6 @@ extension RecipeModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      caloriesStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'calories',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      caloriesEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'calories',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      caloriesContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'calories',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> caloriesMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'calories',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      caloriesIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'calories',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      caloriesIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'calories',
-        value: '',
       ));
     });
   }
@@ -1335,54 +1252,46 @@ extension RecipeModelQueryFilter
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> fatEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'fat',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> fatGreaterThan(
-    String value, {
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'fat',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> fatLessThan(
-    String value, {
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'fat',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> fatBetween(
-    String lower,
-    String upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1391,76 +1300,6 @@ extension RecipeModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> fatStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'fat',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> fatEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'fat',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> fatContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'fat',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> fatMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'fat',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> fatIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'fat',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      fatIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'fat',
-        value: '',
       ));
     });
   }
@@ -2388,55 +2227,47 @@ extension RecipeModelQueryFilter
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> proteinEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'protein',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
       proteinGreaterThan(
-    String value, {
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'protein',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> proteinLessThan(
-    String value, {
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'protein',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> proteinBetween(
-    String lower,
-    String upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -2445,78 +2276,6 @@ extension RecipeModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      proteinStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'protein',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> proteinEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'protein',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> proteinContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'protein',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> proteinMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'protein',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      proteinIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'protein',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      proteinIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'protein',
-        value: '',
       ));
     });
   }
@@ -3893,10 +3652,9 @@ extension RecipeModelQuerySortThenBy
 
 extension RecipeModelQueryWhereDistinct
     on QueryBuilder<RecipeModel, RecipeModel, QDistinct> {
-  QueryBuilder<RecipeModel, RecipeModel, QDistinct> distinctByCalories(
-      {bool caseSensitive = true}) {
+  QueryBuilder<RecipeModel, RecipeModel, QDistinct> distinctByCalories() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'calories', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'calories');
     });
   }
 
@@ -3918,10 +3676,9 @@ extension RecipeModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QDistinct> distinctByFat(
-      {bool caseSensitive = true}) {
+  QueryBuilder<RecipeModel, RecipeModel, QDistinct> distinctByFat() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'fat', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'fat');
     });
   }
 
@@ -3965,10 +3722,9 @@ extension RecipeModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QDistinct> distinctByProtein(
-      {bool caseSensitive = true}) {
+  QueryBuilder<RecipeModel, RecipeModel, QDistinct> distinctByProtein() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'protein', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'protein');
     });
   }
 
@@ -4045,7 +3801,7 @@ extension RecipeModelQueryProperty
     });
   }
 
-  QueryBuilder<RecipeModel, String, QQueryOperations> caloriesProperty() {
+  QueryBuilder<RecipeModel, int, QQueryOperations> caloriesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'calories');
     });
@@ -4070,7 +3826,7 @@ extension RecipeModelQueryProperty
     });
   }
 
-  QueryBuilder<RecipeModel, String, QQueryOperations> fatProperty() {
+  QueryBuilder<RecipeModel, int, QQueryOperations> fatProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'fat');
     });
@@ -4129,7 +3885,7 @@ extension RecipeModelQueryProperty
     });
   }
 
-  QueryBuilder<RecipeModel, String, QQueryOperations> proteinProperty() {
+  QueryBuilder<RecipeModel, int, QQueryOperations> proteinProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'protein');
     });

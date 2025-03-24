@@ -8,53 +8,29 @@ part 'recipe_model.g.dart';
 class RecipeModel {
   Id? id = Isar.autoIncrement;
   final int recipeId;
-
   final String title;
-
   final String imageUrl;
-
   final String sourceName;
-
   final String sourceUrl;
-
   final int time;
-
   final int servings;
-
   final double pricePerServing;
-
   final bool popular;
-
   final bool vegetarian;
-
   final bool vegan;
-
   final List<String> cuisines;
-
   final List<String> dishTypes;
-
   final List<String> diets;
-
   final List<String> ingredients;
-
   final List<InstructionModel> instructions;
-
-  final String calories;
-
-  final String protein;
-
-  final String fat;
-
+  final int calories;
+  final int protein;
+  final int fat;
   final double healthScore;
-
   final int weightWatcher;
-
   final String summary;
-
   final String? instructionsParagraph;
-
   final List<NutritionModel>? nutrients;
-
   final List<SimilarRecipeModel>? similarRecipes;
 
   RecipeModel({
@@ -94,8 +70,8 @@ class RecipeModel {
       sourceUrl: jsonData['sourceUrl'],
       time: jsonData['readyInMinutes'],
       servings: jsonData['servings'],
-      // TODO divide by 100
-      pricePerServing: jsonData['pricePerServing'],
+      // TODO increase this, inflation wasnt accounted for it seems
+      pricePerServing: jsonData['pricePerServing'] / 100,
       popular: jsonData['veryPopular'],
       vegan: jsonData['vegan'],
       vegetarian: jsonData['vegetarian'],
@@ -105,9 +81,9 @@ class RecipeModel {
       ingredients:
           _extractStringFromList(jsonData['extendedIngredients'], 'original'),
       instructions: _returnListOfInstructions(jsonData),
-      calories: _getStringFromParagraph(jsonData['summary'], ' calories'),
-      protein: _getStringFromParagraph(jsonData['summary'], 'g of protein'),
-      fat: _getStringFromParagraph(jsonData['summary'], 'g of fat'),
+      calories: _getIntFromParagraph(jsonData['summary'], ' calories'),
+      protein: _getIntFromParagraph(jsonData['summary'], 'g of protein'),
+      fat: _getIntFromParagraph(jsonData['summary'], 'g of fat'),
       healthScore: jsonData['healthScore'],
       weightWatcher: jsonData['weightWatcherSmartPoints'],
       summary: jsonData['summary'],
@@ -135,9 +111,9 @@ class RecipeModel {
     List<String>? diets,
     List<String>? ingredients,
     List<InstructionModel>? instructions,
-    String? calories,
-    String? protein,
-    String? fat,
+    int? calories,
+    int? protein,
+    int? fat,
     double? healthScore,
     int? weightWatcher,
     String? summary,
@@ -318,14 +294,16 @@ List<String> _extractStringFromList(dynamic jsonData, String key) {
   return [];
 }
 
-String _getStringFromParagraph(String summary, String searchFor) {
-  RegExp regex = RegExp(r'\d+' + RegExp.escape(searchFor));
+int _getIntFromParagraph(String summary, String searchFor) {
+  RegExp regex = RegExp(r'(\d+)\s*' + RegExp.escape(searchFor));
   Match? match = regex.firstMatch(summary);
+
   if (match != null) {
-    String foundData = match.group(0)!;
-    return StringUtils.capitalize(foundData, allWords: true);
+    int foundData = int.parse(match.group(1)!); // Extract number before keyword
+    print('foundData: $foundData');
+    return foundData;
   } else {
-    return '';
+    return -1; // Use -1 instead of 000 for clarity
   }
 }
 

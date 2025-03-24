@@ -69,7 +69,7 @@ class RecipeDisplayCardWidget extends StatelessWidget {
                   child: AutoSizeText(
                     title,
                     minFontSize: 0.1,
-                    maxFontSize: 20,
+                    maxFontSize: 25,
                     stepGranularity: 0.1,
                     textAlign: TextAlign.center,
                     style: titleStyle,

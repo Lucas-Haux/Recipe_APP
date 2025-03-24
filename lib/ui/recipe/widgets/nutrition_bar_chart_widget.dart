@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_box/domain/models/recipe_model.dart';
@@ -28,8 +29,18 @@ class NutritionBarChartWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Title
-            Text(
-              "Recommended Daily Intake Percentage",
+            Padding(
+              padding: EdgeInsets.only(left: 25, bottom: 10),
+              child: AutoSizeText(
+                "Percentage of Recommended Daily Intake",
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
             ),
             // Barchart
             SizedBox(
