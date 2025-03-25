@@ -19,6 +19,16 @@ class SearchViewModel extends _$SearchViewModel {
     await ref.read(recipeDataRepositoryProvider).clearDB();
   }
 
+  clearSearchParameters(String query) async {
+    try {
+      await ref.read(searchParametersRepositoryProvider).resetToDefaults(query);
+      state =
+          ref.watch(searchParametersRepositoryProvider).getSearchParameters();
+    } catch (e) {
+      throw e;
+    }
+  }
+
   void updateSearchParameters(Map<String, dynamic> newParameter) {
     try {
       ref.watch(searchParametersRepositoryProvider).updateState(

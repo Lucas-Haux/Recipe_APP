@@ -80,6 +80,7 @@ class SearchScreen extends ConsumerWidget {
             pinned: true,
             snap: false,
             expandedHeight: 250.0,
+            collapsedHeight: 60.0 + (isModified() ? 22.0 : 0.0),
             leading: const SizedBox(), // hide backbutton in bar
 
             flexibleSpace: FlexibleSpaceBar(
@@ -123,23 +124,94 @@ class SearchScreen extends ConsumerWidget {
                 ),
               ),
               titlePadding: const EdgeInsets.only(), // removes left padding
-              title: Container(
-                padding: const EdgeInsets.only(
-                  left: 30.0,
-                  right: 30.0,
-                ),
-                height: 70,
+              centerTitle: true,
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(
+                      top: 45.0,
+                      left: 30.0,
+                      right: 30.0,
+                    ),
+                    height: 100,
 
-                // Search Field
-                child: Hero(
-                  tag: 'SearchBar',
-                  child: SearchBarFieldWidget(
-                    key: const ValueKey('SearchBar'),
-                    searchPage: true,
-                    controller: searchController,
-                    updateQuery: searchViewModel.updateSearchParameters,
+                    // Search Field
+                    child: Hero(
+                      tag: 'SearchBar',
+                      child: SearchBarFieldWidget(
+                        key: const ValueKey('SearchBar'),
+                        searchPage: true,
+                        controller: searchController,
+                        updateQuery: searchViewModel.updateSearchParameters,
+                      ),
+                    ),
                   ),
-                ),
+                  WidgetAnimator(
+                    incomingEffect:
+                        WidgetTransitionEffects.incomingSlideInFromBottom(
+                            duration: Duration(milliseconds: 500)),
+                    outgoingEffect:
+                        WidgetTransitionEffects.outgoingSlideOutToBottom(
+                            duration: Duration(milliseconds: 500)),
+                    child: isModified()
+                        ? Container(
+                            width: 175,
+                            height: 22,
+                            padding: EdgeInsets.zero,
+                            margin: EdgeInsets.zero,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
+                              border: Border(
+                                left: BorderSide(
+                                  width: 2,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                right: BorderSide(
+                                  width: 2,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                bottom: BorderSide(
+                                  width: 2,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                top: BorderSide.none, // Removes the top stroke
+                              ),
+                              borderRadius: BorderRadius.vertical(
+                                bottom: Radius.circular(
+                                    20), // Keeps only the bottom rounded corners
+                              ),
+                            ),
+                            child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: TextButton(
+                                onPressed: () =>
+                                    searchViewModel.clearSearchParameters(
+                                        searchController.text),
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                child: Text(
+                                  'Clear Filters',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : SizedBox(),
+                  ),
+                  SizedBox(height: 10)
+                ],
               ),
             ),
           ),
@@ -151,36 +223,6 @@ class SearchScreen extends ConsumerWidget {
               children: [
                 // clear filters bar
 
-                WidgetAnimator(
-                  incomingEffect:
-                      WidgetTransitionEffects.incomingSlideInFromTop(
-                          duration: Duration(milliseconds: 100)),
-                  outgoingEffect: WidgetTransitionEffects.outgoingSlideOutToTop(
-                      duration: Duration(milliseconds: 500)),
-                  child: isModified()
-                      ? Container(
-                          width: 175,
-                          padding: EdgeInsets.only(bottom: 3),
-                          decoration: ShapeDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .secondaryContainer,
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                strokeAlign: 2,
-                                width: 2,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              borderRadius: BorderRadius.vertical(
-                                  bottom: Radius.circular(20)),
-                            ),
-                          ),
-                          child: Text('Clear Filters',
-                              textAlign: TextAlign.center),
-                        )
-                      : null,
-                ),
-
                 const SizedBox(height: 15),
 
                 // Meal Type
@@ -189,6 +231,7 @@ class SearchScreen extends ConsumerWidget {
                   title: 'Meal Type',
                   givenEnums: searchParameters.meals,
                   updateState: searchViewModel.updateSearchParameters,
+                  titleTextStyle: titleTextStyle,
                 ),
 
                 // Cuisines
@@ -197,6 +240,7 @@ class SearchScreen extends ConsumerWidget {
                   title: 'Cuisines',
                   givenEnums: searchParameters.cuisines,
                   updateState: searchViewModel.updateSearchParameters,
+                  titleTextStyle: titleTextStyle,
                 ),
 
                 // Diets
@@ -205,6 +249,7 @@ class SearchScreen extends ConsumerWidget {
                   title: 'Diets',
                   givenEnums: searchParameters.diets,
                   updateState: searchViewModel.updateSearchParameters,
+                  titleTextStyle: titleTextStyle,
                 ),
 
                 // Equipment
@@ -213,6 +258,7 @@ class SearchScreen extends ConsumerWidget {
                   title: 'Equipment',
                   givenEnums: searchParameters.equipment,
                   updateState: searchViewModel.updateSearchParameters,
+                  titleTextStyle: titleTextStyle,
                 ),
 
                 // Intolerances
@@ -221,6 +267,7 @@ class SearchScreen extends ConsumerWidget {
                   title: 'Intolerances',
                   givenEnums: searchParameters.intolerances,
                   updateState: searchViewModel.updateSearchParameters,
+                  titleTextStyle: titleTextStyle,
                 ),
 
                 // Ingredients
@@ -246,8 +293,7 @@ class SearchScreen extends ConsumerWidget {
                 // Servings
                 MinMaxSliders(
                   title: 'Servings',
-                  givenMaxValue: searchParameters.servings.end,
-                  givenMinValue: searchParameters.servings.start,
+                  range: searchParameters.servings,
                   updateState: searchViewModel.updateSearchParameters,
                   isModified: () =>
                       searchParameters.servings != SearchParameters().servings,
@@ -259,8 +305,7 @@ class SearchScreen extends ConsumerWidget {
                 // Carbs
                 MinMaxSliders(
                   title: 'Calories',
-                  givenMaxValue: searchParameters.calories.end,
-                  givenMinValue: searchParameters.calories.start,
+                  range: searchParameters.calories,
                   updateState: searchViewModel.updateSearchParameters,
                   isModified: () =>
                       searchParameters.calories != SearchParameters().calories,
@@ -272,8 +317,7 @@ class SearchScreen extends ConsumerWidget {
                 // Protein
                 MinMaxSliders(
                   title: 'Protein',
-                  givenMaxValue: searchParameters.protein.end,
-                  givenMinValue: searchParameters.protein.start,
+                  range: searchParameters.protein,
                   updateState: searchViewModel.updateSearchParameters,
                   isModified: () =>
                       searchParameters.protein != SearchParameters().protein,
@@ -285,8 +329,7 @@ class SearchScreen extends ConsumerWidget {
                 // Fat
                 MinMaxSliders(
                   title: 'Fat',
-                  givenMaxValue: searchParameters.fat.end,
-                  givenMinValue: searchParameters.fat.start,
+                  range: searchParameters.fat,
                   updateState: searchViewModel.updateSearchParameters,
                   isModified: () =>
                       searchParameters.fat != SearchParameters().fat,

@@ -110,5 +110,11 @@ class LocalSearchParametersRepository
   }
 
   @override
-  resetToDefaults() {}
+  resetToDefaults(String query) {
+    try {
+      searchParameters = SearchParameters(query: query);
+    } catch (e) {
+      throw 'Couldnt reset to defaults: $e';
+    }
+  }
 }

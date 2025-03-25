@@ -12,11 +12,14 @@ class ExpandableChipsCard<RecipeParameter extends DisplayableEnum,
   final Map<RecipeParameter, ChipModeCollection> givenEnums;
   final void Function(Map<String, dynamic>) updateState;
   final AndOrType? defualtAndOr;
+  final TextStyle titleTextStyle;
+
   const ExpandableChipsCard({
     required this.chipMode,
     required this.title,
     required this.givenEnums,
     required this.updateState,
+    required this.titleTextStyle,
     this.defualtAndOr,
     super.key,
   });
@@ -35,8 +38,6 @@ class ExpandableChipsState<RecipeParameter extends DisplayableEnum,
   @override
   Widget build(BuildContext context) {
     final List<RecipeParameter> enumValues = widget.givenEnums.keys.toList();
-
-    TextStyle titleTextStyle = const TextStyle(fontSize: 25);
 
     ButtonStyle segmentedButtonStyle = ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith<Color>(
@@ -93,7 +94,7 @@ class ExpandableChipsState<RecipeParameter extends DisplayableEnum,
       child: ExpansionTile(
         title: Text(
           widget.title,
-          style: titleTextStyle,
+          style: widget.titleTextStyle,
           textAlign: TextAlign.center,
         ),
         subtitle: WidgetAnimator(

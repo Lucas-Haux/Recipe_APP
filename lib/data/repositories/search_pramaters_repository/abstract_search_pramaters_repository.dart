@@ -33,5 +33,5 @@ abstract class AbstractSearchParamatersRepository {
     Map<String, RequireExclude>? ingredients,
   });
 
-  resetToDefaults();
+  resetToDefaults(String query);
 }

@@ -20,14 +20,6 @@ class MaxReadyTimeSlider extends StatefulWidget {
 }
 
 class MaxReadyTimeState extends State<MaxReadyTimeSlider> {
-  late double _primarySliderValue;
-
-  @override
-  void initState() {
-    super.initState();
-    _primarySliderValue = widget.givenPrimarySliderValue; // Initialize state
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -62,16 +54,16 @@ class MaxReadyTimeState extends State<MaxReadyTimeSlider> {
               ],
             ),
             Slider(
-              value: _primarySliderValue,
+              value: widget.givenPrimarySliderValue,
               min: 30,
               max: 720,
               divisions: 360,
-              label: minutesToHourMin(_primarySliderValue.round()),
+              label: minutesToHourMin(widget.givenPrimarySliderValue.round()),
               onChanged: (double value) {
                 setState(() {
                   double remainder = value.round() % 30;
-                  _primarySliderValue = value.round() - remainder;
-                  widget.setValue({'maxTime': _primarySliderValue});
+                  final newValue = value.round() - remainder;
+                  widget.setValue({'maxTime': newValue});
                 });
               },
             ),
@@ -100,16 +92,14 @@ class MaxReadyTimeState extends State<MaxReadyTimeSlider> {
 class MinMaxSliders extends StatefulWidget {
   final String title;
   final bool Function() isModified;
-  final double givenMaxValue;
-  final double givenMinValue;
+  final RangeValues range;
   final double sliderMaximum;
   final double sliderMinimum;
   final Function(Map<String, dynamic>) updateState;
   final TextStyle titleTextStyle;
   const MinMaxSliders({
     required this.title,
-    required this.givenMaxValue,
-    required this.givenMinValue,
+    required this.range,
     required this.sliderMaximum,
     required this.sliderMinimum,
     required this.isModified,
@@ -122,16 +112,6 @@ class MinMaxSliders extends StatefulWidget {
 }
 
 class _MinMaxSlidersState extends State<MinMaxSliders> {
-  late double _maxSliderValue;
-  late double _minSliderValue;
-
-  @override
-  void initState() {
-    super.initState();
-    _maxSliderValue = widget.givenMaxValue; // Initialize state
-    _minSliderValue = widget.givenMinValue;
-  }
-
   @override
   Widget build(BuildContext context) {
     TextStyle secondaryTitleStyle = const TextStyle(
@@ -178,20 +158,16 @@ class _MinMaxSlidersState extends State<MinMaxSliders> {
                     PaddleRangeSliderValueIndicatorShape(),
               ),
               child: RangeSlider(
-                values: RangeValues(_minSliderValue, _maxSliderValue),
+                values: widget.range,
                 onChanged: (RangeValues newValue) {
-                  setState(() {
-                    widget.updateState({widget.title: newValue});
-                    _maxSliderValue = newValue.end.round().toDouble();
-                    _minSliderValue = newValue.start.round().toDouble();
-                  });
+                  widget.updateState({widget.title: newValue});
                 },
                 min: widget.sliderMinimum,
                 max: widget.sliderMaximum,
                 divisions: 100,
                 labels: RangeLabels(
-                  _minSliderValue.round().toString(),
-                  _maxSliderValue.round().toString(),
+                  widget.range.start.round().toString(),
+                  widget.range.end.round().toString(),
                 ),
               ),
             ),
