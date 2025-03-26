@@ -2,6 +2,7 @@ import 'package:recipe_box/domain/models/recipe_model.dart';
 
 import 'package:flutter/material.dart';
 import 'package:recipe_box/ui/home/home_screen.dart';
+import 'package:recipe_box/ui/home/widgets/favorites/favorites_screen.dart';
 import 'package:recipe_box/ui/recipe/recipe_screen.dart';
 import 'package:recipe_box/ui/search/search_screen.dart';
 import 'package:recipe_box/ui/search_results/search_results_screen.dart';
@@ -34,6 +35,10 @@ class MainApp extends StatelessWidget {
             switch (homePage.name) {
               case '/':
                 return const HomeScreen();
+              case '/favorites':
+                final List<RecipeModel> favorites =
+                    homePage.arguments as List<RecipeModel>;
+                return FavoritesScreen(favorites: favorites);
               case '/searchPage':
                 return const SearchScreen();
               case '/searchPage/searchResults':

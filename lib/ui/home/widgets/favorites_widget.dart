@@ -68,9 +68,15 @@ class FavoritesWidget extends StatelessWidget {
                 const Spacer(),
                 RotatedBox(
                   quarterTurns: 3,
-                  child: Icon(
-                    Icons.expand_more_rounded,
-                    size: 30,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/favorites',
+                          arguments: favoritesList);
+                    },
+                    icon: Icon(
+                      Icons.expand_more_rounded,
+                      size: 30,
+                    ),
                   ),
                 ),
               ],
