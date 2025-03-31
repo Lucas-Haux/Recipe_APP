@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recipe_box/shared/models/recipe.dart';
+import 'package:recipe_box/shared/ui/back_search_home_bar.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
+
+import 'package:recipe_box/shared/models/recipe.dart';
+import 'package:recipe_box/shared/ui/detailed_recipe_display_card.dart';
+import 'package:recipe_box/shared/ui/recipe_search_bar.dart';
 
 class FavoritesScreen extends ConsumerWidget {
   final List<Recipe> favorites;
@@ -22,11 +27,13 @@ class FavoritesScreen extends ConsumerWidget {
       }
     }
 
+    // Backgroud gradient
     return Container(
       decoration: BoxDecoration(
         gradient: SweepGradient(
           colors: [
-            Color(0XFF8b0000).withAlpha(120),
+            Color(0XFF8b0000),
+            //.withAlpha(120),
             Colors.transparent,
           ],
           endAngle: 10,
@@ -42,14 +49,15 @@ class FavoritesScreen extends ConsumerWidget {
             forceMaterialTransparency: true,
             leadingWidth: 0,
             titleSpacing: 0,
-            leading: const SizedBox(),
-            title: const _AppBar(),
+            leading: const SizedBox.shrink(),
+            title: BackSearchHomeBar(backButton: false),
           ),
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
+              SizedBox(height: 15),
               TextAnimator(
                 'Favorites',
                 atRestEffect: WidgetRestingEffects.wave(
@@ -80,111 +88,57 @@ class FavoritesScreen extends ConsumerWidget {
                   ],
                 ),
               ),
-              //Row(
-              //  mainAxisAlignment: MainAxisAlignment.center,
-              //  crossAxisAlignment: CrossAxisAlignment.start,
-              //  children: [
-              //    Column(
-              //      mainAxisAlignment: MainAxisAlignment.start,
-              //      children: List.generate(
-              //        leftFavorites.length,
-              //        (int index) => Padding(
-              //          padding: EdgeInsets.only(
-              //            left: 10,
-              //            right: 5,
-              //            bottom: 10,
-              //          ),
-              //          child: RecipeDisplayCard(
-              //            recipe: leftFavorites[index],
-              //            showPopularBadge: false,
-              //            recipeListIndex: index,
-              //          ),
-              //        ),
-              //      ),
-              //    ),
-              //    Column(
-              //      mainAxisAlignment: MainAxisAlignment.start,
-              //      children: List.generate(
-              //        rightFavorites.length,
-              //        (int index) => Padding(
-              //          padding: EdgeInsets.only(
-              //            left: 5,
-              //            right: 10,
-              //            bottom: 10,
-              //          ),
-              //          child: RecipeDisplayCard(
-              //            recipe: rightFavorites[index],
-              //            showPopularBadge: false,
-              //            recipeListIndex: index,
-              //          ),
-              //        ),
-              //      ),
-              //    ),
-              //  ],
-              //),
+              SizedBox(height: 15),
+
+              // Recipes
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Left Side
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: List.generate(
+                      leftFavorites.length,
+                      (int index) => Padding(
+                        padding: EdgeInsets.only(
+                          left: 10,
+                          right: 5,
+                          bottom: 10,
+                        ),
+                        child: DetailedRecipeDisplayCard(
+                          recipe: leftFavorites[index],
+                          showPopularBadge: false,
+                          recipeListIndex: index,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Right Side
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: List.generate(
+                      rightFavorites.length,
+                      (int index) => Padding(
+                        padding: EdgeInsets.only(
+                          left: 5,
+                          right: 10,
+                          bottom: 10,
+                        ),
+                        child: DetailedRecipeDisplayCard(
+                          recipe: rightFavorites[index],
+                          showPopularBadge: false,
+                          recipeListIndex: index,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _AppBar extends StatelessWidget {
-  const _AppBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Spacer(),
-
-          // Back Button
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(
-              Icons.arrow_back,
-              size: 30,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-
-          const Spacer(),
-
-          // Search Button
-          //SizedBox(
-          //  height: 45,
-          //  width: 250,
-          //  child: Hero(
-          //    tag: 'SearchBar',
-          //    child: SearchBarFieldWidget(
-          //      key: const ValueKey('SearchBar'),
-          //      searchPage: false,
-          //    ),
-          //  ),
-          //),
-
-          const Spacer(),
-
-          // Home Button
-          Hero(
-            tag: const Key('HomeButton'),
-            child: IconButton(
-              onPressed: () => Navigator.pushNamed(context, '/'),
-              icon: Icon(
-                Icons.home,
-                size: 30,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
-          ),
-
-          const Spacer()
-        ],
       ),
     );
   }

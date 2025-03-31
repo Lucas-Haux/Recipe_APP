@@ -13,7 +13,7 @@ class SearchResultsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(searchResultsManagerProvider.notifier);
+    final manager = ref.watch(searchResultsManagerProvider.notifier);
     final recipeState = ref.watch(searchResultsManagerProvider);
 
     return Scaffold(
@@ -50,7 +50,7 @@ class SearchResultsScreen extends ConsumerWidget {
         ),
       ),
       body: InfiniteScrollPagination(
-        getArticleListPage: viewModel.getArticleListPage,
+        getArticleListPage: manager.getArticleListPage,
       ),
     );
   }

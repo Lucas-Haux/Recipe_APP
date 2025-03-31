@@ -1,3 +1,5 @@
+import 'package:recipe_box/shared/models/recipe.dart';
+import 'package:recipe_box/shared/services/recipe_favorites/recipe_favorites_database.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'recipe_image_manager.g.dart';
@@ -5,5 +7,39 @@ part 'recipe_image_manager.g.dart';
 @Riverpod()
 class RecipeImageManager extends _$RecipeImageManager {
   @override
-  void build() {}
+  FutureOr<bool?> build(Recipe? recipe) async {
+    try {
+      if (recipe == null) return null;
+
+      return ref
+          .watch(favoritesDatabaseProvider)
+          .checkIfRecipeIsFavorite(recipe.recipeId);
+    } catch (e) {
+      throw "Failed to build recipe image manager: $e";
+    }
+  }
+
+  Future<void> addFavorite() async {
+    try {
+      await ref.read(favoritesDatabaseProvider).addFavorite(recipe!);
+      state = AsyncValue.data(await ref
+          .read(favoritesDatabaseProvider)
+          .checkIfRecipeIsFavorite(recipe!.recipeId));
+    } catch (e) {
+      throw "Failed to add favorite in recipe image manager: $e";
+    }
+  }
+
+  Future<void> removeFavorite() async {
+    try {
+      await ref
+          .read(favoritesDatabaseProvider)
+          .removeFavorite(recipe!.recipeId);
+      state = AsyncValue.data(await ref
+          .read(favoritesDatabaseProvider)
+          .checkIfRecipeIsFavorite(recipe!.recipeId));
+    } catch (e) {
+      throw "Failed to remove favorite recipe image manager: $e";
+    }
+  }
 }

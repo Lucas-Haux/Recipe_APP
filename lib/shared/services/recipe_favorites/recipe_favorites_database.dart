@@ -22,7 +22,7 @@ AbstractFavoritesDatabase favoritesDatabase(Ref ref) =>
 class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
   late Future<Isar> favoritesDatabase;
 
-  localFavoritesDatabase() {
+  LocalFavoritesDatabase() {
     favoritesDatabase = openDB();
   }
 
@@ -31,7 +31,8 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
     try {
       final isar = await favoritesDatabase;
 
-      return isar.recipes.where().findAll();
+      final favorites = isar.recipes.where().findAll();
+      return favorites;
     } catch (e) {
       throw "Cant return favorites from database: $e";
     }
@@ -42,8 +43,33 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
     try {
       final isar = await favoritesDatabase;
 
+      // genereate a recipe this way so it has a unique id
+      final recipe = Recipe(
+          recipeId: newFavoriteRecipe.recipeId,
+          title: newFavoriteRecipe.title,
+          imageUrl: newFavoriteRecipe.imageUrl,
+          sourceName: newFavoriteRecipe.sourceName,
+          sourceUrl: newFavoriteRecipe.sourceUrl,
+          popular: newFavoriteRecipe.popular,
+          vegetarian: newFavoriteRecipe.vegetarian,
+          vegan: newFavoriteRecipe.vegan,
+          cuisines: newFavoriteRecipe.cuisines,
+          dishTypes: newFavoriteRecipe.dishTypes,
+          diets: newFavoriteRecipe.diets,
+          time: newFavoriteRecipe.time,
+          servings: newFavoriteRecipe.servings,
+          pricePerServing: newFavoriteRecipe.pricePerServing,
+          healthScore: newFavoriteRecipe.healthScore,
+          weightWatcher: newFavoriteRecipe.weightWatcher,
+          calories: newFavoriteRecipe.calories,
+          protein: newFavoriteRecipe.protein,
+          fat: newFavoriteRecipe.fat,
+          summary: newFavoriteRecipe.summary,
+          ingredients: newFavoriteRecipe.ingredients,
+          instructions: newFavoriteRecipe.instructions);
+
       await isar.writeTxn(() async {
-        isar.recipes.put(newFavoriteRecipe);
+        isar.recipes.put(recipe);
       });
     } catch (e) {
       throw "Failed to add favorite to database: $e";
@@ -90,7 +116,7 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
       } else {
         final docs = await getApplicationDocumentsDirectory();
         // TODO this should be somewhere in share
-        final favoriteRecipesDir = Directory('${docs.path}/favoriteRecipes');
+        final favoriteRecipesDir = Directory('${docs.path}/favoritesDatabase');
         await favoriteRecipesDir.create(recursive: true);
 
         return Isar.openSync(

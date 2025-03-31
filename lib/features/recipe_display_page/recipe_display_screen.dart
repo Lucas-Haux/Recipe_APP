@@ -1,5 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:recipe_box/features/recipe_display_page/recipe_display_manager.dart';
 import 'package:recipe_box/features/recipe_display_page/widgets/enum_row_display.dart';
 import 'package:recipe_box/features/recipe_display_page/widgets/equipment_card.dart';
@@ -9,7 +11,7 @@ import 'package:recipe_box/features/recipe_display_page/widgets/misc_info.dart';
 import 'package:recipe_box/features/recipe_display_page/widgets/servings_info.dart';
 import 'package:recipe_box/features/recipe_display_page/widgets/similar_recipes_card.dart';
 import 'package:recipe_box/shared/ui/back_search_home_bar.dart';
-import 'package:recipe_box/shared/ui/recipe_display_card.dart';
+import 'package:recipe_box/shared/ui/basic_recipe_display_card.dart';
 
 double cardWidth = 371;
 
@@ -47,7 +49,7 @@ class RecipeDisplayScreen extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                RecipeDisplayCard(
+                BasicRecipeDisplayCard(
                   expand: false,
                   title: title,
                   imageUrl: imageUrl,
@@ -86,7 +88,7 @@ class RecipeDisplayScreen extends ConsumerWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              RecipeDisplayCard(
+              BasicRecipeDisplayCard(
                 expand: false,
                 recipe: recipe,
                 imageUrl: recipe.imageUrl,

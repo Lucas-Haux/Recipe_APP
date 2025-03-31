@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:recipe_box/features/search_results_page/widgets/search_result_recipe_display_card.dart';
 import 'package:recipe_box/shared/models/recipe.dart';
+import 'package:recipe_box/shared/ui/detailed_recipe_display_card.dart';
 
 class InfiniteScrollPagination extends StatefulWidget {
   const InfiniteScrollPagination({
@@ -29,8 +29,7 @@ class InfiniteScrollPaginationState extends State<InfiniteScrollPagination> {
           mainAxisSpacing: 8,
           crossAxisSpacing: 8,
           builderDelegate: PagedChildBuilderDelegate<Recipe>(
-            itemBuilder: (context, recipe, index) =>
-                SearchResultRecipeDisplayCard(
+            itemBuilder: (context, recipe, index) => DetailedRecipeDisplayCard(
               recipe: recipe,
               showPopularBadge: false,
               recipeListIndex: index,

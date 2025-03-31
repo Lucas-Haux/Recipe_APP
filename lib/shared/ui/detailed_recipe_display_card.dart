@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:badges/badges.dart' as badges;
 import 'package:recipe_box/shared/models/recipe.dart';
 
-class SearchResultRecipeDisplayCard extends StatelessWidget {
+class DetailedRecipeDisplayCard extends StatelessWidget {
   final Recipe recipe;
   final bool showPopularBadge;
   final int recipeListIndex;
-  const SearchResultRecipeDisplayCard({
+  const DetailedRecipeDisplayCard({
     required this.recipe,
     required this.showPopularBadge,
     required this.recipeListIndex,

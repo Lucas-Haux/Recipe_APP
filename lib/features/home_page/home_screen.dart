@@ -22,7 +22,10 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final favoritesList = ref.watch(homeManagerProvider);
+    final manager = ref.watch(homeManagerProvider.notifier);
+    manager.getFavoritesList();
+
+    final favoritesList = ref.watch(homeManagerProvider).value;
 
     //remove
     final double height = MediaQuery.sizeOf(context).height;
@@ -56,7 +59,7 @@ class HomeScreen extends ConsumerWidget {
 
             Spacer(),
 
-            FavoritesCard(height: height, favoritesList: []),
+            FavoritesCard(height: height, favoritesList: favoritesList ?? []),
 
             const Spacer(),
             // Settings and tokens Buttons

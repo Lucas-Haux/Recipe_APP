@@ -13,9 +13,9 @@ class RecipeDisplayManager extends _$RecipeDisplayManager {
       final recipe = await ref
           .watch(recipeSearchResultsDatabaseProvider)
           .getSingleRecipe(recipeListIndex);
-      //isFavoirte = await ref
-      //    .watch(favoritesDatabaseProvider)
-      //    .checkIfRecipeIsFavorite(recipe.recipeId);
+      isFavoirte = await ref
+          .watch(favoritesDatabaseProvider)
+          .checkIfRecipeIsFavorite(recipe.recipeId);
 
       return recipe;
     } catch (e) {

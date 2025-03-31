@@ -18,11 +18,10 @@ class RecipeImage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     //final manager =
     //ref.watch(recipeFavoritesViewmodelProvider(recipe).notifier);
-    final manager = ref.watch(recipeImageManagerProvider);
+    final manager = ref.watch(recipeImageManagerProvider(recipe).notifier);
 
-    final bool isFavorite = true;
-    //final bool isFavorite =
-    //ref.watch(recipeFavoritesViewmodelProvider(recipe)).value;
+    final bool? isFavorite =
+        ref.watch(recipeImageManagerProvider(recipe)).value;
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
       child: Stack(
@@ -42,9 +41,9 @@ class RecipeImage extends ConsumerWidget {
               child: IconButton(
                 onPressed: () {
                   if (isFavorite) {
-                    //manager.removeFavorite();
+                    manager.removeFavorite();
                   } else {
-                    //manager.addFavorite();
+                    manager.addFavorite();
                   }
                 },
                 color: Colors.redAccent,

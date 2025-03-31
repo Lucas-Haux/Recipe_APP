@@ -5,7 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:recipe_box/shared/models/recipe.dart';
 import 'package:recipe_box/shared/ui/recipe_image.dart';
 
-class RecipeDisplayCard extends StatelessWidget {
+class BasicRecipeDisplayCard extends StatelessWidget {
   final int? recipeId;
   final Recipe? recipe;
   final String title;
@@ -13,7 +13,7 @@ class RecipeDisplayCard extends StatelessWidget {
   final bool expand;
   final double cardWidth;
   final TextStyle? titleStyle;
-  const RecipeDisplayCard({
+  const BasicRecipeDisplayCard({
     this.recipe,
     required this.title,
     this.recipeId,

@@ -1,11 +1,10 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dotted_border/dotted_border.dart';
-import 'package:recipe_box/shared/models/recipe.dart';
-import 'package:recipe_box/shared/ui/recipe_display_card.dart';
-
 import 'package:shimmer/shimmer.dart';
+
+import 'package:recipe_box/shared/models/recipe.dart';
+import 'package:recipe_box/shared/ui/basic_recipe_display_card.dart';
 
 class SimilarRecipesCard extends StatefulWidget {
   final int recipeId;
@@ -94,7 +93,7 @@ class _SimilarRecipesState extends State<SimilarRecipesCard> {
                 flexWeights: const <int>[2, 3, 2],
                 children: widget.similarRecipesList != null
                     ? widget.similarRecipesList!.map((SimilarRecipe recipe) {
-                        return RecipeDisplayCard(
+                        return BasicRecipeDisplayCard(
                             expand: true,
                             imageUrl: recipe.imageUrl!,
                             title: recipe.title!,
