@@ -16,6 +16,14 @@ PageRouteBuilder<dynamic> routes(RouteSettings settings) {
       switch (settings.name) {
         case '/':
           return const HomeScreen();
+        case '/recipe' || '/searchPage/searchResults/recipe':
+          final Map<String, dynamic> arguments =
+              settings.arguments as Map<String, dynamic>;
+          return RecipeDisplayScreen(
+            recipeId: arguments['recipeId'],
+            recipeTitle: arguments['recipeTitle'],
+            recipeImageUrl: arguments['recipeImageUrl'],
+          );
         case '/favorites':
           final List<Recipe> favorites = settings.arguments as List<Recipe>;
           return FavoritesScreen(favorites: favorites);
@@ -23,14 +31,7 @@ PageRouteBuilder<dynamic> routes(RouteSettings settings) {
           return const RecipeSearchScreen();
         case '/searchPage/searchResults':
           return const SearchResultsScreen();
-        case '/searchPage/searchResults/recipe':
-          final Map<String, dynamic> args =
-              settings.arguments as Map<String, dynamic>;
-          return RecipeDisplayScreen(
-            recipeListIndex: args['recipeListIndex'],
-            title: args['title'],
-            imageUrl: args['imageUrl'],
-          );
+
         default:
           return const HomeScreen();
       }

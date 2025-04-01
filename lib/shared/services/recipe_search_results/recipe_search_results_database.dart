@@ -40,16 +40,16 @@ AbstractRecipeSearchResultsDatabase recipeSearchResultsDatabase(Ref ref) =>
 
 class _LocalRecipeSearchResultsDatabase
     implements AbstractRecipeSearchResultsDatabase {
-  late Future<Isar> recipeDataBase;
+  late Future<Isar> recipeDatabase;
 
   _LocalRecipeSearchResultsDatabase() {
-    recipeDataBase = _openDB();
+    recipeDatabase = _openDB();
   }
 
   @override
   Future<List<Recipe>> getRecipes() async {
     try {
-      final isar = await recipeDataBase;
+      final isar = await recipeDatabase;
 
       final recipe = await isar.recipes.where().findAll();
       return recipe;
@@ -58,14 +58,31 @@ class _LocalRecipeSearchResultsDatabase
     }
   }
 
+  //@override
+  //Future<Recipe> getSingleRecipe(int recipeListIndex) async {
+  //  try {
+  //    final isar = await recipeDatabase;
+  //
+  //    final recipes = await isar.recipes.where().findAll();
+  //
+  //    return recipes[recipeListIndex];
+  //  } catch (e) {
+  //    throw 'Failed to get single recipe from database: $e';
+  //  }
+  //}
+  //
+
   @override
-  Future<Recipe> getSingleRecipe(int recipeListIndex) async {
+  Future<Recipe> getSingleRecipe(int recipeId) async {
     try {
-      final isar = await recipeDataBase;
+      final isar = await recipeDatabase;
 
-      final recipes = await isar.recipes.where().findAll();
+      final Recipe recipe = await isar.recipes
+          .filter()
+          .recipeIdEqualTo(recipeId)
+          .findFirst() as Recipe;
 
-      return recipes[recipeListIndex];
+      return recipe;
     } catch (e) {
       throw 'Failed to get single recipe from database: $e';
     }
@@ -78,7 +95,7 @@ class _LocalRecipeSearchResultsDatabase
     SearchParameters searchParamaters,
   ) async {
     try {
-      final isar = await recipeDataBase;
+      final isar = await recipeDatabase;
 
       final num offset = pageNumber.toDouble() * size;
 
@@ -111,7 +128,7 @@ class _LocalRecipeSearchResultsDatabase
   @override
   Future<void> replaceRecipeDataWithFullData(int index) async {
     try {
-      final isar = await recipeDataBase;
+      final isar = await recipeDatabase;
 
       // Get Api Response
       final jsonResponse = await RecipeData()
@@ -134,7 +151,7 @@ class _LocalRecipeSearchResultsDatabase
   @override
   Future<void> addSimilarRecipesToRecipe(int index) async {
     try {
-      final isar = await recipeDataBase;
+      final isar = await recipeDatabase;
 
       final jsonResponse = await SimilarRecipes()
           .fetchSimilarRecipes(isar.recipes.getSync(index)!.recipeId);
@@ -186,10 +203,10 @@ class _LocalRecipeSearchResultsDatabase
   // TODO make local
   Future<void> clearDB() async {
     try {
-      final isar = await recipeDataBase;
+      final isar = await recipeDatabase;
 
-      if (await isar.recipes.count() > 0) {
-        await isar.writeTxn(() async {
+      if (isar.recipes.countSync() > 0) {
+        isar.writeTxn(() async {
           await isar.clear();
         });
       }

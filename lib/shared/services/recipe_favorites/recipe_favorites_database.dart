@@ -10,6 +10,7 @@ part 'recipe_favorites_database.g.dart';
 
 abstract class AbstractFavoritesDatabase {
   Future<List<Recipe>> getFavorites();
+  Future<Recipe> getSingleRecipe(int recipeListIndex);
   Future<void> addFavorite(Recipe newFavoriteRecipe);
   Future<void> removeFavorite(int oldFavoriteRecipeID);
   Future<bool> checkIfRecipeIsFavorite(int recipeID);
@@ -39,34 +40,55 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
   }
 
   @override
+  Future<Recipe> getSingleRecipe(int recipeId) async {
+    try {
+      final isar = await favoritesDatabase;
+
+      final recipe =
+          await isar.recipes.filter().recipeIdEqualTo(recipeId).findFirst();
+      print(recipeId);
+
+      print(recipe == null);
+
+      return recipe!;
+    } catch (e) {
+      throw 'Failed to get single recipe from database: $e';
+    }
+  }
+
+  @override
   Future<void> addFavorite(Recipe newFavoriteRecipe) async {
     try {
       final isar = await favoritesDatabase;
 
       // genereate a recipe this way so it has a unique id
       final recipe = Recipe(
-          recipeId: newFavoriteRecipe.recipeId,
-          title: newFavoriteRecipe.title,
-          imageUrl: newFavoriteRecipe.imageUrl,
-          sourceName: newFavoriteRecipe.sourceName,
-          sourceUrl: newFavoriteRecipe.sourceUrl,
-          popular: newFavoriteRecipe.popular,
-          vegetarian: newFavoriteRecipe.vegetarian,
-          vegan: newFavoriteRecipe.vegan,
-          cuisines: newFavoriteRecipe.cuisines,
-          dishTypes: newFavoriteRecipe.dishTypes,
-          diets: newFavoriteRecipe.diets,
-          time: newFavoriteRecipe.time,
-          servings: newFavoriteRecipe.servings,
-          pricePerServing: newFavoriteRecipe.pricePerServing,
-          healthScore: newFavoriteRecipe.healthScore,
-          weightWatcher: newFavoriteRecipe.weightWatcher,
-          calories: newFavoriteRecipe.calories,
-          protein: newFavoriteRecipe.protein,
-          fat: newFavoriteRecipe.fat,
-          summary: newFavoriteRecipe.summary,
-          ingredients: newFavoriteRecipe.ingredients,
-          instructions: newFavoriteRecipe.instructions);
+        recipeId: newFavoriteRecipe.recipeId,
+        title: newFavoriteRecipe.title,
+        imageUrl: newFavoriteRecipe.imageUrl,
+        sourceName: newFavoriteRecipe.sourceName,
+        sourceUrl: newFavoriteRecipe.sourceUrl,
+        popular: newFavoriteRecipe.popular,
+        vegetarian: newFavoriteRecipe.vegetarian,
+        vegan: newFavoriteRecipe.vegan,
+        cuisines: newFavoriteRecipe.cuisines,
+        dishTypes: newFavoriteRecipe.dishTypes,
+        diets: newFavoriteRecipe.diets,
+        time: newFavoriteRecipe.time,
+        servings: newFavoriteRecipe.servings,
+        pricePerServing: newFavoriteRecipe.pricePerServing,
+        healthScore: newFavoriteRecipe.healthScore,
+        weightWatcher: newFavoriteRecipe.weightWatcher,
+        calories: newFavoriteRecipe.calories,
+        protein: newFavoriteRecipe.protein,
+        fat: newFavoriteRecipe.fat,
+        summary: newFavoriteRecipe.summary,
+        ingredients: newFavoriteRecipe.ingredients,
+        nutrients: newFavoriteRecipe.nutrients,
+        similarRecipes: newFavoriteRecipe.similarRecipes,
+        instructionsParagraph: newFavoriteRecipe.instructionsParagraph,
+        instructions: newFavoriteRecipe.instructions,
+      );
 
       await isar.writeTxn(() async {
         isar.recipes.put(recipe);

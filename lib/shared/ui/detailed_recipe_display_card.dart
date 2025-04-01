@@ -23,9 +23,9 @@ class DetailedRecipeDisplayCard extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             final Map<String, dynamic> arguments = {
-              "recipeListIndex": recipeListIndex,
-              "imageUrl": recipe.imageUrl,
-              "title": recipe.title,
+              'recipeTitle': recipe.title,
+              'recipeId': recipe.recipeId,
+              'recipeImageUrl': recipe.imageUrl
             };
             Navigator.pushNamed(
               context,

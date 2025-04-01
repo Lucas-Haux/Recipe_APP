@@ -13,7 +13,7 @@ class MicInfoCard extends StatelessWidget {
   final List<String> ingredients;
   final int weightWatcher;
   final double healthScore;
-  final List<NutritionModel> nutrients;
+  final List<NutritionModel>? nutrients;
   const MicInfoCard({
     required this.cardWidth,
     required this.sourceUrl,
@@ -22,7 +22,7 @@ class MicInfoCard extends StatelessWidget {
     required this.ingredients,
     required this.weightWatcher,
     required this.healthScore,
-    required this.nutrients,
+    this.nutrients,
   });
   @override
   Widget build(BuildContext context) {
@@ -38,16 +38,21 @@ class MicInfoCard extends StatelessWidget {
             SizedBox(
               height: 29,
               child: FilledButton(
-                onPressed: () {
-                  showDialog(
-                    useSafeArea: false,
-                    context: context,
-                    builder: (BuildContext context) => Dialog(
-                      insetPadding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: NutritionGraph(nutrients: nutrients),
-                    ),
-                  );
+                onPressed: () async {
+                  if (nutrients != null) {
+                    showDialog(
+                      useSafeArea: false,
+                      context: context,
+                      builder: (BuildContext context) => Dialog(
+                        insetPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: NutritionGraph(nutrients: nutrients!),
+                      ),
+                    );
+                  } else {
+                    UnimplementedError(
+                        ' need to replace recipe data with new data that has nutrients');
+                  }
                 },
                 child: const Text(
                   'Nutrition Data',

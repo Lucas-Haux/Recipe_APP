@@ -17,8 +17,9 @@ class FavoritesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CarouselController carouselController =
-        CarouselController(initialItem: favoritesList?.length ?? 2 ~/ 2);
+    CarouselController carouselController = CarouselController(
+        //initialItem: favoritesList?.length ?? 2 ~/ 2,
+        );
     final Color primaryColor = Colors.white;
 
     return Container(
@@ -127,6 +128,19 @@ class FavoritesCard extends StatelessWidget {
                       shrinkExtent: 500,
                       backgroundColor: Colors.transparent,
                       elevation: 10,
+                      onTap: (int index) {
+                        final recipe = favoritesList![index];
+                        final Map<String, dynamic> arguments = {
+                          'recipeTitle': recipe.title,
+                          'recipeId': recipe.recipeId,
+                          'recipeImageUrl': recipe.imageUrl
+                        };
+                        Navigator.pushNamed(
+                          context,
+                          '/recipe',
+                          arguments: arguments,
+                        );
+                      },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12)),
                       ),
@@ -135,7 +149,18 @@ class FavoritesCard extends StatelessWidget {
                       flexWeights: const <int>[3, 4, 3],
                       children: favoritesList!.map((Recipe recipe) {
                         return BasicRecipeDisplayCard(
+                          key: Key(recipe.recipeId.toString()),
                           expand: true,
+                          onTap: () {
+                            print('yes');
+                            //final arguments = recipe.recipeId;
+                            //
+                            //Navigator.pushNamed(
+                            //  context,
+                            //  '/recipe',
+                            //  arguments: arguments,
+                            //);
+                          },
                           title: recipe.title,
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
                           imageUrl: recipe.imageUrl,

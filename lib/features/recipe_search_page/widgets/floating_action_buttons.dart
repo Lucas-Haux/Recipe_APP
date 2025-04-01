@@ -8,6 +8,7 @@ class FloatingActionButtons extends StatelessWidget {
     required this.updateQuery,
     required this.clearDB,
     required this.textEditingController,
+    super.key,
   });
   @override
   Widget build(BuildContext context) {
@@ -34,12 +35,16 @@ class FloatingActionButtons extends StatelessWidget {
             heroTag: 'SearchButton',
             onPressed: () async {
               FocusManager.instance.primaryFocus?.unfocus(); // remove keyboard
+
               await clearDB(); // removes all the present data on the database
+              print('what');
+
               updateQuery({'query': textEditingController.text});
 
               // searchForRecipes();
 
               Navigator.pushNamed(context, '/searchPage/searchResults');
+              print('what');
             },
             icon: const Icon(Icons.search),
             extendedPadding: const EdgeInsets.only(left: 15, right: 15),
