@@ -8,7 +8,6 @@ import 'package:recipe_box/shared/ui/recipe_image.dart';
 class BasicRecipeDisplayCard extends StatelessWidget {
   final int? recipeId;
   final Recipe? recipe;
-  final Function()? onTap;
   final String title;
   final String imageUrl;
   final bool expand;
@@ -16,7 +15,6 @@ class BasicRecipeDisplayCard extends StatelessWidget {
   final TextStyle? titleStyle;
   const BasicRecipeDisplayCard({
     this.recipe,
-    this.onTap,
     required this.title,
     this.recipeId,
     required this.imageUrl,

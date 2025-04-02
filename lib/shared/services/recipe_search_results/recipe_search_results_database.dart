@@ -102,15 +102,14 @@ class _LocalRecipeSearchResultsDatabase
       //Get Api Response
       final response =
           await RecipesSearch().fetchRecipes(offset, size, searchParamaters);
-
       //Convert to List<Recipe>
       final results = response['results'] as List<dynamic>;
       List<Recipe> recipes =
           results.map<Recipe>((jsonMap) => Recipe.fromJson(jsonMap)).toList();
 
       //Add List to DataBase
-      await isar.writeTxn(() async {
-        await isar.recipes.putAll(recipes);
+      await isar.writeTxnSync(() async {
+        isar.recipes.putAllSync(recipes);
       });
 
       RecipeSearchResult recipeSearchDataModel = RecipeSearchResult(

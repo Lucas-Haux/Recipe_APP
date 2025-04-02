@@ -18,12 +18,11 @@ class FavoritesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CarouselController carouselController = CarouselController(
-        //initialItem: favoritesList?.length ?? 2 ~/ 2,
-        );
+      initialItem: (favoritesList == null) ? favoritesList!.length ~/ 2 : 1,
+    );
     final Color primaryColor = Colors.white;
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20), // Rounded corners
@@ -33,7 +32,7 @@ class FavoritesCard extends StatelessWidget {
             Color(0XFF8b0000).withAlpha(100),
             Colors.transparent,
           ],
-          stops: [0.30, 1],
+          stops: [0.30, 0.9],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -102,30 +101,30 @@ class FavoritesCard extends StatelessWidget {
 
           Container(
             constraints: BoxConstraints(maxHeight: height / 5),
-            padding: EdgeInsets.all(0),
-            margin: EdgeInsets.all(0),
+            padding: EdgeInsets.zero,
+            margin: EdgeInsets.zero,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
                 return LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    //Theme.of(context).colorScheme.surface,
                     Colors.transparent,
                     Colors.black,
                     Colors.black,
                     Colors.transparent,
                   ],
-                  stops: [0.0, 0.04, 0.96, 1],
+                  stops: [0.02, 0.25, 0.75, 0.98],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,
 
               // carousel
               child: (favoritesList != null && favoritesList!.isNotEmpty)
-                  ? CarouselView.weighted(
+                  ? CarouselView(
                       controller: carouselController,
-                      shrinkExtent: 500,
+                      shrinkExtent: 123.8,
+                      itemExtent: 123.8,
                       backgroundColor: Colors.transparent,
                       elevation: 10,
                       onTap: (int index) {
@@ -146,26 +145,15 @@ class FavoritesCard extends StatelessWidget {
                       ),
                       padding: EdgeInsets.all(9),
                       itemSnapping: true,
-                      flexWeights: const <int>[3, 4, 3],
                       children: favoritesList!.map((Recipe recipe) {
                         return BasicRecipeDisplayCard(
                           key: Key(recipe.recipeId.toString()),
                           expand: true,
-                          onTap: () {
-                            print('yes');
-                            //final arguments = recipe.recipeId;
-                            //
-                            //Navigator.pushNamed(
-                            //  context,
-                            //  '/recipe',
-                            //  arguments: arguments,
-                            //);
-                          },
                           title: recipe.title,
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),
                           imageUrl: recipe.imageUrl,
                           recipeId: recipe.recipeId,
-                          cardWidth: 350,
+                          cardWidth: 123.8,
                         );
                       }).toList(),
                     )
