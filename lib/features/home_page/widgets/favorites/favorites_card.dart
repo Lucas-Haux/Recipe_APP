@@ -147,7 +147,7 @@ class FavoritesCard extends StatelessWidget {
                       itemSnapping: true,
                       children: favoritesList!.map((Recipe recipe) {
                         return BasicRecipeDisplayCard(
-                          key: Key(recipe.recipeId.toString()),
+                          key: Key('${recipe.recipeId}BRDC'),
                           expand: true,
                           title: recipe.title,
                           titleStyle: TextStyle(fontWeight: FontWeight.bold),

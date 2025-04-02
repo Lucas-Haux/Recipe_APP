@@ -30,6 +30,7 @@ class InfiniteScrollPaginationState extends State<InfiniteScrollPagination> {
           crossAxisSpacing: 8,
           builderDelegate: PagedChildBuilderDelegate<Recipe>(
             itemBuilder: (context, recipe, index) => DetailedRecipeDisplayCard(
+              key: Key('${recipe.recipeId}DRDC'),
               recipe: recipe,
               showPopularBadge: false,
               recipeListIndex: index,

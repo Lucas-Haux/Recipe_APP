@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 
 class FloatingActionButtons extends StatelessWidget {
   final Function(Map<String, dynamic>) updateQuery;
-  final Function clearDB;
   final TextEditingController textEditingController;
   const FloatingActionButtons({
     required this.updateQuery,
-    required this.clearDB,
     required this.textEditingController,
     super.key,
   });
@@ -36,15 +34,9 @@ class FloatingActionButtons extends StatelessWidget {
             onPressed: () async {
               FocusManager.instance.primaryFocus?.unfocus(); // remove keyboard
 
-              await clearDB(); // removes all the present data on the database
-              print('what');
-
-              updateQuery({'query': textEditingController.text});
-
-              // searchForRecipes();
+              await updateQuery({'query': textEditingController.text});
 
               Navigator.pushNamed(context, '/searchPage/searchResults');
-              print('what');
             },
             icon: const Icon(Icons.search),
             extendedPadding: const EdgeInsets.only(left: 15, right: 15),

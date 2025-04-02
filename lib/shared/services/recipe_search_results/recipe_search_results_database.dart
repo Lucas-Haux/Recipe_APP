@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -29,9 +30,6 @@ abstract class AbstractRecipeSearchResultsDatabase {
   Future<void> replaceRecipeDataWithFullData(int recipeListIndex);
 
   Future<void> addSimilarRecipesToRecipe(int recipeListIndex);
-
-  // todo Remove this, make clearDB() a local function. Have the dm clear when the page number is zero
-  Future<void> clearDB();
 }
 
 @Riverpod(keepAlive: false)
@@ -77,12 +75,13 @@ class _LocalRecipeSearchResultsDatabase
     try {
       final isar = await recipeDatabase;
 
-      final Recipe recipe = await isar.recipes
-          .filter()
-          .recipeIdEqualTo(recipeId)
-          .findFirst() as Recipe;
+      final recipe =
+          await isar.recipes.filter().recipeIdEqualTo(recipeId).findFirst();
+      print(recipeId);
 
-      return recipe;
+      print(recipe == null);
+
+      return recipe!;
     } catch (e) {
       throw 'Failed to get single recipe from database: $e';
     }
@@ -96,6 +95,10 @@ class _LocalRecipeSearchResultsDatabase
   ) async {
     try {
       final isar = await recipeDatabase;
+
+      if (pageNumber == 0 && await isar.recipes.count() > 0) {
+        await _clearDB(isar);
+      }
 
       final num offset = pageNumber.toDouble() * size;
 
@@ -186,10 +189,15 @@ class _LocalRecipeSearchResultsDatabase
       if (Isar.instanceNames.contains("RecipeSearchResultsDatabase")) {
         return Future.value(Isar.getInstance("RecipeSearchResultsDatabase"));
       } else {
+        final dir = await getExternalStorageDirectory();
+        final recipeSearchResultsDir =
+            Directory('${dir!.path}/recipeSearchResultsDatabase');
+        await recipeSearchResultsDir.create(recursive: true);
+
         return Isar.openSync(
           [RecipeSchema],
           name: "RecipeSearchResultsDatabase",
-          directory: (await getApplicationDocumentsDirectory()).path,
+          directory: recipeSearchResultsDir.path,
           inspector: true,
         );
       }
@@ -198,12 +206,8 @@ class _LocalRecipeSearchResultsDatabase
     }
   }
 
-  @override
-  // TODO make local
-  Future<void> clearDB() async {
+  Future<void> _clearDB(Isar isar) async {
     try {
-      final isar = await recipeDatabase;
-
       if (isar.recipes.countSync() > 0) {
         isar.writeTxn(() async {
           await isar.clear();

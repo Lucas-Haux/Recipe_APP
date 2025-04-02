@@ -36,6 +36,7 @@ class BasicRecipeDisplayCard extends StatelessWidget {
           children: [
             //Image
             RecipeImage(
+              key: Key('${recipe?.recipeId}Image'),
               recipe: recipe,
               imageUrl: imageUrl,
               cardWidth: cardWidth,

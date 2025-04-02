@@ -71,7 +71,6 @@ class RecipeSearchScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButtons(
         textEditingController: searchController,
         updateQuery: manager.updateSearchParameters,
-        clearDB: ref.watch(recipeSearchManagerProvider.notifier).clearDB,
       ),
       body: CustomScrollView(
         slivers: <Widget>[

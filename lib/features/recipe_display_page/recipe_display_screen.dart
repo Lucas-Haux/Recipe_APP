@@ -56,7 +56,6 @@ class RecipeDisplayScreen extends ConsumerWidget {
                 BasicRecipeDisplayCard(
                   expand: false,
                   title: recipeTitle,
-                  //imageUrl: recipe.imageUrl,
                   imageUrl: recipeImageUrl,
                   cardWidth: cardWidth,
                   titleStyle: Theme.of(context).textTheme.titleMedium!,

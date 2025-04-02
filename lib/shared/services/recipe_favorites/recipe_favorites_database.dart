@@ -136,9 +136,8 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
       if (Isar.instanceNames.contains("favoritesDatabase")) {
         return Future.value(Isar.getInstance("favoritesDatabase"));
       } else {
-        final docs = await getApplicationDocumentsDirectory();
-        // TODO this should be somewhere in share
-        final favoriteRecipesDir = Directory('${docs.path}/favoritesDatabase');
+        final dir = await getExternalStorageDirectory();
+        final favoriteRecipesDir = Directory('${dir!.path}/favoritesDatabase');
         await favoriteRecipesDir.create(recursive: true);
 
         return Isar.openSync(
@@ -150,21 +149,6 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
       }
     } catch (e) {
       throw 'fail to open favorites database: $e';
-    }
-  }
-
-  Future<void> clearDB() async {
-    try {
-      final isar = await favoritesDatabase;
-
-      // dont clear if database is empty
-      if (await isar.recipes.count() > 0) {
-        await isar.writeTxn(() async {
-          await isar.clear();
-        });
-      }
-    } catch (e) {
-      throw 'failed to clear favorites database: $e';
     }
   }
 }

@@ -17,7 +17,7 @@ class DetailedRecipeDisplayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: "$recipeListIndex Card",
+      tag: "${recipe.recipeId}DRDC",
       child: SizedBox(
         width: 185,
         child: GestureDetector(
@@ -27,9 +27,10 @@ class DetailedRecipeDisplayCard extends StatelessWidget {
               'recipeId': recipe.recipeId,
               'recipeImageUrl': recipe.imageUrl
             };
+            final route = ModalRoute.of(context)!.settings.name!;
             Navigator.pushNamed(
               context,
-              '/searchPage/searchResults/recipe',
+              '$route/recipe',
               arguments: arguments,
             );
           },

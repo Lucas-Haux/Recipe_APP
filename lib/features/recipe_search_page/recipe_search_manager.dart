@@ -14,15 +14,6 @@ class RecipeSearchManager extends _$RecipeSearchManager {
     return ref.watch(searchParametersDatabaseProvider).getSearchParameters();
   }
 
-  // shouldnt need this exposed
-  Future<void> clearDB() async {
-    try {
-      await ref.read(recipeSearchResultsDatabaseProvider).clearDB();
-    } catch (e) {
-      throw 'cant clear db: $e';
-    }
-  }
-
   clearSearchParameters(String query) async {
     try {
       await ref.read(searchParametersDatabaseProvider).resetToDefaults(query);
