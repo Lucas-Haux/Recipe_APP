@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'recipe_display_search_manager.dart';
+part of 'recipe_display_manager.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
 String _$recipeDisplayManagerHash() =>
-    r'aad82f3e51b4288585f735ece03def1909366b53';
+    r'310f5ef91fc08aa506a9058d9486c3ab57b4e867';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,12 +32,12 @@ class _SystemHash {
 
 abstract class _$RecipeDisplayManager
     extends BuildlessAutoDisposeAsyncNotifier<Recipe> {
-  late final String route;
-  late final int recipeId;
+  late final dynamic database;
+  late final int id;
 
   FutureOr<Recipe> build(
-    String route,
-    int recipeId,
+    dynamic database,
+    int id,
   );
 }
 
@@ -52,12 +52,12 @@ class RecipeDisplayManagerFamily extends Family<AsyncValue<Recipe>> {
 
   /// See also [RecipeDisplayManager].
   RecipeDisplayManagerProvider call(
-    String route,
-    int recipeId,
+    dynamic database,
+    int id,
   ) {
     return RecipeDisplayManagerProvider(
-      route,
-      recipeId,
+      database,
+      id,
     );
   }
 
@@ -66,8 +66,8 @@ class RecipeDisplayManagerFamily extends Family<AsyncValue<Recipe>> {
     covariant RecipeDisplayManagerProvider provider,
   ) {
     return call(
-      provider.route,
-      provider.recipeId,
+      provider.database,
+      provider.id,
     );
   }
 
@@ -91,12 +91,12 @@ class RecipeDisplayManagerProvider
     extends AutoDisposeAsyncNotifierProviderImpl<RecipeDisplayManager, Recipe> {
   /// See also [RecipeDisplayManager].
   RecipeDisplayManagerProvider(
-    String route,
-    int recipeId,
+    dynamic database,
+    int id,
   ) : this._internal(
           () => RecipeDisplayManager()
-            ..route = route
-            ..recipeId = recipeId,
+            ..database = database
+            ..id = id,
           from: recipeDisplayManagerProvider,
           name: r'recipeDisplayManagerProvider',
           debugGetCreateSourceHash:
@@ -106,8 +106,8 @@ class RecipeDisplayManagerProvider
           dependencies: RecipeDisplayManagerFamily._dependencies,
           allTransitiveDependencies:
               RecipeDisplayManagerFamily._allTransitiveDependencies,
-          route: route,
-          recipeId: recipeId,
+          database: database,
+          id: id,
         );
 
   RecipeDisplayManagerProvider._internal(
@@ -117,20 +117,20 @@ class RecipeDisplayManagerProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.route,
-    required this.recipeId,
+    required this.database,
+    required this.id,
   }) : super.internal();
 
-  final String route;
-  final int recipeId;
+  final dynamic database;
+  final int id;
 
   @override
   FutureOr<Recipe> runNotifierBuild(
     covariant RecipeDisplayManager notifier,
   ) {
     return notifier.build(
-      route,
-      recipeId,
+      database,
+      id,
     );
   }
 
@@ -140,15 +140,15 @@ class RecipeDisplayManagerProvider
       origin: this,
       override: RecipeDisplayManagerProvider._internal(
         () => create()
-          ..route = route
-          ..recipeId = recipeId,
+          ..database = database
+          ..id = id,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        route: route,
-        recipeId: recipeId,
+        database: database,
+        id: id,
       ),
     );
   }
@@ -162,15 +162,15 @@ class RecipeDisplayManagerProvider
   @override
   bool operator ==(Object other) {
     return other is RecipeDisplayManagerProvider &&
-        other.route == route &&
-        other.recipeId == recipeId;
+        other.database == database &&
+        other.id == id;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, route.hashCode);
-    hash = _SystemHash.combine(hash, recipeId.hashCode);
+    hash = _SystemHash.combine(hash, database.hashCode);
+    hash = _SystemHash.combine(hash, id.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -179,11 +179,11 @@ class RecipeDisplayManagerProvider
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin RecipeDisplayManagerRef on AutoDisposeAsyncNotifierProviderRef<Recipe> {
-  /// The parameter `route` of this provider.
-  String get route;
+  /// The parameter `database` of this provider.
+  dynamic get database;
 
-  /// The parameter `recipeId` of this provider.
-  int get recipeId;
+  /// The parameter `id` of this provider.
+  int get id;
 }
 
 class _RecipeDisplayManagerProviderElement
@@ -192,9 +192,9 @@ class _RecipeDisplayManagerProviderElement
   _RecipeDisplayManagerProviderElement(super.provider);
 
   @override
-  String get route => (origin as RecipeDisplayManagerProvider).route;
+  dynamic get database => (origin as RecipeDisplayManagerProvider).database;
   @override
-  int get recipeId => (origin as RecipeDisplayManagerProvider).recipeId;
+  int get id => (origin as RecipeDisplayManagerProvider).id;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

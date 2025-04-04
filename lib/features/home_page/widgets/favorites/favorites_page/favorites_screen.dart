@@ -107,8 +107,7 @@ class FavoritesScreen extends ConsumerWidget {
                           bottom: 10,
                         ),
                         child: DetailedRecipeDisplayCard(
-                          key: Key(
-                              '${leftFavorites[index].recipeId.toString()}DRDC'),
+                          key: Key('${leftFavorites[index].id.toString()}DRDC'),
                           recipe: leftFavorites[index],
                           showPopularBadge: false,
                           recipeListIndex: index,
@@ -129,8 +128,8 @@ class FavoritesScreen extends ConsumerWidget {
                           bottom: 10,
                         ),
                         child: DetailedRecipeDisplayCard(
-                          key: Key(
-                              '${rightFavorites[index].recipeId.toString()}DRDC'),
+                          key:
+                              Key('${rightFavorites[index].id.toString()}DRDC'),
                           recipe: rightFavorites[index],
                           showPopularBadge: false,
                           recipeListIndex: index,

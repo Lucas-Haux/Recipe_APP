@@ -4,8 +4,7 @@ part 'recipe.g.dart';
 
 @collection
 class Recipe {
-  Id? id = Isar.autoIncrement;
-  final int recipeId;
+  final Id id;
 
   final String title;
   final String imageUrl;
@@ -36,7 +35,7 @@ class Recipe {
   final String? instructionsParagraph;
 
   Recipe({
-    required this.recipeId,
+    required this.id,
     required this.title,
     required this.imageUrl,
     required this.sourceName,
@@ -65,7 +64,7 @@ class Recipe {
 
   factory Recipe.fromJson(Map<String, dynamic> jsonData) {
     return Recipe(
-      recipeId: jsonData['id'],
+      id: jsonData['id'],
 
       title: jsonData['title'],
       imageUrl: _convertImage(jsonData['image']),
@@ -103,7 +102,7 @@ class Recipe {
   }
 
   Recipe copyWith({
-    int? recipeId,
+    int? id,
     String? title,
     String? imageUrl,
     String? sourceName,
@@ -130,7 +129,7 @@ class Recipe {
     String? instructionsParagraph,
   }) {
     return Recipe(
-      recipeId: recipeId ?? this.recipeId,
+      id: id ?? this.id,
       title: title ?? this.title,
       imageUrl: imageUrl ?? this.imageUrl,
       sourceName: sourceName ?? this.sourceName,

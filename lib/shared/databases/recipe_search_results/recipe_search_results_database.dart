@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:recipe_box/shared/databases/recipe_search_results/model/recipe_search_result.dart';
 import 'package:recipe_box/shared/services/remote/recipe_data.dart';
 import 'package:recipe_box/shared/services/remote/recipes_search.dart';
-import 'package:recipe_box/shared/services/remote/similar_recipes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:recipe_box/shared/models/recipe.dart';
@@ -26,6 +25,8 @@ abstract class AbstractRecipeSearchResultsDatabase {
   Future<List<Recipe>> getRecipes();
 
   Future<Recipe> getSingleRecipe(int recipeListIndex);
+
+  Future<void> updateOrAddRecipe(Recipe recipe);
 
   Future<void> replaceRecipeDataWithFullData(int recipeListIndex);
 
@@ -71,19 +72,31 @@ class _LocalRecipeSearchResultsDatabase
   //
 
   @override
-  Future<Recipe> getSingleRecipe(int recipeId) async {
+  Future<Recipe> getSingleRecipe(int id) async {
     try {
       final isar = await recipeDatabase;
 
-      final recipe =
-          await isar.recipes.filter().recipeIdEqualTo(recipeId).findFirst();
-      print(recipeId);
+      final recipe = await isar.recipes.filter().idEqualTo(id).findFirst();
+      print(id);
 
       print(recipe == null);
 
       return recipe!;
     } catch (e) {
       throw 'Failed to get single recipe from database: $e';
+    }
+  }
+
+  @override
+  Future<void> updateOrAddRecipe(Recipe recipe) async {
+    try {
+      final isar = await recipeDatabase;
+
+      await isar.writeTxnSync(() async {
+        isar.recipes.putSync(recipe);
+      });
+    } catch (e) {
+      throw 'Failed to update or add recipe to recipe search results database: $e';
     }
   }
 
@@ -133,8 +146,8 @@ class _LocalRecipeSearchResultsDatabase
       final isar = await recipeDatabase;
 
       // Get Api Response
-      final jsonResponse = await RecipeData()
-          .fetchFullRecipe(isar.recipes.getSync(index)!.recipeId);
+      final jsonResponse =
+          await RecipeData().fetchFullRecipe(isar.recipes.getSync(index)!.id);
       // Convert to new Recipe
       Recipe newRecipe = Recipe.fromJson(
         jsonResponse,
@@ -142,7 +155,6 @@ class _LocalRecipeSearchResultsDatabase
 
       // Replace Recipe with new recipe in database
       await isar.writeTxnSync(() async {
-        newRecipe.id = index;
         isar.recipes.putSync(newRecipe);
       });
     } catch (e) {
@@ -153,30 +165,30 @@ class _LocalRecipeSearchResultsDatabase
   @override
   Future<void> addSimilarRecipesToRecipe(int index) async {
     try {
-      final isar = await recipeDatabase;
-
-      final jsonResponse = await SimilarRecipes()
-          .fetchSimilarRecipes(isar.recipes.getSync(index)!.recipeId);
-
-      // get list of similarRecipes from json response
-      List<SimilarRecipe> similarRecipes = [];
-      for (var recipe in jsonResponse) {
-        similarRecipes.add(SimilarRecipe.fromJson(recipe));
-      }
-
-      Recipe? newRecipe =
-          await isar.recipes.where().idEqualTo(index).findFirst();
-
-      if (newRecipe != null) {
-        newRecipe = newRecipe.copyWith(similarRecipes: similarRecipes);
-
-        await isar.writeTxnSync(() async {
-          newRecipe!.id = index;
-          isar.recipes.putSync(newRecipe!);
-        });
-      } else {
-        throw "cant find recipe with id in database";
-      }
+      UnimplementedError();
+      //final isar = await recipeDatabase;
+      //
+      //final jsonResponse =
+      //    await fetchSimilarRecipes(isar.recipes.getSync(index)!.id);
+      //
+      //// get list of similarRecipes from json response
+      //List<SimilarRecipe> similarRecipes = [];
+      //for (var recipe in jsonResponse) {
+      //  similarRecipes.add(SimilarRecipe.fromJson(recipe));
+      //}
+      //
+      //Recipe? newRecipe =
+      //    await isar.recipes.where().idEqualTo(index).findFirst();
+      //
+      //if (newRecipe != null) {
+      //  newRecipe = newRecipe.copyWith(similarRecipes: similarRecipes);
+      //
+      //  await isar.writeTxnSync(() async {
+      //    isar.recipes.putSync(newRecipe!);
+      //  });
+      //} else {
+      //  throw "cant find recipe with id in database";
+      //}
 
       // Replace Recipe with new recipe in database
     } catch (e, stackTrace) {

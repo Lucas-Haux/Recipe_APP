@@ -131,7 +131,7 @@ class FavoritesCard extends StatelessWidget {
                         final recipe = favoritesList![index];
                         final Map<String, dynamic> arguments = {
                           'recipeTitle': recipe.title,
-                          'recipeId': recipe.recipeId,
+                          'id': recipe.id,
                           'recipeImageUrl': recipe.imageUrl
                         };
                         Navigator.pushNamed(
@@ -146,14 +146,17 @@ class FavoritesCard extends StatelessWidget {
                       padding: EdgeInsets.all(9),
                       itemSnapping: true,
                       children: favoritesList!.map((Recipe recipe) {
-                        return BasicRecipeDisplayCard(
-                          key: Key('${recipe.recipeId}BRDC'),
-                          expand: true,
-                          title: recipe.title,
-                          titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                          imageUrl: recipe.imageUrl,
-                          recipeId: recipe.recipeId,
-                          cardWidth: 123.8,
+                        return Hero(
+                          tag: '${recipe.id}Card',
+                          child: BasicRecipeDisplayCard(
+                            key: Key('${recipe.id}Card'),
+                            expand: true,
+                            title: recipe.title,
+                            titleStyle: TextStyle(fontWeight: FontWeight.bold),
+                            imageUrl: recipe.imageUrl,
+                            id: recipe.id,
+                            cardWidth: 123.8,
+                          ),
                         );
                       }).toList(),
                     )

@@ -13,7 +13,7 @@ class RecipeImageManager extends _$RecipeImageManager {
 
       return ref
           .watch(favoritesDatabaseProvider)
-          .checkIfRecipeIsFavorite(recipe.recipeId);
+          .checkIfRecipeIsFavorite(recipe.id);
     } catch (e) {
       throw "Failed to build recipe image manager: $e";
     }
@@ -24,7 +24,7 @@ class RecipeImageManager extends _$RecipeImageManager {
       await ref.read(favoritesDatabaseProvider).addFavorite(recipe!);
       state = AsyncValue.data(await ref
           .read(favoritesDatabaseProvider)
-          .checkIfRecipeIsFavorite(recipe!.recipeId));
+          .checkIfRecipeIsFavorite(recipe!.id));
     } catch (e) {
       throw "Failed to add favorite in recipe image manager: $e";
     }
@@ -32,12 +32,10 @@ class RecipeImageManager extends _$RecipeImageManager {
 
   Future<void> removeFavorite() async {
     try {
-      await ref
-          .read(favoritesDatabaseProvider)
-          .removeFavorite(recipe!.recipeId);
+      await ref.read(favoritesDatabaseProvider).removeFavorite(recipe!.id);
       state = AsyncValue.data(await ref
           .read(favoritesDatabaseProvider)
-          .checkIfRecipeIsFavorite(recipe!.recipeId));
+          .checkIfRecipeIsFavorite(recipe!.id));
     } catch (e) {
       throw "Failed to remove favorite recipe image manager: $e";
     }

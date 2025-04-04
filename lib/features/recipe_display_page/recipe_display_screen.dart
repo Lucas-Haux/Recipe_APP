@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:recipe_box/features/recipe_display_page/recipe_display_search_manager.dart';
+import 'package:recipe_box/features/recipe_display_page/recipe_display_manager.dart';
 import 'package:recipe_box/features/recipe_display_page/widgets/enum_row_display.dart';
 import 'package:recipe_box/features/recipe_display_page/widgets/equipment_card.dart';
 import 'package:recipe_box/features/recipe_display_page/widgets/ingredents_card.dart';
@@ -10,19 +10,23 @@ import 'package:recipe_box/features/recipe_display_page/widgets/instructions_car
 import 'package:recipe_box/features/recipe_display_page/widgets/misc_info.dart';
 import 'package:recipe_box/features/recipe_display_page/widgets/servings_info.dart';
 import 'package:recipe_box/features/recipe_display_page/widgets/similar_recipes_card.dart';
+import 'package:recipe_box/shared/themes/dimens.dart';
 import 'package:recipe_box/shared/ui/back_search_home_bar.dart';
 import 'package:recipe_box/shared/ui/basic_recipe_display_card.dart';
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 double cardWidth = 371;
 
 TextEditingController searchController = TextEditingController();
 
 class RecipeDisplayScreen extends ConsumerWidget {
+  final dynamic database;
   final String recipeTitle;
   final String recipeImageUrl;
-  final int recipeId;
+  final int id;
   const RecipeDisplayScreen({
-    required this.recipeId,
+    required this.database,
+    required this.id,
     required this.recipeTitle,
     required this.recipeImageUrl,
     super.key,
@@ -30,79 +34,43 @@ class RecipeDisplayScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final route = ModalRoute.of(context)!.settings.name!;
-
     final manager =
-        ref.watch(recipeDisplayManagerProvider(route, recipeId).notifier);
-    final theState = ref.watch(recipeDisplayManagerProvider(route, recipeId));
-    final recipe =
-        ref.watch(recipeDisplayManagerProvider(route, recipeId)).value;
+        ref.watch(recipeDisplayManagerProvider(database, id).notifier);
 
-    while (theState.valueOrNull == null) {
-      return Scaffold(
-        appBar: AppBar(
-          leadingWidth: 0,
-          titleSpacing: 0,
-          leading: const SizedBox(), // Remove Default Back Button
-          forceMaterialTransparency: true,
-          title: const BackSearchHomeBar(backButton: true),
-        ),
-        body: Hero(
-          tag: "$recipeListIndex Card",
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                BasicRecipeDisplayCard(
-                  expand: false,
-                  title: recipeTitle,
-                  imageUrl: recipeImageUrl,
-                  cardWidth: cardWidth,
-                  titleStyle: Theme.of(context).textTheme.titleMedium!,
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height / 5),
-                SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 8,
-                    strokeCap: StrokeCap.round,
-                  ),
-                ),
-                SizedBox(height: 50, width: MediaQuery.of(context).size.width),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
+    final recipe = ref.watch(recipeDisplayManagerProvider(database, id)).value;
 
-    if (recipe != null)
-      return Scaffold(
-        appBar: AppBar(
-          leadingWidth: 0,
-          titleSpacing: 0,
-          leading: const SizedBox(), // Remove Default Back Button
-          forceMaterialTransparency: true,
-          title: const BackSearchHomeBar(backButton: true),
-        ),
-        body: Hero(
-          tag: "$recipeListIndex Card",
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                BasicRecipeDisplayCard(
-                  expand: false,
-                  recipe: recipe,
-                  imageUrl: recipe.imageUrl,
-                  title: recipe.title,
-                  recipeId: recipe.recipeId,
-                  cardWidth: cardWidth,
-                  titleStyle: Theme.of(context).textTheme.titleMedium!,
-                ),
-
-                const SizedBox(height: 3),
-
+    return Scaffold(
+      appBar: AppBar(
+        leadingWidth: 0,
+        titleSpacing: 0,
+        leading: const SizedBox(), // Remove Default Back Button
+        forceMaterialTransparency: true,
+        title: const BackSearchHomeBar(backButton: true),
+      ),
+      body: Hero(
+        placeholderBuilder: (context, size, child) {
+          return Container(
+            width: size.width,
+            height: size.height,
+            color: Theme.of(context).colorScheme.surface,
+          );
+        },
+        tag: "${id}Card",
+        child: SingleChildScrollView(
+          padding: Dimens.of(context).edgeInsetsScreenHorizontal,
+          child: Column(
+            children: [
+              BasicRecipeDisplayCard(
+                expand: false,
+                recipe: recipe,
+                imageUrl: (recipe != null) ? recipe.imageUrl : recipeImageUrl,
+                title: (recipe != null) ? recipe.title : recipeTitle,
+                id: (recipe != null) ? recipe.id : id,
+                cardWidth: cardWidth,
+                titleStyle: Theme.of(context).textTheme.titleMedium!,
+              ),
+              const SizedBox(height: 3),
+              if (recipe != null) ...[
                 //Diets
                 if (recipe.diets.isNotEmpty && recipe.diets[0].isNotEmpty)
                   EnumRowDisplay(
@@ -182,22 +150,57 @@ class RecipeDisplayScreen extends ConsumerWidget {
                   instructionsParagraph: recipe.instructionsParagraph,
                 ),
 
-                //Seperation
-                const SizedBox(height: 20),
-                const Divider(),
+                if (database != null) ...[
+                  //Seperation
+                  const SizedBox(height: 20),
+                  const Divider(),
 
-                SimilarRecipesCard(
-                  recipeId: recipe.id!,
-                  cardWidth: cardWidth,
-                  similarRecipesList: recipe.similarRecipes,
-                  searchForSimilarRecipes: manager.searchSimilarRecipes,
-                ),
+                  TextAnimator(
+                    'Similar Recipes',
+                    atRestEffect: WidgetRestingEffects.wave(
+                      duration: Duration(milliseconds: 2500),
+                    ),
+                    textAlign: TextAlign.center,
+                    initialDelay: const Duration(milliseconds: 50),
+                    spaceDelay: const Duration(milliseconds: 65),
+                    characterDelay: const Duration(milliseconds: 65),
+                    style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                      shadows: [
+                        Shadow(
+                            blurRadius: 9,
+                            color: Colors.white.withAlpha(70),
+                            offset: Offset(-3, -3)),
+                        Shadow(
+                            blurRadius: 9,
+                            color: Colors.white.withAlpha(70),
+                            offset: Offset(3, -3)),
+                        Shadow(
+                            blurRadius: 9,
+                            color: Colors.white.withAlpha(70),
+                            offset: Offset(-3, 3)),
+                        Shadow(
+                            blurRadius: 9,
+                            color: Colors.white.withAlpha(70),
+                            offset: Offset(3, 3)),
+                      ],
+                    ),
+                  ),
+
+                  SimilarRecipesCard(
+                    recipe: recipe,
+                    //id: recipe.id!,
+                    database: database,
+                    cardWidth: cardWidth,
+                    //similarRecipesList: recipe.similarRecipes,
+                    //searchForSimilarRecipes: manager.searchSimilarRecipes,
+                  ),
+                ],
+                const SizedBox(height: 15)
               ],
-            ),
+            ],
           ),
         ),
-      );
-
-    return Placeholder();
+      ),
+    );
   }
 }

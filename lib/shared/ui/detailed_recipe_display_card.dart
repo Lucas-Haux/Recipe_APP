@@ -16,73 +16,70 @@ class DetailedRecipeDisplayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: "${recipe.recipeId}DRDC",
-      child: SizedBox(
-        width: 185,
-        child: GestureDetector(
-          onTap: () {
-            final Map<String, dynamic> arguments = {
-              'recipeTitle': recipe.title,
-              'recipeId': recipe.recipeId,
-              'recipeImageUrl': recipe.imageUrl
-            };
-            final route = ModalRoute.of(context)!.settings.name!;
-            Navigator.pushNamed(
-              context,
-              '$route/recipe',
-              arguments: arguments,
-            );
-          },
-          child: Card(
-            margin: const EdgeInsets.all(5),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _RecipeImage(
-                  imageUrl: recipe.imageUrl,
-                  time: recipe.time,
-                  popular: recipe.popular,
-                  showPopularBadge: showPopularBadge,
-                  recipeListIndex: recipeListIndex,
-                ),
-                const SizedBox(height: 3),
-                // Title
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2),
-                  child: AutoSizeText(
-                    recipe.title,
-                    style: Theme.of(context).textTheme.titleSmall!,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const Divider(),
-                Text(
-                  'Per Serving:',
+    return SizedBox(
+      width: 185,
+      child: GestureDetector(
+        onTap: () {
+          final Map<String, dynamic> arguments = {
+            'recipeTitle': recipe.title,
+            'id': recipe.id,
+            'recipeImageUrl': recipe.imageUrl
+          };
+          final route = ModalRoute.of(context)!.settings.name!;
+          Navigator.pushNamed(
+            context,
+            '$route/recipe',
+            arguments: arguments,
+          );
+        },
+        child: Card(
+          margin: const EdgeInsets.all(5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _RecipeImage(
+                imageUrl: recipe.imageUrl,
+                time: recipe.time,
+                popular: recipe.popular,
+                showPopularBadge: showPopularBadge,
+                recipeListIndex: recipeListIndex,
+              ),
+              const SizedBox(height: 3),
+              // Title
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: AutoSizeText(
+                  recipe.title,
+                  style: Theme.of(context).textTheme.titleSmall!,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16,
-                    letterSpacing: 0.5,
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
                 ),
-                const SizedBox(height: 7),
+              ),
+              const Divider(),
+              Text(
+                'Per Serving:',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 16,
+                  letterSpacing: 0.5,
+                  color: Theme.of(context).colorScheme.tertiary,
+                ),
+              ),
+              const SizedBox(height: 7),
 
-                _NumbersTextRichText(
-                    start: recipe.calories.toString(),
-                    end: (recipe.calories > 1) ? ' Calories' : ' Calorie'),
-                _NumbersTextRichText(
-                    start: '${recipe.protein}g', end: ' of Protein'),
-                _NumbersTextRichText(start: '${recipe.fat}g', end: ' of Fat'),
+              _NumbersTextRichText(
+                  start: recipe.calories.toString(),
+                  end: (recipe.calories > 1) ? ' Calories' : ' Calorie'),
+              _NumbersTextRichText(
+                  start: '${recipe.protein}g', end: ' of Protein'),
+              _NumbersTextRichText(start: '${recipe.fat}g', end: ' of Fat'),
 
-                const SizedBox(height: 10),
-              ],
-            ),
+              const SizedBox(height: 10),
+            ],
           ),
         ),
       ),

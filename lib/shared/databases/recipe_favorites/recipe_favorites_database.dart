@@ -11,6 +11,7 @@ part 'recipe_favorites_database.g.dart';
 abstract class AbstractFavoritesDatabase {
   Future<List<Recipe>> getFavorites();
   Future<Recipe> getSingleRecipe(int recipeListIndex);
+  Future<void> updateOrAddRecipe(Recipe recipe);
   Future<void> addFavorite(Recipe newFavoriteRecipe);
   Future<void> removeFavorite(int oldFavoriteRecipeID);
   Future<bool> checkIfRecipeIsFavorite(int recipeID);
@@ -40,13 +41,12 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
   }
 
   @override
-  Future<Recipe> getSingleRecipe(int recipeId) async {
+  Future<Recipe> getSingleRecipe(int id) async {
     try {
       final isar = await favoritesDatabase;
 
-      final recipe =
-          await isar.recipes.filter().recipeIdEqualTo(recipeId).findFirst();
-      print(recipeId);
+      final recipe = await isar.recipes.filter().idEqualTo(id).findFirst();
+      print(id);
 
       print(recipe == null);
 
@@ -57,13 +57,26 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
   }
 
   @override
+  Future<void> updateOrAddRecipe(Recipe recipe) async {
+    try {
+      final isar = await favoritesDatabase;
+
+      await isar.writeTxnSync(() async {
+        isar.recipes.putSync(recipe);
+      });
+    } catch (e) {
+      throw 'Failed to update or add recipe to recipe favoritesDatabase database: $e';
+    }
+  }
+
+  @override
   Future<void> addFavorite(Recipe newFavoriteRecipe) async {
     try {
       final isar = await favoritesDatabase;
 
       // genereate a recipe this way so it has a unique id
       final recipe = Recipe(
-        recipeId: newFavoriteRecipe.recipeId,
+        id: newFavoriteRecipe.id,
         title: newFavoriteRecipe.title,
         imageUrl: newFavoriteRecipe.imageUrl,
         sourceName: newFavoriteRecipe.sourceName,
@@ -105,7 +118,7 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
 
       final recipe = await isar.recipes
           .filter()
-          .recipeIdEqualTo(oldFavoriteRecipeID)
+          .idEqualTo(oldFavoriteRecipeID)
           .findFirst();
 
       if (recipe == null) throw "Cant find recipe with provided id";
@@ -124,7 +137,7 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
       final isar = await favoritesDatabase;
 
       final Recipe? recipe =
-          await isar.recipes.filter().recipeIdEqualTo(recipeID).findFirst();
+          await isar.recipes.filter().idEqualTo(recipeID).findFirst();
       return (recipe != null) ? true : false;
     } catch (e) {
       throw "Failed to check if favorite is in database: $e";

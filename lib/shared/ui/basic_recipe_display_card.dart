@@ -6,7 +6,7 @@ import 'package:recipe_box/shared/models/recipe.dart';
 import 'package:recipe_box/shared/ui/recipe_image.dart';
 
 class BasicRecipeDisplayCard extends StatelessWidget {
-  final int? recipeId;
+  final int? id;
   final Recipe? recipe;
   final String title;
   final String imageUrl;
@@ -16,7 +16,7 @@ class BasicRecipeDisplayCard extends StatelessWidget {
   const BasicRecipeDisplayCard({
     this.recipe,
     required this.title,
-    this.recipeId,
+    this.id,
     required this.imageUrl,
     this.titleStyle,
     required this.cardWidth,
@@ -36,7 +36,7 @@ class BasicRecipeDisplayCard extends StatelessWidget {
           children: [
             //Image
             RecipeImage(
-              key: Key('${recipe?.recipeId}Image'),
+              key: Key('${recipe?.id}Image'),
               recipe: recipe,
               imageUrl: imageUrl,
               cardWidth: cardWidth,

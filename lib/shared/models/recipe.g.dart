@@ -89,59 +89,54 @@ const RecipeSchema = CollectionSchema(
       name: r'protein',
       type: IsarType.long,
     ),
-    r'recipeId': PropertySchema(
-      id: 14,
-      name: r'recipeId',
-      type: IsarType.long,
-    ),
     r'servings': PropertySchema(
-      id: 15,
+      id: 14,
       name: r'servings',
       type: IsarType.long,
     ),
     r'similarRecipes': PropertySchema(
-      id: 16,
+      id: 15,
       name: r'similarRecipes',
       type: IsarType.objectList,
       target: r'SimilarRecipe',
     ),
     r'sourceName': PropertySchema(
-      id: 17,
+      id: 16,
       name: r'sourceName',
       type: IsarType.string,
     ),
     r'sourceUrl': PropertySchema(
-      id: 18,
+      id: 17,
       name: r'sourceUrl',
       type: IsarType.string,
     ),
     r'summary': PropertySchema(
-      id: 19,
+      id: 18,
       name: r'summary',
       type: IsarType.string,
     ),
     r'time': PropertySchema(
-      id: 20,
+      id: 19,
       name: r'time',
       type: IsarType.long,
     ),
     r'title': PropertySchema(
-      id: 21,
+      id: 20,
       name: r'title',
       type: IsarType.string,
     ),
     r'vegan': PropertySchema(
-      id: 22,
+      id: 21,
       name: r'vegan',
       type: IsarType.bool,
     ),
     r'vegetarian': PropertySchema(
-      id: 23,
+      id: 22,
       name: r'vegetarian',
       type: IsarType.bool,
     ),
     r'weightWatcher': PropertySchema(
-      id: 24,
+      id: 23,
       name: r'weightWatcher',
       type: IsarType.long,
     )
@@ -279,22 +274,21 @@ void _recipeSerialize(
   writer.writeBool(offsets[11], object.popular);
   writer.writeDouble(offsets[12], object.pricePerServing);
   writer.writeLong(offsets[13], object.protein);
-  writer.writeLong(offsets[14], object.recipeId);
-  writer.writeLong(offsets[15], object.servings);
+  writer.writeLong(offsets[14], object.servings);
   writer.writeObjectList<SimilarRecipe>(
-    offsets[16],
+    offsets[15],
     allOffsets,
     SimilarRecipeSchema.serialize,
     object.similarRecipes,
   );
-  writer.writeString(offsets[17], object.sourceName);
-  writer.writeString(offsets[18], object.sourceUrl);
-  writer.writeString(offsets[19], object.summary);
-  writer.writeLong(offsets[20], object.time);
-  writer.writeString(offsets[21], object.title);
-  writer.writeBool(offsets[22], object.vegan);
-  writer.writeBool(offsets[23], object.vegetarian);
-  writer.writeLong(offsets[24], object.weightWatcher);
+  writer.writeString(offsets[16], object.sourceName);
+  writer.writeString(offsets[17], object.sourceUrl);
+  writer.writeString(offsets[18], object.summary);
+  writer.writeLong(offsets[19], object.time);
+  writer.writeString(offsets[20], object.title);
+  writer.writeBool(offsets[21], object.vegan);
+  writer.writeBool(offsets[22], object.vegetarian);
+  writer.writeLong(offsets[23], object.weightWatcher);
 }
 
 Recipe _recipeDeserialize(
@@ -310,6 +304,7 @@ Recipe _recipeDeserialize(
     dishTypes: reader.readStringList(offsets[3]) ?? [],
     fat: reader.readLong(offsets[4]),
     healthScore: reader.readDouble(offsets[5]),
+    id: id,
     imageUrl: reader.readString(offsets[6]),
     ingredients: reader.readStringList(offsets[7]) ?? [],
     instructions: reader.readObjectList<Instruction>(
@@ -329,24 +324,22 @@ Recipe _recipeDeserialize(
     popular: reader.readBool(offsets[11]),
     pricePerServing: reader.readDouble(offsets[12]),
     protein: reader.readLong(offsets[13]),
-    recipeId: reader.readLong(offsets[14]),
-    servings: reader.readLong(offsets[15]),
+    servings: reader.readLong(offsets[14]),
     similarRecipes: reader.readObjectList<SimilarRecipe>(
-      offsets[16],
+      offsets[15],
       SimilarRecipeSchema.deserialize,
       allOffsets,
       SimilarRecipe(),
     ),
-    sourceName: reader.readString(offsets[17]),
-    sourceUrl: reader.readString(offsets[18]),
-    summary: reader.readString(offsets[19]),
-    time: reader.readLong(offsets[20]),
-    title: reader.readString(offsets[21]),
-    vegan: reader.readBool(offsets[22]),
-    vegetarian: reader.readBool(offsets[23]),
-    weightWatcher: reader.readLong(offsets[24]),
+    sourceName: reader.readString(offsets[16]),
+    sourceUrl: reader.readString(offsets[17]),
+    summary: reader.readString(offsets[18]),
+    time: reader.readLong(offsets[19]),
+    title: reader.readString(offsets[20]),
+    vegan: reader.readBool(offsets[21]),
+    vegetarian: reader.readBool(offsets[22]),
+    weightWatcher: reader.readLong(offsets[23]),
   );
-  object.id = id;
   return object;
 }
 
@@ -399,29 +392,27 @@ P _recipeDeserializeProp<P>(
     case 14:
       return (reader.readLong(offset)) as P;
     case 15:
-      return (reader.readLong(offset)) as P;
-    case 16:
       return (reader.readObjectList<SimilarRecipe>(
         offset,
         SimilarRecipeSchema.deserialize,
         allOffsets,
         SimilarRecipe(),
       )) as P;
+    case 16:
+      return (reader.readString(offset)) as P;
     case 17:
       return (reader.readString(offset)) as P;
     case 18:
       return (reader.readString(offset)) as P;
     case 19:
-      return (reader.readString(offset)) as P;
-    case 20:
       return (reader.readLong(offset)) as P;
-    case 21:
+    case 20:
       return (reader.readString(offset)) as P;
+    case 21:
+      return (reader.readBool(offset)) as P;
     case 22:
       return (reader.readBool(offset)) as P;
     case 23:
-      return (reader.readBool(offset)) as P;
-    case 24:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -429,16 +420,14 @@ P _recipeDeserializeProp<P>(
 }
 
 Id _recipeGetId(Recipe object) {
-  return object.id ?? Isar.autoIncrement;
+  return object.id;
 }
 
 List<IsarLinkBase<dynamic>> _recipeGetLinks(Recipe object) {
   return [];
 }
 
-void _recipeAttach(IsarCollection<dynamic> col, Id id, Recipe object) {
-  object.id = id;
-}
+void _recipeAttach(IsarCollection<dynamic> col, Id id, Recipe object) {}
 
 extension RecipeQueryWhereSort on QueryBuilder<Recipe, Recipe, QWhere> {
   QueryBuilder<Recipe, Recipe, QAfterWhere> anyId() {
@@ -1332,23 +1321,7 @@ extension RecipeQueryFilter on QueryBuilder<Recipe, Recipe, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> idIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'id',
-      ));
-    });
-  }
-
-  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> idIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'id',
-      ));
-    });
-  }
-
-  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> idEqualTo(Id? value) {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -1358,7 +1331,7 @@ extension RecipeQueryFilter on QueryBuilder<Recipe, Recipe, QFilterCondition> {
   }
 
   QueryBuilder<Recipe, Recipe, QAfterFilterCondition> idGreaterThan(
-    Id? value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1371,7 +1344,7 @@ extension RecipeQueryFilter on QueryBuilder<Recipe, Recipe, QFilterCondition> {
   }
 
   QueryBuilder<Recipe, Recipe, QAfterFilterCondition> idLessThan(
-    Id? value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1384,8 +1357,8 @@ extension RecipeQueryFilter on QueryBuilder<Recipe, Recipe, QFilterCondition> {
   }
 
   QueryBuilder<Recipe, Recipe, QAfterFilterCondition> idBetween(
-    Id? lower,
-    Id? upper, {
+    Id lower,
+    Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -2210,59 +2183,6 @@ extension RecipeQueryFilter on QueryBuilder<Recipe, Recipe, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'protein',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> recipeIdEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'recipeId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> recipeIdGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'recipeId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> recipeIdLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'recipeId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> recipeIdBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'recipeId',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -3196,18 +3116,6 @@ extension RecipeQuerySortBy on QueryBuilder<Recipe, Recipe, QSortBy> {
     });
   }
 
-  QueryBuilder<Recipe, Recipe, QAfterSortBy> sortByRecipeId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'recipeId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Recipe, Recipe, QAfterSortBy> sortByRecipeIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'recipeId', Sort.desc);
-    });
-  }
-
   QueryBuilder<Recipe, Recipe, QAfterSortBy> sortByServings() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'servings', Sort.asc);
@@ -3426,18 +3334,6 @@ extension RecipeQuerySortThenBy on QueryBuilder<Recipe, Recipe, QSortThenBy> {
     });
   }
 
-  QueryBuilder<Recipe, Recipe, QAfterSortBy> thenByRecipeId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'recipeId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Recipe, Recipe, QAfterSortBy> thenByRecipeIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'recipeId', Sort.desc);
-    });
-  }
-
   QueryBuilder<Recipe, Recipe, QAfterSortBy> thenByServings() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'servings', Sort.asc);
@@ -3623,12 +3519,6 @@ extension RecipeQueryWhereDistinct on QueryBuilder<Recipe, Recipe, QDistinct> {
     });
   }
 
-  QueryBuilder<Recipe, Recipe, QDistinct> distinctByRecipeId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'recipeId');
-    });
-  }
-
   QueryBuilder<Recipe, Recipe, QDistinct> distinctByServings() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'servings');
@@ -3779,12 +3669,6 @@ extension RecipeQueryProperty on QueryBuilder<Recipe, Recipe, QQueryProperty> {
   QueryBuilder<Recipe, int, QQueryOperations> proteinProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'protein');
-    });
-  }
-
-  QueryBuilder<Recipe, int, QQueryOperations> recipeIdProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'recipeId');
     });
   }
 

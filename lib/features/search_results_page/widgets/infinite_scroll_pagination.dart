@@ -29,11 +29,16 @@ class InfiniteScrollPaginationState extends State<InfiniteScrollPagination> {
           mainAxisSpacing: 8,
           crossAxisSpacing: 8,
           builderDelegate: PagedChildBuilderDelegate<Recipe>(
-            itemBuilder: (context, recipe, index) => DetailedRecipeDisplayCard(
-              key: Key('${recipe.recipeId}DRDC'),
-              recipe: recipe,
-              showPopularBadge: false,
-              recipeListIndex: index,
+            itemBuilder: (context, recipe, index) => Hero(
+              tag: '${recipe.id}Card',
+              child: Material(
+                key: ValueKey('${recipe.id}Card'),
+                child: DetailedRecipeDisplayCard(
+                  recipe: recipe,
+                  showPopularBadge: false,
+                  recipeListIndex: index,
+                ),
+              ),
             ),
             firstPageErrorIndicatorBuilder: (context) => Text('error'),
             noItemsFoundIndicatorBuilder: (context) => Text('loading'),
