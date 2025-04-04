@@ -2,8 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:recipe_box/shared/enums/chip_parameters_modes.dart';
 import 'package:recipe_box/shared/models/search_parameters.dart';
-import 'package:recipe_box/shared/services/recipe_search_results/recipe_search_results_database.dart';
-import 'package:recipe_box/shared/services/searchs-paramaters/search_paramaters_database.dart';
+import 'package:recipe_box/shared/databases/searchs-paramaters/search_paramaters_database.dart';
 
 part 'recipe_search_manager.g.dart';
 

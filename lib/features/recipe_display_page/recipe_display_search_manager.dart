@@ -1,7 +1,9 @@
+import 'package:recipe_box/features/recipe_search_page/recipe_search_manager.dart';
+import 'package:recipe_box/shared/databases/recipe_favorites/recipe_favorites_database.dart';
+import 'package:recipe_box/shared/databases/recipe_search_results/recipe_search_results_database.dart';
 import 'package:recipe_box/shared/models/recipe.dart';
-import 'package:recipe_box/shared/services/recipe_favorites/recipe_favorites_database.dart';
-import 'package:recipe_box/shared/services/recipe_search_results/apis/recipe_data.dart';
-import 'package:recipe_box/shared/services/recipe_search_results/recipe_search_results_database.dart';
+import 'package:recipe_box/shared/services/remote/recipe_data.dart';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'recipe_display_search_manager.g.dart';
@@ -15,7 +17,7 @@ class RecipeDisplayManager extends _$RecipeDisplayManager {
     try {
       switch (route) {
         case '/searchPage/searchResults/recipe':
-          database = recipeSearchResultsDatabaseProvider;
+          database = recipeSearchManagerProvider;
         case '/recipe':
           database = favoritesDatabaseProvider;
         case '/favorites/recipe':

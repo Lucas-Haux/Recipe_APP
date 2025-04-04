@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/widgets.dart';
+import 'package:recipe_box/shared/databases/recipe_search_results/model/recipe_search_result.dart';
+import 'package:recipe_box/shared/services/remote/recipe_data.dart';
+import 'package:recipe_box/shared/services/remote/recipes_search.dart';
+import 'package:recipe_box/shared/services/remote/similar_recipes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:recipe_box/shared/models/recipe.dart';
 import 'package:recipe_box/shared/models/search_parameters.dart';
-import 'package:recipe_box/shared/services/recipe_search_results/model/recipe_search_result.dart';
-import 'package:recipe_box/shared/services/recipe_search_results/apis/recipe_data.dart';
-import 'package:recipe_box/shared/services/recipe_search_results/apis/recipes_search.dart';
-import 'package:recipe_box/shared/services/recipe_search_results/apis/similar_recipes.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';

@@ -1,8 +1,9 @@
+import 'package:recipe_box/shared/databases/recipe_search_results/model/recipe_search_result.dart';
+import 'package:recipe_box/shared/databases/recipe_search_results/recipe_search_results_database.dart';
+import 'package:recipe_box/shared/databases/searchs-paramaters/search_paramaters_database.dart';
 import 'package:recipe_box/shared/models/recipe.dart';
 import 'package:recipe_box/shared/models/search_parameters.dart';
-import 'package:recipe_box/shared/services/recipe_search_results/model/recipe_search_result.dart';
-import 'package:recipe_box/shared/services/recipe_search_results/recipe_search_results_database.dart';
-import 'package:recipe_box/shared/services/searchs-paramaters/search_paramaters_database.dart';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'search_results_manager.g.dart';

@@ -1,5 +1,5 @@
+import 'package:recipe_box/shared/databases/recipe_favorites/recipe_favorites_database.dart';
 import 'package:recipe_box/shared/models/recipe.dart';
-import 'package:recipe_box/shared/services/recipe_favorites/recipe_favorites_database.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'recipe_image_manager.g.dart';
