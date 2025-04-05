@@ -50,7 +50,11 @@ class FavoritesScreen extends ConsumerWidget {
             leadingWidth: 0,
             titleSpacing: 0,
             leading: const SizedBox.shrink(),
-            title: BackSearchHomeBar(key: Key('favorites'), backButton: false),
+            title: BackSearchHomeBar(
+              key: Key('favorites'),
+              backButton: true,
+              homeButton: false,
+            ),
           ),
         ),
         body: SingleChildScrollView(

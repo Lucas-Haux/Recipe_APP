@@ -45,16 +45,12 @@ class RecipeDisplayScreen extends ConsumerWidget {
         titleSpacing: 0,
         leading: const SizedBox(), // Remove Default Back Button
         forceMaterialTransparency: true,
-        title: const BackSearchHomeBar(backButton: true),
+        title: const BackSearchHomeBar(
+          backButton: true,
+          homeButton: true,
+        ),
       ),
       body: Hero(
-        placeholderBuilder: (context, size, child) {
-          return Container(
-            width: size.width,
-            height: size.height,
-            color: Theme.of(context).colorScheme.surface,
-          );
-        },
         tag: "${id}Card",
         child: SingleChildScrollView(
           padding: Dimens.of(context).edgeInsetsScreenHorizontal,

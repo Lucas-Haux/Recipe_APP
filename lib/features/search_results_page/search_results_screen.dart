@@ -21,7 +21,7 @@ class SearchResultsScreen extends ConsumerWidget {
         leadingWidth: 0,
         titleSpacing: 0,
         leading: const SizedBox(),
-        title: BackSearchHomeBar(backButton: false),
+        title: BackSearchHomeBar(backButton: false, homeButton: true),
         bottomOpacity: 0.7,
         // total results and tokens display
         bottom: recipeState.hasValue

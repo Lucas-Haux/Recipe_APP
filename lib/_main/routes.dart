@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_box/features/recipe_display_page/recipe_display_screen.dart';
-import 'package:recipe_box/features/recipe_search_page/recipe_search_screen.dart';
-import 'package:recipe_box/features/search_results_page/search_results_screen.dart';
-import 'package:recipe_box/shared/databases/recipe_favorites/recipe_favorites_database.dart';
-import 'package:recipe_box/shared/databases/recipe_search_results/recipe_search_results_database.dart';
 
 import 'package:recipe_box/shared/models/recipe.dart';
+import 'package:recipe_box/shared/databases/recipe_favorites/recipe_favorites_database.dart';
+import 'package:recipe_box/shared/databases/recipe_search_results/recipe_search_results_database.dart';
 
 // Screens
 import 'package:recipe_box/features/home_page/widgets/favorites/favorites_page/favorites_screen.dart';
 import 'package:recipe_box/features/home_page/home_screen.dart';
+import 'package:recipe_box/features/recipe_display_page/recipe_display_screen.dart';
+import 'package:recipe_box/features/recipe_search_page/recipe_search_screen.dart';
+import 'package:recipe_box/features/search_results_page/search_results_screen.dart';
 
 PageRouteBuilder<dynamic> routes(RouteSettings settings) {
   return PageRouteBuilder(

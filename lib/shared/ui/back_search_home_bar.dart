@@ -3,7 +3,12 @@ import 'package:recipe_box/shared/ui/recipe_search_bar.dart';
 
 class BackSearchHomeBar extends StatelessWidget {
   final bool backButton;
-  const BackSearchHomeBar({required this.backButton, super.key});
+  final bool homeButton;
+  const BackSearchHomeBar({
+    required this.backButton,
+    required this.homeButton,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +47,18 @@ class BackSearchHomeBar extends StatelessWidget {
           const Spacer(),
 
           // Home Button
-          Hero(
-            tag: const Key('HomeButton'),
-            child: IconButton(
-              onPressed: () => Navigator.pushNamed(context, '/'),
-              icon: Icon(
-                Icons.home,
-                size: 30,
-                color: Theme.of(context).colorScheme.secondary,
+          if (homeButton)
+            Hero(
+              tag: const Key('HomeButton'),
+              child: IconButton(
+                onPressed: () => Navigator.pushNamed(context, '/'),
+                icon: Icon(
+                  Icons.home,
+                  size: 30,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
             ),
-          ),
 
           const Spacer(),
         ],

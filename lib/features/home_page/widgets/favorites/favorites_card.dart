@@ -148,6 +148,13 @@ class FavoritesCard extends StatelessWidget {
                       children: favoritesList!.map((Recipe recipe) {
                         return Hero(
                           tag: '${recipe.id}Card',
+                          placeholderBuilder: (context, size, child) {
+                            return Container(
+                              width: size.width,
+                              height: size.height,
+                              color: Theme.of(context).colorScheme.surface,
+                            );
+                          },
                           child: BasicRecipeDisplayCard(
                             key: Key('${recipe.id}Card'),
                             expand: true,
