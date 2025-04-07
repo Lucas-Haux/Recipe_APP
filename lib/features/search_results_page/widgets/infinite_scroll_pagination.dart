@@ -5,13 +5,15 @@ import 'package:recipe_box/shared/models/recipe.dart';
 import 'package:recipe_box/shared/ui/detailed_recipe_display_card.dart';
 
 class InfiniteScrollPagination extends StatefulWidget {
+  final int? totalResults;
+  final Future<List<Recipe>> Function(num, num) getArticleListPage;
+  final List<Recipe>? recipes;
   const InfiniteScrollPagination({
     this.recipes,
     required this.getArticleListPage,
+    this.totalResults,
     super.key,
   });
-  final Future<List<Recipe>> Function(num, num) getArticleListPage;
-  final List<Recipe>? recipes;
 
   @override
   InfiniteScrollPaginationState createState() =>
@@ -41,7 +43,8 @@ class InfiniteScrollPaginationState extends State<InfiniteScrollPagination> {
               ),
             ),
             firstPageErrorIndicatorBuilder: (context) => Text('error'),
-            noItemsFoundIndicatorBuilder: (context) => Text('loading'),
+            noItemsFoundIndicatorBuilder: (context) =>
+                Text('No Recipes Found With This Search'),
           ),
           pagingController: _pagingController,
           padding: const EdgeInsets.all(16),
@@ -62,24 +65,30 @@ class InfiniteScrollPaginationState extends State<InfiniteScrollPagination> {
 
   Future<void> _fetchPage(num pageKey) async {
     try {
+      print('what');
       final newPage = await widget.getArticleListPage(
         pageKey.toInt(),
         8,
       );
 
-      final previouslyFetchedItemsCount =
-          // 2
-          _pagingController.itemList?.length ?? 0;
+      //final previouslyFetchedItemsCount =
+      //    _pagingController.itemList?.length ?? 0;
 
-      //TODO isLastPage
-      final isLastPage = false;
-      final newItems = newPage;
+      bool isLastPage = false;
+      int totalRecipeResults =
+          (widget.totalResults != null) ? widget.totalResults! : 0;
+      if (totalRecipeResults < (pageKey + 1) * 8) {
+        print('totalRecipeResults: $totalRecipeResults');
+        isLastPage = true;
+      } else {
+        isLastPage = false;
+      }
 
       if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
+        _pagingController.appendLastPage(newPage);
       } else {
         final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(newItems, nextPageKey.toInt());
+        _pagingController.appendPage(newPage, nextPageKey.toInt());
       }
     } catch (error, stackTrack) {
       // 4

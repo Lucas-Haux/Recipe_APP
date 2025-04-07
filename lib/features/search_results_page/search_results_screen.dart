@@ -51,22 +51,8 @@ class SearchResultsScreen extends ConsumerWidget {
       ),
       body: InfiniteScrollPagination(
         getArticleListPage: manager.getArticleListPage,
+        totalResults: recipeState.value?.totalResults,
       ),
     );
   }
 }
-
-//bool _showPopularBadge(List<Recipe> recipeData) {
-//  int numberOfPopular = 0;
-//  for (var recipe in recipeData) {
-//    if (recipe.popular == true) {
-//      numberOfPopular++;
-//    }
-//  }
-//  print('total number of popular: $numberOfPopular');
-//  if (numberOfPopular < 17) {
-//    return true;
-//  } else {
-//    return false;
-//  }
-//}

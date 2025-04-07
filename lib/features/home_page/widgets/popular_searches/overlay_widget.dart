@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 
-import 'package:recipe_box/temp_popular_searches_test_data.dart'; // remove
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:recipe_box/features/home_page/widgets/popular_searches/popular_searches_manager.dart';
 import 'package:recipe_box/shared/enums/chip_parameters_modes.dart';
 import 'package:recipe_box/shared/enums/recipe_parameters.dart';
 import 'package:recipe_box/shared/models/search_parameters.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class OverlayWidget extends StatelessWidget {
+class OverlayWidget extends ConsumerWidget {
   final int currentIndex;
   const OverlayWidget({required this.currentIndex, super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final manager = ref.watch(popularSearchesManagerProvider.notifier);
+
     return Padding(
       padding: EdgeInsets.all(15),
       child: Stack(
@@ -34,10 +37,30 @@ class OverlayWidget extends StatelessWidget {
             child: Wrap(
               direction: Axis.vertical,
               textDirection: TextDirection.rtl,
-              spacing: 10,
+              spacing: 15,
               children: [
-                _TopRightButton(icon: Icons.edit_note, text: "Edit Filters"),
-                _TopRightButton(icon: Icons.search, text: "Search"),
+                // Edit Filters Button
+                _TopRightButton(
+                  icon: Icons.edit_note,
+                  text: "Edit Filters",
+                  onTap: () {
+                    manager.setFilters(
+                      popularSearchesData.entries.toList()[currentIndex].value,
+                    );
+                    Navigator.pushNamed(context, '/searchPage');
+                  },
+                ),
+                // Search Button
+                _TopRightButton(
+                  icon: Icons.search,
+                  text: "Search",
+                  onTap: () {
+                    manager.setFilters(
+                      popularSearchesData.entries.toList()[currentIndex].value,
+                    );
+                    Navigator.pushNamed(context, '/searchPage/searchResults');
+                  },
+                ),
               ],
             ),
           ),
@@ -109,7 +132,10 @@ class _TitleAndFiltersDisplay extends StatelessWidget {
           // Title
           ShaderMask(
             shaderCallback: (bounds) => LinearGradient(
-              colors: [Colors.blue, Colors.lightBlueAccent], // Gradient colors
+              colors: [
+                Colors.blue.shade500,
+                Colors.lightBlueAccent
+              ], // Gradient colors
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ).createShader(bounds),
@@ -156,32 +182,40 @@ class _TitleAndFiltersDisplay extends StatelessWidget {
 class _TopRightButton extends StatelessWidget {
   final IconData icon;
   final String text;
-  const _TopRightButton({required this.icon, required this.text});
+  final void Function() onTap;
+  const _TopRightButton({
+    required this.icon,
+    required this.text,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 4),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.blue, Colors.lightBlueAccent],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-      ),
-      child: Row(
-        spacing: 5,
-        children: [
-          Icon(icon),
-          Text(
-            text,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium!
-                .copyWith(color: Colors.white),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 4),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue, Colors.lightBlueAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-        ],
+          borderRadius: BorderRadius.all(Radius.circular(5)),
+        ),
+        child: Row(
+          spacing: 5,
+          children: [
+            Icon(icon),
+            Text(
+              text,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }

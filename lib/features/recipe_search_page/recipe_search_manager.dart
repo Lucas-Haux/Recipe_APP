@@ -2,14 +2,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:recipe_box/shared/enums/chip_parameters_modes.dart';
 import 'package:recipe_box/shared/models/search_parameters.dart';
-import 'package:recipe_box/shared/databases/searchs-paramaters/search_paramaters_database.dart';
+import 'package:recipe_box/shared/databases/searchs-parameters/search_parameters_database.dart';
 
 part 'recipe_search_manager.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class RecipeSearchManager extends _$RecipeSearchManager {
   @override
   SearchParameters build() {
+    print('building ');
+
     return ref.watch(searchParametersDatabaseProvider).getSearchParameters();
   }
 
@@ -87,5 +89,9 @@ class RecipeSearchManager extends _$RecipeSearchManager {
     ingredients.remove(name);
 
     updateSearchParameters({'Ingredients': ingredients});
+  }
+
+  void refreshFromDatabase() {
+    state = ref.read(searchParametersDatabaseProvider).getSearchParameters();
   }
 }

@@ -5,8 +5,6 @@ import 'package:recipe_box/shared/enums/chip_parameters_modes.dart';
 import 'package:recipe_box/shared/enums/recipe_parameters.dart';
 import 'package:recipe_box/shared/functions/capitalize_string.dart';
 
-import 'package:widget_and_text_animator/widget_and_text_animator.dart';
-
 enum ChipMode { requireExclude, and, or, orAnd }
 
 class ExpandableChipsCard<RecipeParameter extends DisplayableEnum,

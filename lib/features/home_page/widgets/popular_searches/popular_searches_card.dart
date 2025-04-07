@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:recipe_box/features/home_page/widgets/popular_searches/overlay_widget.dart';
-
-import 'package:recipe_box/temp_popular_searches_test_data.dart'; // remove
+import 'package:recipe_box/features/home_page/widgets/popular_searches/popular_searches_manager.dart';
+import 'package:recipe_box/features/recipe_display_page/recipe_display_screen.dart';
 
 class PopularSearchesCard extends StatefulWidget {
   final double height;
@@ -65,6 +65,7 @@ class PopularSearchesCardState extends State<PopularSearchesCard> {
               controller: carouselController,
               backgroundColor: Colors.transparent,
               padding: EdgeInsets.zero,
+              enableSplash: false,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.zero),
               ),
@@ -87,9 +88,10 @@ class PopularSearchesCardState extends State<PopularSearchesCard> {
                       },
                       blendMode: BlendMode.dstIn,
                       // Carousel only changes the image but a controller listener updates the index
-                      child: Image.network(
+                      child: Image.asset(
                         popularSearchesImages[entry.key]!,
                         height: widget.height / 3,
+                        width: cardWidth,
                         fit: BoxFit.cover,
                       ),
                     ),

@@ -9,12 +9,11 @@ class RecipesSearch {
 
   Future<dynamic> fetchRecipes(num offset, num numberOfRecipes,
       SearchParameters searchPramatersRepository) async {
-    print('ran service ');
-
     try {
       const String appKey = 'e9099c3488ce479db3778d9f917e9334';
 
       final query = searchPramatersRepository.query;
+      print('QUERY: $query');
       // For every cuisines in the map that is set to require add the cuisine display name to the string
       String mealTypes = searchPramatersRepository.meals.keys
           .where((key) => searchPramatersRepository.meals[key] == AndOrType.or)
@@ -84,7 +83,7 @@ class RecipesSearch {
 
       // Combine all the parameters
       String queryParameters = 'apiKey=$appKey&'
-          'titleMatch="${Uri.encodeComponent(query.trim())}"&'
+          //'${query.isNotEmpty ? 'titleMatch="${Uri.encodeComponent(query.trim())}"&' : ''}'
           'query="${Uri.encodeComponent(query.trim())}"&'
           //'titleMatch=${Uri.encodeComponent(query.trim())}&'
           'type=$mealTypes&'
@@ -113,7 +112,9 @@ class RecipesSearch {
           'addRecipeNutrition=true&'
           'offset=${offset.toInt()}&'
           'number=$numberOfRecipes&'
-          'sort=meta-score';
+          'sort=random';
+
+      //'sort=meta-score';
 
       // make uri with the api endpoint and parameters
       final Uri uri =

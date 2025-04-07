@@ -77,9 +77,6 @@ class _LocalRecipeSearchResultsDatabase
       final isar = await recipeDatabase;
 
       final recipe = await isar.recipes.filter().idEqualTo(id).findFirst();
-      print(id);
-
-      print(recipe == null);
 
       return recipe!;
     } catch (e) {

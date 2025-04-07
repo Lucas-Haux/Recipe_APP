@@ -14,13 +14,30 @@ import 'package:recipe_box/features/recipe_search_page/recipe_search_manager.dar
 TextStyle titleTextStyle =
     const TextStyle(fontSize: 25, fontWeight: FontWeight.w600);
 
-class RecipeSearchScreen extends ConsumerWidget {
+class RecipeSearchScreen extends ConsumerStatefulWidget {
   const RecipeSearchScreen({
     super.key,
   });
+  @override
+  ConsumerState<RecipeSearchScreen> createState() => _RecipeSearchScreenState();
+}
+
+class _RecipeSearchScreenState extends ConsumerState<RecipeSearchScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(recipeSearchManagerProvider.notifier).refreshFromDatabase();
+    });
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final manager = ref.watch(recipeSearchManagerProvider.notifier);
     final SearchParameters searchParameters =
         ref.watch(recipeSearchManagerProvider);

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_box/shared/enums/chip_parameters_modes.dart';
@@ -6,9 +5,9 @@ import 'package:recipe_box/shared/enums/recipe_parameters.dart';
 import 'package:recipe_box/shared/models/search_parameters.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'search_paramaters_database.g.dart';
+part 'search_parameters_database.g.dart';
 
-abstract class AbstractSearchParamatersDatabase {
+abstract class AbstractSearchParametersDatabase {
   SearchParameters getSearchParameters();
 
   void updateState({
@@ -27,15 +26,17 @@ abstract class AbstractSearchParamatersDatabase {
     Map<String, RequireExclude>? ingredients,
   });
 
+  replaceState(SearchParameters newSearchParameters);
+
   resetToDefaults(String query);
 }
 
 @Riverpod(keepAlive: false)
-AbstractSearchParamatersDatabase searchParametersDatabase(Ref ref) =>
+AbstractSearchParametersDatabase searchParametersDatabase(Ref ref) =>
     LocalSearchParametersDatabase();
 
 class LocalSearchParametersDatabase
-    implements AbstractSearchParamatersDatabase {
+    implements AbstractSearchParametersDatabase {
   SearchParameters? searchParameters;
   @override
   LocalSearchParametersDatabase() {
@@ -123,6 +124,15 @@ class LocalSearchParametersDatabase
       );
     } catch (e) {
       throw 'Failed to updateState: $e';
+    }
+  }
+
+  @override
+  replaceState(SearchParameters newSearchParameters) {
+    try {
+      searchParameters = newSearchParameters;
+    } catch (e) {
+      throw 'Couldnt replace SearchParametersDatabase state with the new state: $e';
     }
   }
 
