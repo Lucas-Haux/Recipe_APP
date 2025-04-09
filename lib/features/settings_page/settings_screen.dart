@@ -12,11 +12,6 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final screenWidthArea = MediaQuery.sizeOf(context).width -
-        (Dimens.dimensMobile.paddingScreenHorizontal * 2);
-    final screenHeightArea = MediaQuery.sizeOf(context).height -
-        (Dimens.dimensMobile.paddingScreenVertical * 2);
-
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -24,7 +19,7 @@ class SettingsScreen extends ConsumerWidget {
               horizontal: Dimens.dimensMobile.paddingScreenHorizontal,
               vertical: Dimens.dimensMobile.paddingScreenVertical),
           child: Column(
-            spacing: 50,
+            spacing: itemSpacing,
             children: [
               Text('Settings'),
               SettingsGroup(
