@@ -14,7 +14,7 @@ class SettingsAndTokensButtons extends StatelessWidget {
           icon: Icons.settings_rounded,
           gradientColorOne: Colors.grey,
           gradientColorTwo: Colors.blueGrey,
-          onTap: () {},
+          onTap: () => Navigator.pushNamed(context, '/settingsPage'),
         ),
 
         const Spacer(),
@@ -54,7 +54,7 @@ class _Button extends StatelessWidget {
     double bottomPadding = 5;
 
     return GestureDetector(
-      onTap: onTap(),
+      onTap: () => onTap(),
       // Buttons Shape
       child: Container(
         //constraints: BoxConstraints(maxHeight: height / 4.5),

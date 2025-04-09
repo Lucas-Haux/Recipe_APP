@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_box/features/settings_page/settings_screen.dart';
 
 import 'package:recipe_box/shared/models/recipe.dart';
 import 'package:recipe_box/shared/databases/recipe_favorites/recipe_favorites_database.dart';
@@ -45,6 +46,9 @@ PageRouteBuilder<dynamic> routes(RouteSettings settings) {
         case '/favorites':
           final List<Recipe> favorites = settings.arguments as List<Recipe>;
           return FavoritesScreen(favorites: favorites);
+
+        case '/settingsPage':
+          return const SettingsScreen();
 
         case '/searchPage':
           return const RecipeSearchScreen();
