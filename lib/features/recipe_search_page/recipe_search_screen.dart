@@ -114,6 +114,19 @@ class _RecipeSearchScreenState extends ConsumerState<RecipeSearchScreen> {
                   currentSorting: searchParameters.sorting,
                   updateState: manager.updateSearchParameters,
                 ),
+
+                // Fillters Warning
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  alignment: Alignment.topCenter,
+                  child: WidgetAnimator(
+                    incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
+                    outgoingEffect: WidgetTransitionEffects.outgoingScaleDown(),
+                    child: isModified() ? FiltersWarning() : null,
+                  ),
+                ),
+
                 //Meal Type
                 ExpandableChipsCard(
                   chipMode: ChipMode.or,
