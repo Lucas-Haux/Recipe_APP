@@ -21,6 +21,8 @@ class _SortOptionsState extends State<SortOptions> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+      margin: EdgeInsets.all(10),
+      width: double.infinity,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),

@@ -32,6 +32,9 @@ class RecipeSearchAppBar extends StatelessWidget {
       expandedHeight: 250.0,
       collapsedHeight: 60.0 + (isModified ? 22.0 : 0.0),
       leading: const SizedBox(), // hide backbutton in bar
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(18)),
+      ),
 
       flexibleSpace: FlexibleSpaceBar(
         expandedTitleScale: 1,

@@ -11,8 +11,6 @@ import 'package:recipe_box/shared/enums/chip_parameters_modes.dart';
 import 'package:recipe_box/shared/models/search_parameters.dart';
 import 'package:recipe_box/features/recipe_search_page/widgets/sort_options.dart';
 
-import 'package:recipe_box/shared/enums/recipe_parameters.dart';
-
 import 'package:recipe_box/features/recipe_search_page/recipe_search_manager.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
@@ -116,15 +114,10 @@ class _RecipeSearchScreenState extends ConsumerState<RecipeSearchScreen> {
                 ),
 
                 // Fillters Warning
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  alignment: Alignment.topCenter,
-                  child: WidgetAnimator(
-                    incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
-                    outgoingEffect: WidgetTransitionEffects.outgoingScaleDown(),
-                    child: isModified() ? FiltersWarning() : null,
-                  ),
+                WidgetAnimator(
+                  incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
+                  outgoingEffect: WidgetTransitionEffects.outgoingScaleDown(),
+                  child: isModified() ? FiltersWarning() : null,
                 ),
 
                 //Meal Type

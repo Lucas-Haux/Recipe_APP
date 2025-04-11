@@ -18,7 +18,7 @@ class _FiltersWarningState extends State<FiltersWarning> {
       }),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 7),
-        margin: EdgeInsets.symmetric(horizontal: 7),
+        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
         decoration: ShapeDecoration(
           gradient: LinearGradient(colors: [
             Colors.orange,
@@ -49,7 +49,12 @@ class _FiltersWarningState extends State<FiltersWarning> {
                 )
               ],
             ),
-            _warningText(),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeInOut,
+              alignment: Alignment.topCenter,
+              child: _warningText(),
+            ),
           ],
         ),
       ),
