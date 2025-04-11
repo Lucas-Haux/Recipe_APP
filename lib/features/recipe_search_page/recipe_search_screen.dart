@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_box/features/recipe_search_page/widgets/expandable_chips.dart';
+import 'package:recipe_box/features/recipe_search_page/widgets/filters_warning.dart';
 import 'package:recipe_box/features/recipe_search_page/widgets/floating_action_buttons.dart';
 import 'package:recipe_box/features/recipe_search_page/widgets/ingreidents_input.dart';
 import 'package:recipe_box/features/recipe_search_page/widgets/recipe_search_app_bar.dart';
@@ -8,8 +9,12 @@ import 'package:recipe_box/features/recipe_search_page/widgets/slider_card.dart'
 
 import 'package:recipe_box/shared/enums/chip_parameters_modes.dart';
 import 'package:recipe_box/shared/models/search_parameters.dart';
+import 'package:recipe_box/features/recipe_search_page/widgets/sort_options.dart';
+
+import 'package:recipe_box/shared/enums/recipe_parameters.dart';
 
 import 'package:recipe_box/features/recipe_search_page/recipe_search_manager.dart';
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 TextStyle titleTextStyle =
     const TextStyle(fontSize: 25, fontWeight: FontWeight.w600);
@@ -104,6 +109,11 @@ class _RecipeSearchScreenState extends ConsumerState<RecipeSearchScreen> {
               children: [
                 const SizedBox(height: 15),
 
+                // Sorting Chips
+                SortOptions(
+                  currentSorting: searchParameters.sorting,
+                  updateState: manager.updateSearchParameters,
+                ),
                 //Meal Type
                 ExpandableChipsCard(
                   chipMode: ChipMode.or,

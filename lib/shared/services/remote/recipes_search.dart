@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:recipe_box/shared/enums/chip_parameters_modes.dart';
+import 'package:recipe_box/shared/enums/recipe_parameters.dart';
 import 'package:recipe_box/shared/models/search_parameters.dart';
 
 class RecipesSearch {
@@ -81,6 +82,23 @@ class RecipesSearch {
           .map((intolerances) => intolerances.displayName)
           .join(',');
 
+      String shorting() {
+        switch (searchPramatersRepository.sorting) {
+          case SortType.metaScore:
+            return 'meta-score';
+          case SortType.popularity:
+            return 'popularity';
+          case SortType.healthiness:
+            return 'healthiness';
+          case SortType.price:
+            return 'price';
+          case SortType.time:
+            return 'time';
+          default:
+            return 'meta-score';
+        }
+      }
+
       // Combine all the parameters
       String queryParameters = 'apiKey=$appKey&'
           //'${query.isNotEmpty ? 'titleMatch="${Uri.encodeComponent(query.trim())}"&' : ''}'
@@ -112,9 +130,7 @@ class RecipesSearch {
           'addRecipeNutrition=true&'
           'offset=${offset.toInt()}&'
           'number=$numberOfRecipes&'
-          'sort=random';
-
-      //'sort=meta-score';
+          'sort=${shorting()}';
 
       // make uri with the api endpoint and parameters
       final Uri uri =

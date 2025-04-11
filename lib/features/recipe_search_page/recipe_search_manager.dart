@@ -10,8 +10,6 @@ part 'recipe_search_manager.g.dart';
 class RecipeSearchManager extends _$RecipeSearchManager {
   @override
   SearchParameters build() {
-    print('building ');
-
     return ref.watch(searchParametersDatabaseProvider).getSearchParameters();
   }
 
@@ -40,6 +38,7 @@ class RecipeSearchManager extends _$RecipeSearchManager {
             equipment: newParameter['Equipment'],
             ingredients: newParameter['Ingredients'],
             intolerances: newParameter['Intolerances'],
+            newSortType: newParameter['Shorting'],
           );
       state = ref.watch(searchParametersDatabaseProvider).getSearchParameters();
     } catch (e) {

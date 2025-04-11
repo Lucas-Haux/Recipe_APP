@@ -2,6 +2,19 @@ abstract class DisplayableEnum {
   String get displayName;
 }
 
+enum SortType implements DisplayableEnum {
+  metaScore("Algorithm"),
+  popularity("Most Popular"),
+  healthiness("Most Healthy"),
+  price("Lowest Price"),
+  time("Quickist Cook Time"),
+  random("random");
+
+  @override
+  final String displayName;
+  const SortType(this.displayName);
+}
+
 enum MealType implements DisplayableEnum {
   mainCourse("main course"),
   sideDish("side dish"),
