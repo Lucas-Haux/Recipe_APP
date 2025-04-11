@@ -21,6 +21,8 @@ class InfiniteScrollPagination extends StatefulWidget {
 }
 
 class InfiniteScrollPaginationState extends State<InfiniteScrollPagination> {
+  bool isLastPage = false;
+
   @override
   Widget build(BuildContext context) => RefreshIndicator(
         onRefresh: () => Future.sync(
@@ -74,14 +76,16 @@ class InfiniteScrollPaginationState extends State<InfiniteScrollPagination> {
       //final previouslyFetchedItemsCount =
       //    _pagingController.itemList?.length ?? 0;
 
-      bool isLastPage = false;
       int totalRecipeResults =
-          (widget.totalResults != null) ? widget.totalResults! : 0;
+          (widget.totalResults != null) ? widget.totalResults! : 100;
       if (totalRecipeResults < (pageKey + 1) * 8) {
-        print('totalRecipeResults: $totalRecipeResults');
-        isLastPage = true;
+        setState(() {
+          isLastPage = true;
+        });
       } else {
-        isLastPage = false;
+        setState(() {
+          isLastPage = false;
+        });
       }
 
       if (isLastPage) {
