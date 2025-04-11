@@ -43,6 +43,8 @@ class OverlayWidget extends ConsumerWidget {
                 _TopRightButton(
                   icon: Icons.edit_note,
                   text: "Edit Filters",
+                  color1: Colors.blue.shade400,
+                  color2: Colors.blue.shade500,
                   onTap: () {
                     manager.setFilters(
                       popularSearchesData.entries.toList()[currentIndex].value,
@@ -53,6 +55,8 @@ class OverlayWidget extends ConsumerWidget {
                 // Search Button
                 _TopRightButton(
                   icon: Icons.search,
+                  color1: Colors.blue.shade600,
+                  color2: Colors.blue.shade700,
                   text: "Search",
                   onTap: () {
                     manager.setFilters(
@@ -122,6 +126,20 @@ class _TitleAndFiltersDisplay extends StatelessWidget {
           searchParametersData.meals, AndOrType.unspecified),
     };
 
+    List<Color> getColorsFromIndex(int index) {
+      switch (index) {
+        case 0:
+          return [Colors.blue.shade700, Colors.blue.shade600];
+        case 1:
+          return [Colors.blue.shade600, Colors.blue.shade500];
+        case 2:
+          return [Colors.blue.shade500, Colors.blue.shade400];
+
+        default:
+          return [Colors.blue.shade700, Colors.blue.shade600];
+      }
+    }
+
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 400),
       child: Column(
@@ -130,21 +148,14 @@ class _TitleAndFiltersDisplay extends StatelessWidget {
         spacing: 1,
         children: [
           // Title
-          ShaderMask(
-            shaderCallback: (bounds) => LinearGradient(
-              colors: [
-                Colors.blue.shade500,
-                Colors.lightBlueAccent
-              ], // Gradient colors
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ).createShader(bounds),
-            child: Text(
-              title,
-              textAlign: TextAlign.left,
-              textDirection: TextDirection.ltr,
-              style: Theme.of(context).textTheme.headlineMedium!,
-            ),
+          Text(
+            title,
+            textAlign: TextAlign.left,
+            textDirection: TextDirection.ltr,
+            style: Theme.of(context)
+                .textTheme
+                .headlineMedium!
+                .copyWith(color: Colors.white),
           ),
 
           // Filters Row
@@ -156,9 +167,9 @@ class _TitleAndFiltersDisplay extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 4),
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.blue, Colors.lightBlueAccent],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                      colors: getColorsFromIndex(index),
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
                     ),
                     borderRadius: BorderRadius.all(Radius.circular(5))),
                 child: Text(
@@ -182,10 +193,14 @@ class _TitleAndFiltersDisplay extends StatelessWidget {
 class _TopRightButton extends StatelessWidget {
   final IconData icon;
   final String text;
+  final Color color1;
+  final Color color2;
   final void Function() onTap;
   const _TopRightButton({
     required this.icon,
     required this.text,
+    required this.color1,
+    required this.color2,
     required this.onTap,
   });
 
@@ -197,7 +212,7 @@ class _TopRightButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 4),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue, Colors.lightBlueAccent],
+            colors: [color1, color2],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

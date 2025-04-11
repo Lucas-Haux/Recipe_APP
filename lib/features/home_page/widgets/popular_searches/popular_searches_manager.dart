@@ -24,6 +24,7 @@ class PopularSearchesManager<RecipeParameter extends DisplayableEnum,
         query: searchParameters.query,
         maxTime: searchParameters.maxTime,
         protein: searchParameters.protein,
+        sorting: searchParameters.sorting,
       );
       fullSearchParameters.diets.addAll(searchParameters.diets);
       fullSearchParameters.cuisines.addAll(searchParameters.cuisines);
@@ -46,19 +47,10 @@ class PopularSearchesManager<RecipeParameter extends DisplayableEnum,
 }
 
 Map<String, SearchParameters> popularSearchesData = {
-  'Vegan Cupcakes': SearchParameters(
-    query: 'Cupcakes',
-    diets: {DietType.vegan: AndOrType.and},
-    meals: {MealType.dessert: AndOrType.and},
-  ),
-  'High-Protein Breakfast': SearchParameters(
-    query: 'Breakfast',
-    protein: RangeValues(15, 100),
-    meals: {MealType.breakfast: AndOrType.and},
-  ),
   'Quick 30-Minute Dinners': SearchParameters(
     query: 'Dinner',
     meals: {MealType.mainCourse: AndOrType.and},
+    sorting: SortType.popularity,
     maxTime: 30,
   ),
   'Dairy-Free Smoothies': SearchParameters(
@@ -71,17 +63,22 @@ Map<String, SearchParameters> popularSearchesData = {
     equipment: {EquipmentType.pot: AndOrType.and},
     meals: {MealType.mainCourse: AndOrType.and, MealType.lunch: AndOrType.and},
   ),
-  'Spicy Asian Dishes': SearchParameters(
-    query: 'Spicy',
-    cuisines: {CuisineType.asian: RequireExclude.require},
+  'Vegan Cupcakes': SearchParameters(
+    query: 'Cupcakes',
+    diets: {DietType.vegan: AndOrType.and},
+    meals: {MealType.dessert: AndOrType.and},
+  ),
+  'High-Protein Breakfast': SearchParameters(
+    query: 'Breakfast',
+    protein: RangeValues(15, 100),
+    meals: {MealType.breakfast: AndOrType.and},
   ),
 };
 
 Map<String, String> popularSearchesImages = {
-  'Vegan Cupcakes': 'assets/images/vegan_cupcakes.jpg',
-  'High-Protein Breakfast': 'assets/images/high-protein_breakfast.jpg',
   'Quick 30-Minute Dinners': 'assets/images/quick_30-min_dinners.jpg',
   'Dairy-Free Smoothies': 'assets/images/dairy-free_smoothies.jpg',
   'One-Pot Comfort Food': 'assets/images/one-pot_comfort_food.jpg',
-  'Spicy Asian Dishes': 'assets/images/spicy_asian_dishes.png'
+  'Vegan Cupcakes': 'assets/images/vegan_cupcakes.jpg',
+  'High-Protein Breakfast': 'assets/images/high-protein_breakfast.jpg',
 };

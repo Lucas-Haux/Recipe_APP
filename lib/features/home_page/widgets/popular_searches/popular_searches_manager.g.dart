@@ -7,7 +7,7 @@ part of 'popular_searches_manager.dart';
 // **************************************************************************
 
 String _$popularSearchesManagerHash() =>
-    r'c51aaaebfafb67795443221fd86a131bcc94a52a';
+    r'714802e35a1238ebb87592df61cc50a17dddf471';
 
 /// See also [PopularSearchesManager].
 @ProviderFor(PopularSearchesManager)
