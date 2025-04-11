@@ -121,8 +121,7 @@ class RecipeDisplayScreen extends ConsumerWidget {
                   ),
 
                 // Seperation
-                const SizedBox(height: 20),
-                const Divider(),
+                const SizedBox(height: 30),
 
                 EquipmentCard(
                   cardWidth: cardWidth,
@@ -136,8 +135,7 @@ class RecipeDisplayScreen extends ConsumerWidget {
                 ),
 
                 // Seperation
-                const SizedBox(height: 20),
-                const Divider(),
+                const SizedBox(height: 30),
 
                 InstructionsCard(
                   getParagraphDataForRecipe: manager.getMissingDataForRecipe,
@@ -148,8 +146,7 @@ class RecipeDisplayScreen extends ConsumerWidget {
 
                 if (database != null) ...[
                   //Seperation
-                  const SizedBox(height: 20),
-                  const Divider(),
+                  const SizedBox(height: 30),
 
                   TextAnimator(
                     'Similar Recipes',
@@ -180,6 +177,9 @@ class RecipeDisplayScreen extends ConsumerWidget {
                             offset: Offset(3, 3)),
                       ],
                     ),
+                  ),
+                  SizedBox(
+                    height: 5,
                   ),
 
                   SimilarRecipesCard(

@@ -162,10 +162,10 @@ class _ListInstructions extends StatelessWidget {
         return extractedTitle;
         // if recipe only has one set of instructions
       } else if (numberOfInsturctions < 2) {
-        return 'Instruction';
+        return 'Instructions';
         // if recipe has more then one set of instructions
       } else {
-        return '${order(instructionNum)} Instruction';
+        return '${order(instructionNum)} Instructions';
       }
     }
 

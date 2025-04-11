@@ -36,7 +36,7 @@ class SimilarRecipesCard extends ConsumerWidget {
             if (similarRecipes == null || similarRecipes.isEmpty) {
               return DottedBorder(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 75, horizontal: 100),
+                    const EdgeInsets.symmetric(vertical: 75, horizontal: 80),
                 dashPattern: const [6, 10],
                 color: Theme.of(context).colorScheme.outlineVariant,
                 strokeWidth: 2,
