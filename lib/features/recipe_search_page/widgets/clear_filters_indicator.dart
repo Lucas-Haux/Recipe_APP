@@ -8,39 +8,44 @@ class ClearFiltersIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WidgetAnimator(
-      incomingEffect: WidgetTransitionEffects.incomingSlideInFromLeft(),
-      outgoingEffect: WidgetTransitionEffects.outgoingSlideOutToLeft(),
-      child: isModified
-          ? Padding(
-              padding: EdgeInsets.symmetric(horizontal: 90, vertical: 10),
-              child: Container(
-                height: 20,
-                decoration: ShapeDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      strokeAlign: 2,
-                      width: 2,
-                      color: Theme.of(context).colorScheme.primary,
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      alignment: Alignment.topCenter,
+      child: WidgetAnimator(
+        incomingEffect: WidgetTransitionEffects.incomingSlideInFromLeft(),
+        outgoingEffect: WidgetTransitionEffects.outgoingSlideOutToLeft(),
+        child: isModified
+            ? Padding(
+                padding: EdgeInsets.symmetric(horizontal: 90, vertical: 10),
+                child: Container(
+                  height: 20,
+                  decoration: ShapeDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        strokeAlign: 2,
+                        width: 2,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: Row(
+                    spacing: 2,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.edit_rounded, size: 15),
+                      Text(
+                        'Modified',
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  spacing: 2,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.edit_rounded, size: 15),
-                    Text(
-                      'Modified',
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
-                  ],
-                ),
-              ),
-            )
-          : null,
+              )
+            : null,
+      ),
     );
   }
 }

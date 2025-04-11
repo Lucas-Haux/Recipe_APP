@@ -194,7 +194,7 @@ class ExpandableChipsState<RecipeParameter extends DisplayableEnum,
                     ),
                     color: WidgetStatePropertyAll(getBGColor(value)),
                     showCheckmark: false,
-                    selected: false, //
+                    selected: false,
                     onSelected: (bool selected) {
                       // TODO remove the amount of if statements
                       // if requireExclude

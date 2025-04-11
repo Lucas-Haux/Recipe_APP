@@ -93,53 +93,61 @@ class RecipeSearchAppBar extends StatelessWidget {
                 ),
               ),
             ),
-            WidgetAnimator(
-              incomingEffect: WidgetTransitionEffects.incomingSlideInFromBottom(
-                  duration: Duration(milliseconds: 500)),
-              outgoingEffect: WidgetTransitionEffects.outgoingSlideOutToBottom(
-                  duration: Duration(milliseconds: 500)),
-              child: isModified
-                  ? Container(
-                      width: 175,
-                      height: 22,
-                      padding: EdgeInsets.zero,
-                      margin: EdgeInsets.zero,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondaryContainer,
-                        border: Border(
-                          left: clearParametersBorderSide,
-                          right: clearParametersBorderSide,
-                          bottom: clearParametersBorderSide,
-                          top: BorderSide.none,
-                        ),
-                        borderRadius: BorderRadius.vertical(
-                          bottom: Radius.circular(
-                              20), // Keeps only the bottom rounded corners
-                        ),
-                      ),
-                      child: SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: TextButton(
-                          onPressed: () =>
-                              clearSearchParameters(searchController.text),
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              alignment: Alignment.topCenter,
+              child: WidgetAnimator(
+                incomingEffect:
+                    WidgetTransitionEffects.incomingSlideInFromBottom(
+                        duration: Duration(milliseconds: 500)),
+                outgoingEffect:
+                    WidgetTransitionEffects.outgoingSlideOutToBottom(
+                        duration: Duration(milliseconds: 500)),
+                child: isModified
+                    ? Container(
+                        width: 175,
+                        height: 22,
+                        padding: EdgeInsets.zero,
+                        margin: EdgeInsets.zero,
+                        decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).colorScheme.secondaryContainer,
+                          border: Border(
+                            left: clearParametersBorderSide,
+                            right: clearParametersBorderSide,
+                            bottom: clearParametersBorderSide,
+                            top: BorderSide.none,
                           ),
-                          child: Text(
-                            'Clear Filters',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 14,
-                              color: Theme.of(context).colorScheme.secondary,
+                          borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(
+                                20), // Keeps only the bottom rounded corners
+                          ),
+                        ),
+                        child: SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: TextButton(
+                            onPressed: () =>
+                                clearSearchParameters(searchController.text),
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: Text(
+                              'Clear Filters',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 14,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
-                  : SizedBox(),
+                      )
+                    : SizedBox(),
+              ),
             ),
             SizedBox(height: 10)
           ],
