@@ -11,7 +11,7 @@ class RecipesSearch {
   Future<dynamic> fetchRecipes(num offset, num numberOfRecipes,
       SearchParameters searchPramatersRepository) async {
     try {
-      const String appKey = 'e9099c3488ce479db3778d9f917e9334';
+      const String appKey = '096cc91305b04684ab47dfebc84bc59e';
 
       final query = searchPramatersRepository.query;
       print('QUERY: $query');

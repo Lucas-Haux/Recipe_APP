@@ -10,40 +10,40 @@ class FloatingActionButtons extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomRight,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        textDirection: TextDirection.rtl,
-        children: [
-          // Home
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, left: 63.0),
-            child: FloatingActionButton.small(
-              backgroundColor: Theme.of(context).colorScheme.onPrimary,
-              child: const Icon(Icons.home),
-              onPressed: () {
-                Navigator.pushNamed(context, '/');
-              },
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      textDirection: TextDirection.rtl,
+      children: [
+        // Home
+        Padding(
+          padding: const EdgeInsets.only(
+            bottom: 10,
           ),
-          //Search
-          FloatingActionButton.extended(
-            heroTag: 'SearchButton',
-            onPressed: () async {
-              FocusManager.instance.primaryFocus?.unfocus(); // remove keyboard
-
-              await updateQuery({'query': textEditingController.text});
-
-              Navigator.pushNamed(context, '/searchPage/searchResults');
+          child: FloatingActionButton.small(
+            backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            child: const Icon(Icons.home),
+            onPressed: () {
+              Navigator.pushNamed(context, '/');
             },
-            icon: const Icon(Icons.search),
-            extendedPadding: const EdgeInsets.only(left: 15, right: 15),
-            label: const Text('Search'),
           ),
-        ],
-      ),
+        ),
+        //Search
+        FloatingActionButton.extended(
+          heroTag: 'SearchButton',
+          onPressed: () async {
+            FocusManager.instance.primaryFocus?.unfocus(); // remove keyboard
+
+            await updateQuery({'query': textEditingController.text});
+
+            Navigator.pushNamed(context, '/searchPage/searchResults');
+          },
+          icon: const Icon(Icons.search),
+          extendedPadding: const EdgeInsets.only(left: 10, right: 15),
+          label: const Text('Search'),
+        ),
+      ],
     );
   }
 }

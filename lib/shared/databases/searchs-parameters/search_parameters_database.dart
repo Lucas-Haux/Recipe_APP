@@ -25,6 +25,7 @@ abstract class AbstractSearchParametersDatabase {
     Map<IntoleranceType, RequireExclude>? intolerances,
     Map<String, RequireExclude>? ingredients,
     SortType? newSortType,
+    bool? matchTitle,
   });
 
   replaceState(SearchParameters newSearchParameters);
@@ -73,6 +74,7 @@ class LocalSearchParametersDatabase
     Map<IntoleranceType, RequireExclude>? intolerances,
     Map<String, RequireExclude>? ingredients,
     SortType? newSortType,
+    bool? matchTitle,
   }) {
     try {
       dynamic newMap;
@@ -108,6 +110,7 @@ class LocalSearchParametersDatabase
         protein: protein ?? searchParameters!.protein,
         fat: fat ?? searchParameters!.fat,
         sorting: newSortType ?? searchParameters!.sorting,
+        matchTitle: matchTitle ?? searchParameters!.matchTitle,
         meals: meals != null
             ? (newMap ?? searchParameters!.meals)
             : searchParameters!.meals,

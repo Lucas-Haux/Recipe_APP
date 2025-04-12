@@ -7,7 +7,7 @@ part of 'recipe_search_manager.dart';
 // **************************************************************************
 
 String _$recipeSearchManagerHash() =>
-    r'1fbf2f0f793ed3e9b1a20b347869f5a7c83c6330';
+    r'9f4e7207dbec1f73c4c92e29c19b6e18013c52ae';
 
 /// See also [RecipeSearchManager].
 @ProviderFor(RecipeSearchManager)

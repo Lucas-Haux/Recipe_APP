@@ -17,6 +17,7 @@ class SearchParameters {
   final RangeValues protein;
   final RangeValues fat;
   final SortType sorting;
+  final bool matchTitle;
 
   SearchParameters({
     this.query = '',
@@ -32,6 +33,7 @@ class SearchParameters {
     this.protein = const RangeValues(0, 100),
     this.fat = const RangeValues(0, 100),
     this.sorting = SortType.metaScore,
+    this.matchTitle = false,
   })  : cuisines = cuisines ??
             Map.fromIterable(
               CuisineType.values,
@@ -71,6 +73,7 @@ class SearchParameters {
     RangeValues? protein,
     RangeValues? fat,
     SortType? sorting,
+    bool? matchTitle,
   }) {
     return SearchParameters(
       query: query ?? this.query,
@@ -86,6 +89,7 @@ class SearchParameters {
       protein: protein ?? this.protein,
       fat: fat ?? this.fat,
       sorting: sorting ?? this.sorting,
+      matchTitle: matchTitle ?? this.matchTitle,
     );
   }
 }

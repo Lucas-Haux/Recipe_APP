@@ -39,6 +39,7 @@ class RecipeSearchManager extends _$RecipeSearchManager {
             ingredients: newParameter['Ingredients'],
             intolerances: newParameter['Intolerances'],
             newSortType: newParameter['Shorting'],
+            matchTitle: newParameter['matchTitle'],
           );
       state = ref.watch(searchParametersDatabaseProvider).getSearchParameters();
     } catch (e) {

@@ -92,13 +92,15 @@ class _RecipeSearchScreenState extends ConsumerState<RecipeSearchScreen> {
         textEditingController: searchController,
         updateQuery: manager.updateSearchParameters,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: CustomScrollView(
         slivers: <Widget>[
           RecipeSearchAppBar(
             isModified: isModified(),
             searchController: searchController,
-            updateQuery: manager.updateSearchParameters,
+            updateSearchParameters: manager.updateSearchParameters,
             clearSearchParameters: manager.clearSearchParameters,
+            matchTitle: searchParameters.matchTitle,
           ),
           SliverFillRemaining(
             hasScrollBody: false,
