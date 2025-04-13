@@ -53,11 +53,11 @@ Discover delicious recipes effortlessly with this feature-packed recipe app powe
     <td>Riverpod</td>
   </tr>
   <tr>
-    <td>Android System:</td>
+    <td>Android Desgin System:</td>
     <td>Material 3</td>
   </tr>
   <tr>
-    <td>IOS System:</td>
+    <td>IOS Desgin System:</td>
     <td>Cupertino</td>
   </tr>
   <tr>
