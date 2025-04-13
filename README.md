@@ -9,17 +9,40 @@ Discover delicious recipes effortlessly with this feature-packed recipe app powe
 
 
 
-## Demo Video & Imagessss
+## Demo Video & Images
 
 
-<a href="https://www.youtube.com/shorts/-mBlx2S-LpQ">
-  <img src="https://w0.peakpx.com/wallpaper/93/215/HD-wallpaper-youtube-youtube-channel-phone-youtube-logo-logo-google-youtube-music-youtube-mix-youtuber.jpg" width="250" height="555.55">
-</a>
-<img src="images/home_page.png" alt="Home Page" width="250">
-<img src="images/search_page.png" alt="Search Page" width="250">
-<img src="images/search_results.png" alt="Search Results" width="250">
-<img src="images/recipe_page.png" alt="Recipe Page" width="250">
-<img src="images/recipe_page2.png" alt="Recipe Page 2" width="250">
+<table>
+  <tr>
+    <td>
+      <a href="https://www.youtube.com/shorts/-mBlx2S-LpQ">
+        <img
+          src="https://w0.peakpx.com/wallpaper/93/215/HD-wallpaper-youtube-youtube-channel-phone-youtube-logo-logo-google-youtube-music-youtube-mix-youtuber.jpg"
+          width="250"
+          height="555.55"
+        />
+      </a>
+    </td>
+    <td>
+      <img src="images/home_page.png" alt="Home Page" width="250" />
+    </td>
+    <td>
+      <img src="images/search_page.png" alt="Search Page" width="250" />
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="images/search_results.png" alt="Search Results" width="250" />
+    </td>
+    <td>
+      <img src="images/recipe_page.png" alt="Recipe Page" width="250" />
+    </td>
+    <td>
+      <img src="images/recipe_page2.png" alt="Recipe Page 2" width="250" />
+    </td>
+  </tr>
+</table>
+
 
 ## Tech Stack Overview
 
