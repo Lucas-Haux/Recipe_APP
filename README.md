@@ -9,15 +9,12 @@ Discover delicious recipes effortlessly with this feature-packed recipe app powe
 
 
 
-## Demo Video & Images
+## Demo Video & Imagessss
 
-<iframe width="250" height="555.55" 
-  src="https://www.youtube.com/embed/-mBlx2S-LpQ" 
-  title="YouTube video player" 
-  frameborder="0" 
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-  allowfullscreen>
-</iframe>
+
+<a href="https://www.youtube.com/shorts/-mBlx2S-LpQ">
+  <img src="https://w0.peakpx.com/wallpaper/93/215/HD-wallpaper-youtube-youtube-channel-phone-youtube-logo-logo-google-youtube-music-youtube-mix-youtuber.jpg" width="250" height="555.55">
+</a>
 <img src="images/home_page.png" alt="Home Page" width="250">
 <img src="images/search_page.png" alt="Search Page" width="250">
 <img src="images/search_results.png" alt="Search Results" width="250">
