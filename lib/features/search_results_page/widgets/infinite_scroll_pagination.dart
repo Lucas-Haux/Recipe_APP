@@ -7,10 +7,10 @@ import 'package:recipe_box/shared/ui/detailed_recipe_display_card.dart';
 class InfiniteScrollPagination extends StatefulWidget {
   final int? totalResults;
   final Future<List<Recipe>> Function(num, num) getArticleListPage;
-  final List<Recipe>? recipes;
+  final Function resetUsedTokens;
   const InfiniteScrollPagination({
-    this.recipes,
     required this.getArticleListPage,
+    required this.resetUsedTokens,
     this.totalResults,
     super.key,
   });
@@ -23,11 +23,49 @@ class InfiniteScrollPagination extends StatefulWidget {
 class InfiniteScrollPaginationState extends State<InfiniteScrollPagination> {
   bool isLastPage = false;
 
+  final _pagingController = PagingController<num, Recipe>(
+    firstPageKey: 0,
+  );
+
+  Future<void> _fetchPage(num pageKey) async {
+    try {
+      final newPage = await widget.getArticleListPage(
+        pageKey.toInt(),
+        8,
+      );
+
+      int totalRecipeResults =
+          (widget.totalResults != null) ? widget.totalResults! : 100;
+      if (totalRecipeResults < (pageKey + 1) * 8) {
+        setState(() {
+          isLastPage = true;
+        });
+      } else {
+        setState(() {
+          isLastPage = false;
+        });
+      }
+
+      if (isLastPage) {
+        _pagingController.appendLastPage(newPage);
+      } else {
+        final nextPageKey = pageKey + 1;
+        _pagingController.appendPage(newPage, nextPageKey.toInt());
+      }
+    } catch (error, stackTrack) {
+      debugPrint('infinite scroll error $error /n \n $stackTrack');
+      _pagingController.error = error;
+    }
+  }
+
   @override
   Widget build(BuildContext context) => RefreshIndicator(
-        onRefresh: () => Future.sync(
-          () => _pagingController.refresh(),
-        ),
+        onRefresh: () async {
+          widget.resetUsedTokens();
+          Future.sync(
+            () => _pagingController.refresh(),
+          );
+        },
         child: PagedMasonryGridView.count(
           crossAxisCount: 2,
           mainAxisSpacing: 8,
@@ -53,52 +91,12 @@ class InfiniteScrollPaginationState extends State<InfiniteScrollPagination> {
         ),
       );
 
-  final _pagingController = PagingController<num, Recipe>(
-    firstPageKey: 0,
-  );
-
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) async {
       await _fetchPage(pageKey.toInt());
     });
     super.initState();
-  }
-
-  Future<void> _fetchPage(num pageKey) async {
-    try {
-      print('what');
-      final newPage = await widget.getArticleListPage(
-        pageKey.toInt(),
-        8,
-      );
-
-      //final previouslyFetchedItemsCount =
-      //    _pagingController.itemList?.length ?? 0;
-
-      int totalRecipeResults =
-          (widget.totalResults != null) ? widget.totalResults! : 100;
-      if (totalRecipeResults < (pageKey + 1) * 8) {
-        setState(() {
-          isLastPage = true;
-        });
-      } else {
-        setState(() {
-          isLastPage = false;
-        });
-      }
-
-      if (isLastPage) {
-        _pagingController.appendLastPage(newPage);
-      } else {
-        final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(newPage, nextPageKey.toInt());
-      }
-    } catch (error, stackTrack) {
-      // 4
-      debugPrint('infinite scroll error $error /n \n $stackTrack');
-      _pagingController.error = error;
-    }
   }
 
   @override

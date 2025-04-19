@@ -41,4 +41,8 @@ class SearchResultsManager extends _$SearchResultsManager {
       throw 'failed to get search results from manager: $e';
     }
   }
+
+  resetUsedTokens() {
+    state.value!.usedTokens = 0;
+  }
 }

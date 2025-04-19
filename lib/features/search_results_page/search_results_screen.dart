@@ -51,6 +51,7 @@ class SearchResultsScreen extends ConsumerWidget {
       ),
       body: InfiniteScrollPagination(
         getArticleListPage: manager.getArticleListPage,
+        resetUsedTokens: manager.resetUsedTokens,
         totalResults: recipeState.value?.totalResults,
       ),
     );
