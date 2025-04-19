@@ -241,11 +241,19 @@ class NutritionModel {
 
   factory NutritionModel.fromJson(Map<String, dynamic> jsonData) {
     return NutritionModel(
-      label: jsonData['name'],
+      label: _editNutritionLabels(jsonData['name']),
       amount: jsonData['amount'],
       unit: jsonData['unit'],
       percentage: jsonData['percentOfDailyNeeds'],
     );
+  }
+}
+
+String _editNutritionLabels(String label) {
+  if (label.contains('Carbohydrates')) {
+    return label.replaceFirst('Carbohydrates', 'Carbs');
+  } else {
+    return label;
   }
 }
 

@@ -1,97 +1,54 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_box/shared/models/recipe.dart';
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class NutritionGraph extends StatelessWidget {
-  final List<NutritionModel> nutrients;
-  NutritionGraph({required this.nutrients, super.key});
+  final List<NutritionModel> oldNutrients;
+  const NutritionGraph({required this.oldNutrients, super.key});
 
   @override
   Widget build(BuildContext context) {
     // TODO make this a setting where you can add more/less
     // removes Alcohol nutrients
-    final List<NutritionModel> newNutrients = nutrients
+    final List<NutritionModel> newNutrients = oldNutrients
         .where((nutrition) => !nutrition.label!.contains('Alcohol'))
         .toList();
 
-    return GestureDetector(
-      onTap: () => Navigator.pop(context),
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 0,
-          right: 25,
-          top: 10,
-          bottom: 10,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Title
-            Padding(
-              padding: EdgeInsets.only(left: 25, bottom: 10),
-              child: AutoSizeText(
-                "Percentage of Recommended Daily Intake",
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                ),
+    return WidgetAnimator(
+      incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
+      outgoingEffect: WidgetTransitionEffects.outgoingScaleDown(),
+      child: BarChart(
+        BarChartData(
+          alignment: BarChartAlignment.spaceAround,
+          maxY: _getMaxY(newNutrients) + _getInterval(newNutrients),
+          rotationQuarterTurns: 1,
+          titlesData: titlesData(newNutrients),
+          barGroups: barsData(newNutrients),
+          barTouchData: barValueLabel(newNutrients),
+          borderData: FlBorderData(show: false),
+          gridData: FlGridData(
+            horizontalInterval: _getInterval(newNutrients),
+            show: true,
+            drawVerticalLine: false,
+            drawHorizontalLine: true,
+          ),
+          extraLinesData: ExtraLinesData(
+            horizontalLines: <HorizontalLine>[
+              HorizontalLine(
+                y: _getMaxY(newNutrients) + _getInterval(newNutrients),
+                dashArray: defaultGridLine(0).dashArray,
+                strokeWidth: defaultGridLine(0).strokeWidth,
+                color: defaultGridLine(0).color,
               ),
-            ),
-            // Barchart
-            SizedBox(
-              height: 700,
-              child: _BarChart(
-                nutrients: newNutrients,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _BarChart extends StatelessWidget {
-  final List<NutritionModel> nutrients;
-  const _BarChart({required this.nutrients});
-
-  @override
-  Widget build(BuildContext context) {
-    return BarChart(
-      BarChartData(
-        alignment: BarChartAlignment.spaceAround,
-        maxY: _getMaxY() + _getInterval(),
-        rotationQuarterTurns: 1,
-        titlesData: titlesData(),
-        barGroups: barsData(),
-        barTouchData: barValueLabel(),
-        borderData: FlBorderData(show: false),
-        gridData: FlGridData(
-          horizontalInterval: _getInterval(),
-          show: true,
-          drawVerticalLine: false,
-          drawHorizontalLine: true,
-        ),
-        extraLinesData: ExtraLinesData(
-          horizontalLines: <HorizontalLine>[
-            HorizontalLine(
-              y: _getMaxY() + _getInterval(),
-              dashArray: defaultGridLine(0).dashArray,
-              strokeWidth: defaultGridLine(0).strokeWidth,
-              color: defaultGridLine(0).color,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  FlTitlesData titlesData() {
+  FlTitlesData titlesData(List<NutritionModel> nutrients) {
     // names of the nutrition labels
     Widget nutritionTitles(double value, TitleMeta meta) {
       final style = TextStyle(
@@ -144,7 +101,7 @@ class _BarChart extends StatelessWidget {
       // Top, Bar scale Labels
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
-          interval: _getInterval(),
+          interval: _getInterval(nutrients),
           maxIncluded: true,
           showTitles: true,
           reservedSize: 22,
@@ -160,7 +117,7 @@ class _BarChart extends StatelessWidget {
     );
   }
 
-  BarTouchData barValueLabel() {
+  BarTouchData barValueLabel(List<NutritionModel> nutrients) {
     return BarTouchData(
       enabled: false,
       touchTooltipData: BarTouchTooltipData(
@@ -208,7 +165,7 @@ class _BarChart extends StatelessWidget {
     return gradient();
   }
 
-  List<BarChartGroupData> barsData() {
+  List<BarChartGroupData> barsData(List<NutritionModel> nutrients) {
     return List.generate(
       nutrients.length,
       (index) {
@@ -228,7 +185,7 @@ class _BarChart extends StatelessWidget {
     );
   }
 
-  double _getMaxY() {
+  double _getMaxY(List<NutritionModel> nutrients) {
     // get Biggest Percentage from all nutrients
     double biggestGivenNum = nutrients
         .map((nutrition) => nutrition.percentage!)
@@ -236,7 +193,7 @@ class _BarChart extends StatelessWidget {
 
     // List of numbers from 0 to 400, incrementing by 20
     List<double> thresholds =
-        List.generate(21, (index) => index * _getInterval());
+        List.generate(21, (index) => index * _getInterval(nutrients));
 
     return thresholds
         .reduce((closest, current) => (current - biggestGivenNum).abs() <
@@ -246,7 +203,7 @@ class _BarChart extends StatelessWidget {
         .roundToDouble();
   }
 
-  double _getInterval() {
+  double _getInterval(List<NutritionModel> nutrients) {
     double biggestGivenNum = nutrients
         .map((nutrition) => nutrition.percentage!)
         .fold(0, (prev, element) => element > prev ? element : prev);

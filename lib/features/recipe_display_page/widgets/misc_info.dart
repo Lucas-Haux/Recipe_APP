@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:recipe_box/features/recipe_display_page/widgets/nutrition_dialog.dart';
 import 'package:recipe_box/features/recipe_display_page/widgets/nutrition_graph.dart';
 import 'package:recipe_box/shared/models/recipe.dart';
 
@@ -46,7 +47,7 @@ class MicInfoCard extends StatelessWidget {
                       builder: (BuildContext context) => Dialog(
                         insetPadding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: NutritionGraph(nutrients: nutrients!),
+                        child: NutritionDialog(nutrients: nutrients!),
                       ),
                     );
                   } else {
