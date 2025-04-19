@@ -65,8 +65,11 @@ class RecipeSearchBar extends StatelessWidget {
                     ),
                     selected: matchTitle!,
                     showCheckmark: false,
-                    onSelected: (selected) =>
-                        updateSearchParameters!({'matchTitle': !matchTitle!}),
+                    onSelected: (selected) {
+                      updateSearchParameters!(
+                          {'query': controller!.value.text});
+                      updateSearchParameters!({'matchTitle': !matchTitle!});
+                    },
                     shape: CircleBorder(),
                   )
                 : null,
