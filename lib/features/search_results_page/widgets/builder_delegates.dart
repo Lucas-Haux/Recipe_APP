@@ -13,13 +13,10 @@ class ItemBuilder extends StatelessWidget {
       padding: EdgeInsets.all(5),
       child: Hero(
         tag: '${recipe.id}Card',
-        child: Material(
-          key: ValueKey('${recipe.id}Card'),
-          child: DetailedRecipeDisplayCard(
-            recipe: recipe,
-            showPopularBadge: false,
-            recipeListIndex: index,
-          ),
+        child: DetailedRecipeDisplayCard(
+          recipe: recipe,
+          showPopularBadge: false,
+          recipeListIndex: index,
         ),
       ),
     );
