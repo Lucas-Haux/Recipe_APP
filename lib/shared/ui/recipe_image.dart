@@ -23,7 +23,8 @@ class RecipeImage extends ConsumerWidget {
     final bool? isFavorite =
         ref.watch(recipeImageManagerProvider(recipe)).value;
     return ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),
+      borderRadius: BorderRadius.vertical(
+          top: Radius.circular(10), bottom: Radius.circular(20)),
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
@@ -32,6 +33,7 @@ class RecipeImage extends ConsumerWidget {
           Image.network(
             imageUrl,
             width: cardWidth,
+            height: 246.9,
           ),
 
           // favorites button
