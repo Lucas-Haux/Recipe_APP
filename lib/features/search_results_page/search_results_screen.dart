@@ -53,6 +53,7 @@ class SearchResultsScreen extends ConsumerWidget {
         getArticleListPage: manager.getArticleListPage,
         resetUsedTokens: manager.resetUsedTokens,
         totalResults: recipeState.value?.totalResults,
+        isFiltersModified: manager.areFiltersModified(),
       ),
     );
   }

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:recipe_box/features/search_results_page/widgets/builder_delegates.dart';
 import 'package:recipe_box/shared/models/recipe.dart';
-import 'package:recipe_box/shared/ui/detailed_recipe_display_card.dart';
 
 class InfiniteScrollPagination extends StatefulWidget {
   final int? totalResults;
   final Future<List<Recipe>> Function(num, num) getArticleListPage;
   final Function resetUsedTokens;
+  final bool isFiltersModified;
   const InfiniteScrollPagination({
     required this.getArticleListPage,
     required this.resetUsedTokens,
     this.totalResults,
+    required this.isFiltersModified,
     super.key,
   });
 
@@ -71,20 +73,25 @@ class InfiniteScrollPaginationState extends State<InfiniteScrollPagination> {
           mainAxisSpacing: 8,
           crossAxisSpacing: 8,
           builderDelegate: PagedChildBuilderDelegate<Recipe>(
-            itemBuilder: (context, recipe, index) => Hero(
-              tag: '${recipe.id}Card',
-              child: Material(
-                key: ValueKey('${recipe.id}Card'),
-                child: DetailedRecipeDisplayCard(
-                  recipe: recipe,
-                  showPopularBadge: false,
-                  recipeListIndex: index,
-                ),
-              ),
-            ),
-            firstPageErrorIndicatorBuilder: (context) => Text('error'),
-            noItemsFoundIndicatorBuilder: (context) =>
-                Text('No Recipes Found With This Search'),
+            animateTransitions: true,
+            transitionDuration: Duration(milliseconds: 600),
+
+            // When we get a valid response of Recipes
+            itemBuilder: (context, recipe, index) =>
+                ItemBuilder(recipe: recipe, index: index),
+
+            // When we get a valid response but no recipes were returned
+            noItemsFoundIndicatorBuilder: (context) => NoItemsFoundIndicator(
+                isFiltersModified: widget.isFiltersModified),
+
+            // Loading
+            firstPageProgressIndicatorBuilder: (context) =>
+                FirstPageLoadingIndicator(),
+
+            // Error
+            firstPageErrorIndicatorBuilder: (context) =>
+                FirstPageErrorIndicator(
+                    retry: _pagingController.retryLastFailedRequest),
           ),
           pagingController: _pagingController,
           padding: const EdgeInsets.all(16),

@@ -118,10 +118,14 @@ class _RecipeImage extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       child: SizedBox(
         width: 175,
+        height: 116.5,
         child: Stack(
           children: [
             // Picture
-            Image.network(imageUrl),
+            Image.network(
+              imageUrl,
+              width: 175,
+            ),
 
             // Time Banner
             Container(

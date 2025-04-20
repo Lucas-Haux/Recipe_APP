@@ -7,7 +7,7 @@ part of 'search_results_manager.dart';
 // **************************************************************************
 
 String _$searchResultsManagerHash() =>
-    r'7d62d3c8351928a4ba8ec3e42782e6964744a9e5';
+    r'4b7d0a3157afaea5b82f54aaebce0a8a5e417820';
 
 /// See also [SearchResultsManager].
 @ProviderFor(SearchResultsManager)
