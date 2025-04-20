@@ -36,13 +36,13 @@ class _FiltersWarningState extends State<FiltersWarning> {
               children: [
                 Icon(
                   Icons.warning_rounded,
-                  color: Colors.black,
+                  color: Colors.black87,
                   size: 40,
                 ),
                 Text(
                   'Warning:',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.black87,
                     fontWeight: FontWeight.w900,
                     fontSize: 25,
                   ),
@@ -66,32 +66,32 @@ class _FiltersWarningState extends State<FiltersWarning> {
       textAlign: TextAlign.center,
       text: TextSpan(
         style: TextStyle(
-            fontSize: 18,
-            color: Colors.black.withAlpha(200),
-            fontWeight: FontWeight.w400),
+          fontSize: 18,
+          color: Colors.black.withAlpha(200),
+          fontWeight: FontWeight.w400,
+        ),
         children: [
           if (expanded == true) ...[
             TextSpan(
-              text: 'Not All Recipes Are Accurately Labled, Filters Like ',
+              text: 'Not all recipes are perfectly tagged. Filters like ',
             ),
             TextSpan(
               text: 'Meal Type, Cuisines, Diets, and Intolerances ',
               style: TextStyle(fontWeight: FontWeight.w800),
             ),
             TextSpan(
-              text: 'Are Often Missing From Many Recipes. Meaning That ',
+              text: 'might be missing from some recipes. This means that ',
             ),
           ],
           TextSpan(
             text:
-                'Some Of The Recipes That Should Fit With Your Filters Wont Be Returned. \n',
+                'Some recipes that *should* match your filters may not appear in the results. \n',
             style: TextStyle(fontWeight: FontWeight.w800),
           ),
           if (expanded == true)
             TextSpan(
               text:
-                  "\n So If You're Not Getting The Recipe You're Looking For It's Recommened To Remove Some Of Your Filters Because Of This Limitation :/ \n",
-
+                  "\n Tip: If you're not finding what you're looking for, try removing a filter or two! You might discover a hidden gem. 😉 \n",
               //style: TextStyle(decoration: TextDecoration.underline),
             ),
         ],
