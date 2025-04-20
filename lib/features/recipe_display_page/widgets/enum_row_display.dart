@@ -18,7 +18,8 @@ class EnumRowDisplay extends StatelessWidget {
           minWidth: cardWidth, maxWidth: cardWidth, minHeight: 45),
       child: Card(
         color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
-        child: Center(
+        child: Padding(
+          padding: EdgeInsets.all(5),
           child: Wrap(
             alignment: WrapAlignment.center,
             spacing: 5,

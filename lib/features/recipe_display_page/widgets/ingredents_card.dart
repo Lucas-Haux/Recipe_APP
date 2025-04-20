@@ -21,8 +21,10 @@ class IngredentsCard extends StatelessWidget {
             const SizedBox(height: 5),
             // Tile
             Text(
-              'Ingredients:',
-              style: Theme.of(context).textTheme.titleLarge!,
+              'Ingredients',
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
             ),
             const Divider(),
             // Column of Ingredient Names

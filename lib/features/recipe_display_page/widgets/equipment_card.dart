@@ -27,8 +27,10 @@ class EquipmentCard extends StatelessWidget {
               const SizedBox(height: 5),
               // Title
               Text(
-                'Equipment:',
-                style: Theme.of(context).textTheme.titleLarge!,
+                'Equipment',
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
               ),
               const Divider(),
               // Row of Equipment

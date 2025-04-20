@@ -38,7 +38,6 @@ class InstructionsCardState extends State<InstructionsCard> {
       width: widget.cardWidth,
       child: Column(
         children: [
-          const SizedBox(height: 5),
 
           // InstructionsView Picker Button
           SegmentedButton<InstructionsView>(
@@ -171,11 +170,13 @@ class _ListInstructions extends StatelessWidget {
 
     return Column(
       children: [
-        const SizedBox(height: 3),
+        const SizedBox(height: 5),
         if (instructionNum != 1) const Divider(),
         Text(
           instructionTitle(),
-          style: Theme.of(context).textTheme.titleLarge!,
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
         ),
         const Divider(),
         Padding(
