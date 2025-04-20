@@ -38,7 +38,6 @@ class InstructionsCardState extends State<InstructionsCard> {
       width: widget.cardWidth,
       child: Column(
         children: [
-
           // InstructionsView Picker Button
           SegmentedButton<InstructionsView>(
             showSelectedIcon: false,
@@ -63,54 +62,70 @@ class InstructionsCardState extends State<InstructionsCard> {
             },
           ),
 
-          // List view
-          if (selectedView == InstructionsView.list) ...[
-            Card(
-              margin: EdgeInsets.only(top: 0, left: 4, right: 4),
-              color: Theme.of(context).colorScheme.onSecondaryFixed,
-              child: Column(
-                children: widget.instructions.map<Widget>((instruction) {
-                  instructionNum++;
+          Card(
+            margin: EdgeInsets.only(top: 0, left: 4, right: 4),
+            color: Theme.of(context).colorScheme.onSecondaryFixed,
+            child: AnimatedSize(
+              duration: const Duration(milliseconds: 50),
+              curve: Curves.easeInOut,
+              alignment: Alignment.topCenter,
+              child: (selectedView == InstructionsView.list)
+                  // List View
+                  ? Column(
+                      children: widget.instructions.map<Widget>((instruction) {
+                        instructionNum++;
 
-                  return _ListInstructions(
-                    getParagraphDataForRecipe: widget.getParagraphDataForRecipe,
-                    title: instruction.title!,
-                    steps: instruction.steps!,
-                    instructionNum: instructionNum,
-                    numberOfInsturctions: widget.instructions.length,
-                    cardWidth: widget.cardWidth,
-                  );
-                }).toList(),
-              ),
-            ),
-          ],
-
-          // Paragraph view
-          if (selectedView == InstructionsView.paragraph) ...[
-            Card(
-              margin: EdgeInsets.only(top: 0, left: 4, right: 4),
-              color: Theme.of(context).colorScheme.onSecondaryFixed,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: widget.instructionsParagraph != null
-                    ? HtmlWidget(
-                        widget.instructionsParagraph!,
-                      )
-                    : const Center(
-                        heightFactor: 2,
-                        child: SizedBox(
-                          height: 100,
-                          width: 100,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 7,
-                            strokeCap: StrokeCap.round,
-                          ),
+                        return _ListInstructions(
+                          getParagraphDataForRecipe:
+                              widget.getParagraphDataForRecipe,
+                          title: instruction.title!,
+                          steps: instruction.steps!,
+                          instructionNum: instructionNum,
+                          numberOfInsturctions: widget.instructions.length,
+                          cardWidth: widget.cardWidth,
+                        );
+                      }).toList(),
+                    )
+                  // Paragraph View
+                  : Column(
+                      children: [
+                        const SizedBox(height: 5),
+                        Text(
+                          'Instructions',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                         ),
-                      ),
-              ),
+                        const Divider(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          child: widget.instructionsParagraph != null
+                              // Content
+                              ? HtmlWidget(
+                                  widget.instructionsParagraph!,
+                                )
+                              // Loading
+                              : const Center(
+                                  heightFactor: 2,
+                                  child: SizedBox(
+                                    height: 100,
+                                    width: 100,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 7,
+                                      strokeCap: StrokeCap.round,
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
             ),
-          ],
+          ),
+
           const SizedBox(height: 5),
         ],
       ),
@@ -180,14 +195,17 @@ class _ListInstructions extends StatelessWidget {
         ),
         const Divider(),
         Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.only(bottom: 17, left: 5, right: 5),
           child: Column(
             children: List.generate(steps.length, (index) {
               return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: (index < 9) ? 10 : 3,
                 children: [
                   // Step number
                   Card(
                     color: Theme.of(context).colorScheme.tertiaryContainer,
+                    margin: EdgeInsets.zero,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
