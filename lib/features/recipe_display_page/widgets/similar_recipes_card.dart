@@ -1,8 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+
+import 'package:flutter_inset_shadow/flutter_inset_shadow.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recipe_box/features/recipe_display_page/widgets/similar_recipes_card_manager.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
+
+import 'package:recipe_box/features/recipe_display_page/widgets/similar_recipes_card_manager.dart';
 import 'package:recipe_box/shared/models/recipe.dart';
 import 'package:recipe_box/shared/ui/basic_recipe_display_card.dart';
 
@@ -26,8 +30,42 @@ class SimilarRecipesCard extends ConsumerWidget {
     final double height = MediaQuery.sizeOf(context).height;
 
     return Column(
+      spacing: 5,
       mainAxisSize: MainAxisSize.min,
       children: [
+        //Title
+        TextAnimator(
+          'Similar Recipes',
+          atRestEffect: WidgetRestingEffects.wave(
+            duration: Duration(milliseconds: 2500),
+          ),
+          textAlign: TextAlign.center,
+          initialDelay: const Duration(milliseconds: 50),
+          spaceDelay: const Duration(milliseconds: 65),
+          characterDelay: const Duration(milliseconds: 65),
+          style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+            shadows: [
+              Shadow(
+                  blurRadius: 9,
+                  color: Colors.white.withAlpha(70),
+                  offset: Offset(-3, -3)),
+              Shadow(
+                  blurRadius: 9,
+                  color: Colors.white.withAlpha(70),
+                  offset: Offset(3, -3)),
+              Shadow(
+                  blurRadius: 9,
+                  color: Colors.white.withAlpha(70),
+                  offset: Offset(-3, 3)),
+              Shadow(
+                  blurRadius: 9,
+                  color: Colors.white.withAlpha(70),
+                  offset: Offset(3, 3)),
+            ],
+          ),
+        ),
+
+        // Content
         manager.when(
           data: (similarRecipes) {
             similarRecipes = ref
@@ -84,9 +122,23 @@ class _Carousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
       constraints: BoxConstraints(maxHeight: height / 4.0),
-      padding: EdgeInsets.zero,
       margin: EdgeInsets.zero,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            offset: Offset(0, 0),
+            blurRadius: 30,
+            spreadRadius: 00,
+            color: Colors.black45,
+            //color: Colors.green,
+            inset: true,
+          ),
+        ],
+      ),
       child: ShaderMask(
         shaderCallback: (Rect bounds) {
           return LinearGradient(
@@ -111,7 +163,6 @@ class _Carousel extends StatelessWidget {
           onTap: (int index) {
             if (similarRecipes != null) {
               final route = ModalRoute.of(context)!.settings.name!;
-              print(route);
               final similarRecipe = similarRecipes![index];
               final Map<String, dynamic> arguments = {
                 'recipeTitle': similarRecipe.title,
@@ -126,7 +177,7 @@ class _Carousel extends StatelessWidget {
             }
           },
           backgroundColor: Colors.transparent,
-          elevation: 10,
+          elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(12)),
           ),

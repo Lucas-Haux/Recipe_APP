@@ -265,7 +265,7 @@ String _convertImage(String imageUrl) {
 String _constructImageUrl(int recipeId, String imageType) {
   // TODO image a image model with a imageSize enum so with one class i can easily change the size of the image dependent on the need. String imageUrl will be gone replaced by Image image;
 
-  String imageSize = "312x231";
+  String imageSize = "556x370";
   return 'https://img.spoonacular.com/recipes/$recipeId-$imageSize.$imageType';
 }
 

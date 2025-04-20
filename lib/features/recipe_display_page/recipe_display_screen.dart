@@ -13,7 +13,6 @@ import 'package:recipe_box/features/recipe_display_page/widgets/similar_recipes_
 import 'package:recipe_box/shared/themes/dimens.dart';
 import 'package:recipe_box/shared/ui/back_search_home_bar.dart';
 import 'package:recipe_box/shared/ui/basic_recipe_display_card.dart';
-import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 double cardWidth = 371;
 
@@ -148,40 +147,6 @@ class RecipeDisplayScreen extends ConsumerWidget {
                   //Seperation
                   const SizedBox(height: 30),
 
-                  TextAnimator(
-                    'Similar Recipes',
-                    atRestEffect: WidgetRestingEffects.wave(
-                      duration: Duration(milliseconds: 2500),
-                    ),
-                    textAlign: TextAlign.center,
-                    initialDelay: const Duration(milliseconds: 50),
-                    spaceDelay: const Duration(milliseconds: 65),
-                    characterDelay: const Duration(milliseconds: 65),
-                    style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                      shadows: [
-                        Shadow(
-                            blurRadius: 9,
-                            color: Colors.white.withAlpha(70),
-                            offset: Offset(-3, -3)),
-                        Shadow(
-                            blurRadius: 9,
-                            color: Colors.white.withAlpha(70),
-                            offset: Offset(3, -3)),
-                        Shadow(
-                            blurRadius: 9,
-                            color: Colors.white.withAlpha(70),
-                            offset: Offset(-3, 3)),
-                        Shadow(
-                            blurRadius: 9,
-                            color: Colors.white.withAlpha(70),
-                            offset: Offset(3, 3)),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-
                   SimilarRecipesCard(
                     recipe: recipe,
                     //id: recipe.id!,
@@ -191,7 +156,15 @@ class RecipeDisplayScreen extends ConsumerWidget {
                     //searchForSimilarRecipes: manager.searchSimilarRecipes,
                   ),
                 ],
-                const SizedBox(height: 15)
+                const SizedBox(height: 20)
+              ] else ...[
+                SizedBox(height: 100),
+                Transform.scale(
+                  scale: 3.5,
+                  child: CircularProgressIndicator(
+                    strokeCap: StrokeCap.round,
+                  ),
+                ),
               ],
             ],
           ),
