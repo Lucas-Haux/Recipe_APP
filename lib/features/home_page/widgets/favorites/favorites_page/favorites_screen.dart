@@ -6,7 +6,6 @@ import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 import 'package:recipe_box/shared/models/recipe.dart';
 import 'package:recipe_box/shared/ui/detailed_recipe_display_card.dart';
-import 'package:recipe_box/shared/ui/recipe_search_bar.dart';
 
 class FavoritesScreen extends ConsumerWidget {
   final List<Recipe> favorites;
@@ -107,7 +106,7 @@ class FavoritesScreen extends ConsumerWidget {
                       (int index) => Padding(
                         padding: EdgeInsets.only(
                           left: 10,
-                          right: 5,
+                          right: 7.5,
                           bottom: 10,
                         ),
                         child: DetailedRecipeDisplayCard(
@@ -127,7 +126,7 @@ class FavoritesScreen extends ConsumerWidget {
                       rightFavorites.length,
                       (int index) => Padding(
                         padding: EdgeInsets.only(
-                          left: 5,
+                          left: 7.5,
                           right: 10,
                           bottom: 10,
                         ),

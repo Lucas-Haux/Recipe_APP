@@ -17,7 +17,7 @@ class DetailedRecipeDisplayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 185,
+      width: 175,
       child: GestureDetector(
         onTap: () {
           final Map<String, dynamic> arguments = {
