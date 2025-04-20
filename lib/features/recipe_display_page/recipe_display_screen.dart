@@ -62,6 +62,7 @@ class RecipeDisplayScreen extends ConsumerWidget {
                 title: (recipe != null) ? recipe.title : recipeTitle,
                 id: (recipe != null) ? recipe.id : id,
                 cardWidth: cardWidth,
+                height: 246.9,
                 titleStyle: Theme.of(context).textTheme.titleMedium!,
               ),
               const SizedBox(height: 3),

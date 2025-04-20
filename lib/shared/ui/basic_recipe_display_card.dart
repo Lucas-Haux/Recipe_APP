@@ -12,6 +12,7 @@ class BasicRecipeDisplayCard extends StatelessWidget {
   final String imageUrl;
   final bool expand;
   final double cardWidth;
+  final double? height;
   final TextStyle? titleStyle;
   const BasicRecipeDisplayCard({
     this.recipe,
@@ -20,6 +21,7 @@ class BasicRecipeDisplayCard extends StatelessWidget {
     required this.imageUrl,
     this.titleStyle,
     required this.cardWidth,
+    this.height,
     required this.expand,
     super.key,
   });
@@ -40,6 +42,7 @@ class BasicRecipeDisplayCard extends StatelessWidget {
               recipe: recipe,
               imageUrl: imageUrl,
               cardWidth: cardWidth,
+              height: height,
             ),
 
             //Spacer(),

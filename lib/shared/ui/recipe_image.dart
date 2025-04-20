@@ -7,10 +7,12 @@ class RecipeImage extends ConsumerWidget {
   final String imageUrl;
   final Recipe? recipe;
   final double cardWidth;
+  final double? height;
   const RecipeImage({
     this.recipe,
     required this.imageUrl,
     required this.cardWidth,
+    this.height,
     super.key,
   });
 
@@ -33,7 +35,7 @@ class RecipeImage extends ConsumerWidget {
           Image.network(
             imageUrl,
             width: cardWidth,
-            height: 246.9,
+            height: height,
           ),
 
           // favorites button
