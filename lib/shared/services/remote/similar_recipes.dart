@@ -1,9 +1,9 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 Future<dynamic> fetchSimilarRecipes(int recipeId) async {
   try {
-    const String appKey = 'e9099c3488ce479db3778d9f917e9334';
+    const String appKey = '096cc91305b04684ab47dfebc84bc59e';
 
     String queryParameters = 'apiKey=$appKey&'
         'number=5';

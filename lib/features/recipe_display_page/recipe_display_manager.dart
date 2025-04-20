@@ -1,6 +1,5 @@
 import 'package:recipe_box/shared/models/recipe.dart';
 import 'package:recipe_box/shared/databases/recipe_favorites/recipe_favorites_database.dart';
-import 'package:recipe_box/shared/databases/recipe_search_results/recipe_search_results_database.dart';
 import 'package:recipe_box/shared/services/remote/recipe_data.dart';
 import 'package:recipe_box/shared/services/remote/similar_recipes.dart';
 
@@ -8,15 +7,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'recipe_display_manager.g.dart';
 
-final recipeListIndex = 1;
-
 @riverpod
 class RecipeDisplayManager extends _$RecipeDisplayManager {
   @override
   Future<Recipe> build(dynamic database, int id) async {
     try {
-      print('database: ${database.toString()}');
-      // get the _recipe data
       if (database != null) {
         _recipe = await ref.watch(database).getSingleRecipe(id)!;
       } else {
@@ -65,13 +60,9 @@ class RecipeDisplayManager extends _$RecipeDisplayManager {
   // Used for Instruction Paragraph view
   Future<void> getMissingDataForRecipe() async {
     try {
-      await ref
-          .watch(recipeSearchResultsDatabaseProvider)
-          .replaceRecipeDataWithFullData(recipeListIndex + 1);
+      await ref.watch(database).replaceRecipeDataWithFullData(id);
 
-      state = AsyncValue.data(await ref
-          .watch(recipeSearchResultsDatabaseProvider)
-          .getSingleRecipe(recipeListIndex));
+      state = AsyncValue.data(await ref.watch(database).getSingleRecipe(id));
     } catch (e) {
       throw '$e';
     }

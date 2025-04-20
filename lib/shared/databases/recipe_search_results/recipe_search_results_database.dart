@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/widgets.dart';
+
 import 'package:recipe_box/shared/databases/recipe_search_results/model/recipe_search_result.dart';
 import 'package:recipe_box/shared/services/remote/recipe_data.dart';
 import 'package:recipe_box/shared/services/remote/recipes_search.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
+import 'package:recipe_box/shared/services/remote/similar_recipes.dart';
 import 'package:recipe_box/shared/models/recipe.dart';
 import 'package:recipe_box/shared/models/search_parameters.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -23,13 +24,9 @@ abstract class AbstractRecipeSearchResultsDatabase {
   );
 
   Future<List<Recipe>> getRecipes();
-
   Future<Recipe> getSingleRecipe(int recipeListIndex);
-
   Future<void> updateOrAddRecipe(Recipe recipe);
-
   Future<void> replaceRecipeDataWithFullData(int recipeListIndex);
-
   Future<void> addSimilarRecipesToRecipe(int recipeListIndex);
 }
 
@@ -56,20 +53,6 @@ class _LocalRecipeSearchResultsDatabase
       throw 'Failed to get Recipes from database: $e';
     }
   }
-
-  //@override
-  //Future<Recipe> getSingleRecipe(int recipeListIndex) async {
-  //  try {
-  //    final isar = await recipeDatabase;
-  //
-  //    final recipes = await isar.recipes.where().findAll();
-  //
-  //    return recipes[recipeListIndex];
-  //  } catch (e) {
-  //    throw 'Failed to get single recipe from database: $e';
-  //  }
-  //}
-  //
 
   @override
   Future<Recipe> getSingleRecipe(int id) async {
@@ -162,30 +145,29 @@ class _LocalRecipeSearchResultsDatabase
   @override
   Future<void> addSimilarRecipesToRecipe(int index) async {
     try {
-      UnimplementedError();
-      //final isar = await recipeDatabase;
-      //
-      //final jsonResponse =
-      //    await fetchSimilarRecipes(isar.recipes.getSync(index)!.id);
-      //
-      //// get list of similarRecipes from json response
-      //List<SimilarRecipe> similarRecipes = [];
-      //for (var recipe in jsonResponse) {
-      //  similarRecipes.add(SimilarRecipe.fromJson(recipe));
-      //}
-      //
-      //Recipe? newRecipe =
-      //    await isar.recipes.where().idEqualTo(index).findFirst();
-      //
-      //if (newRecipe != null) {
-      //  newRecipe = newRecipe.copyWith(similarRecipes: similarRecipes);
-      //
-      //  await isar.writeTxnSync(() async {
-      //    isar.recipes.putSync(newRecipe!);
-      //  });
-      //} else {
-      //  throw "cant find recipe with id in database";
-      //}
+      final isar = await recipeDatabase;
+
+      final jsonResponse =
+          await fetchSimilarRecipes(isar.recipes.getSync(index)!.id);
+
+      // get list of similarRecipes from json response
+      List<SimilarRecipe> similarRecipes = [];
+      for (var recipe in jsonResponse) {
+        similarRecipes.add(SimilarRecipe.fromJson(recipe));
+      }
+
+      Recipe? newRecipe =
+          await isar.recipes.where().idEqualTo(index).findFirst();
+
+      if (newRecipe != null) {
+        newRecipe = newRecipe.copyWith(similarRecipes: similarRecipes);
+
+        await isar.writeTxnSync(() async {
+          isar.recipes.putSync(newRecipe!);
+        });
+      } else {
+        throw "cant find recipe with id in database";
+      }
 
       // Replace Recipe with new recipe in database
     } catch (e, stackTrace) {

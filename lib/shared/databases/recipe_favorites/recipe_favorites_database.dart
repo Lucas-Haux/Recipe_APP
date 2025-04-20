@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:recipe_box/shared/services/remote/recipe_data.dart';
+import 'package:recipe_box/shared/services/remote/similar_recipes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -15,6 +17,8 @@ abstract class AbstractFavoritesDatabase {
   Future<void> addFavorite(Recipe newFavoriteRecipe);
   Future<void> removeFavorite(int oldFavoriteRecipeID);
   Future<bool> checkIfRecipeIsFavorite(int recipeID);
+  Future<void> replaceRecipeDataWithFullData(int recipeListIndex);
+  Future<void> addSimilarRecipesToRecipe(int recipeListIndex);
 }
 
 @Riverpod(keepAlive: true)
@@ -46,9 +50,6 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
       final isar = await favoritesDatabase;
 
       final recipe = await isar.recipes.filter().idEqualTo(id).findFirst();
-      print(id);
-
-      print(recipe == null);
 
       return recipe!;
     } catch (e) {
@@ -124,7 +125,7 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
       if (recipe == null) throw "Cant find recipe with provided id";
 
       await isar.writeTxn(() async {
-        isar.recipes.delete(recipe.id!);
+        isar.recipes.delete(recipe.id);
       });
     } catch (e) {
       throw "Failed to add favorite to database: $e";
@@ -141,6 +142,61 @@ class LocalFavoritesDatabase implements AbstractFavoritesDatabase {
       return (recipe != null) ? true : false;
     } catch (e) {
       throw "Failed to check if favorite is in database: $e";
+    }
+  }
+
+  @override
+  Future<void> replaceRecipeDataWithFullData(int index) async {
+    try {
+      final isar = await favoritesDatabase;
+
+      // Get Api Response
+      final jsonResponse =
+          await RecipeData().fetchFullRecipe(isar.recipes.getSync(index)!.id);
+      // Convert to new Recipe
+      Recipe newRecipe = Recipe.fromJson(
+        jsonResponse,
+      );
+
+      // Replace Recipe with new recipe in database
+      await isar.writeTxnSync(() async {
+        isar.recipes.putSync(newRecipe);
+      });
+    } catch (e) {
+      throw 'Error replacing recipe data in favorites database: $e';
+    }
+  }
+
+  @override
+  Future<void> addSimilarRecipesToRecipe(int index) async {
+    try {
+      final isar = await favoritesDatabase;
+
+      final jsonResponse =
+          await fetchSimilarRecipes(isar.recipes.getSync(index)!.id);
+
+      // get list of similarRecipes from json response
+      List<SimilarRecipe> similarRecipes = [];
+      for (var recipe in jsonResponse) {
+        similarRecipes.add(SimilarRecipe.fromJson(recipe));
+      }
+
+      Recipe? newRecipe =
+          await isar.recipes.where().idEqualTo(index).findFirst();
+
+      if (newRecipe != null) {
+        newRecipe = newRecipe.copyWith(similarRecipes: similarRecipes);
+
+        await isar.writeTxnSync(() async {
+          isar.recipes.putSync(newRecipe!);
+        });
+      } else {
+        throw "cant find recipe with id in database";
+      }
+
+      // Replace Recipe with new recipe in database
+    } catch (e, stackTrace) {
+      throw 'Error adding  Similar recipes to database: $e $stackTrace';
     }
   }
 
