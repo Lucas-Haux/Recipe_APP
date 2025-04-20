@@ -33,7 +33,7 @@ class DetailedRecipeDisplayCard extends StatelessWidget {
           );
         },
         child: Card(
-          margin: const EdgeInsets.all(5),
+          margin: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),

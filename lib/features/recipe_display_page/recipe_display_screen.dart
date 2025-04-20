@@ -49,126 +49,125 @@ class RecipeDisplayScreen extends ConsumerWidget {
           homeButton: true,
         ),
       ),
-      body: Hero(
-        tag: "${id}Card",
-        child: SingleChildScrollView(
-          padding: Dimens.of(context).edgeInsetsScreenHorizontal,
-          child: Column(
-            children: [
-              BasicRecipeDisplayCard(
+      body: SingleChildScrollView(
+        padding: Dimens.of(context).edgeInsetsScreenHorizontal,
+        child: Column(
+          children: [
+            Hero(
+              tag: "${id}Card",
+              child: BasicRecipeDisplayCard(
                 expand: false,
                 recipe: recipe,
                 imageUrl: (recipe != null) ? recipe.imageUrl : recipeImageUrl,
                 title: (recipe != null) ? recipe.title : recipeTitle,
                 id: (recipe != null) ? recipe.id : id,
                 cardWidth: cardWidth,
-                height: 246.9,
+                //height: 246.9,
                 titleStyle: Theme.of(context).textTheme.titleMedium!,
               ),
-              const SizedBox(height: 3),
-              if (recipe != null) ...[
-                //Diets
-                if (recipe.diets.isNotEmpty && recipe.diets[0].isNotEmpty)
-                  EnumRowDisplay(
-                    listEnum: recipe.diets,
-                    cardWidth: cardWidth,
-                    key: Key('${recipe.title} diets'),
-                  ),
-
-                // Row of Serving and misc cards
-                SizedBox(
-                  width: cardWidth,
-                  height: 200,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ServingsInfoCard(
-                        cardWidth: cardWidth,
-                        servings: recipe.servings,
-                        calories: recipe.calories,
-                        fat: recipe.fat,
-                        protein: recipe.protein,
-                        pricePerServing: recipe.pricePerServing,
-                      ),
-                      MicInfoCard(
-                        cardWidth: cardWidth,
-                        sourceUrl: recipe.sourceUrl,
-                        sourceName: recipe.sourceName,
-                        time: recipe.time,
-                        ingredients: recipe.ingredients,
-                        weightWatcher: recipe.weightWatcher,
-                        healthScore: recipe.healthScore,
-                        nutrients: recipe.nutrients,
-                      )
-                    ],
-                  ),
+            ),
+            const SizedBox(height: 3),
+            if (recipe != null) ...[
+              //Diets
+              if (recipe.diets.isNotEmpty && recipe.diets[0].isNotEmpty)
+                EnumRowDisplay(
+                  listEnum: recipe.diets,
+                  cardWidth: cardWidth,
+                  key: Key('${recipe.title} diets'),
                 ),
 
-                // Cuisines
-                if (recipe.cuisines.isNotEmpty && recipe.cuisines[0].isNotEmpty)
-                  EnumRowDisplay(
-                      listEnum: recipe.cuisines,
+              // Row of Serving and misc cards
+              SizedBox(
+                width: cardWidth,
+                height: 200,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ServingsInfoCard(
                       cardWidth: cardWidth,
-                      key: Key('${recipe.title} cuisines')),
+                      servings: recipe.servings,
+                      calories: recipe.calories,
+                      fat: recipe.fat,
+                      protein: recipe.protein,
+                      pricePerServing: recipe.pricePerServing,
+                    ),
+                    MicInfoCard(
+                      cardWidth: cardWidth,
+                      sourceUrl: recipe.sourceUrl,
+                      sourceName: recipe.sourceName,
+                      time: recipe.time,
+                      ingredients: recipe.ingredients,
+                      weightWatcher: recipe.weightWatcher,
+                      healthScore: recipe.healthScore,
+                      nutrients: recipe.nutrients,
+                    )
+                  ],
+                ),
+              ),
 
-                // Dish Types
-                if (recipe.dishTypes.isNotEmpty &&
-                    recipe.dishTypes[0].isNotEmpty)
-                  EnumRowDisplay(
-                    listEnum: recipe.dishTypes,
+              // Cuisines
+              if (recipe.cuisines.isNotEmpty && recipe.cuisines[0].isNotEmpty)
+                EnumRowDisplay(
+                    listEnum: recipe.cuisines,
                     cardWidth: cardWidth,
-                    key: Key('${recipe.title} dishTypes'),
-                  ),
+                    key: Key('${recipe.title} cuisines')),
 
-                // Seperation
+              // Dish Types
+              if (recipe.dishTypes.isNotEmpty && recipe.dishTypes[0].isNotEmpty)
+                EnumRowDisplay(
+                  listEnum: recipe.dishTypes,
+                  cardWidth: cardWidth,
+                  key: Key('${recipe.title} dishTypes'),
+                ),
+
+              // Seperation
+              const SizedBox(height: 30),
+
+              EquipmentCard(
+                cardWidth: cardWidth,
+                instructions: recipe.instructions,
+                key: Key('${recipe.title} equipment'),
+              ),
+              IngredentsCard(
+                cardWidth: cardWidth,
+                ingredients: recipe.ingredients,
+                key: Key('${recipe.title} ingredents'),
+              ),
+
+              // Seperation
+              const SizedBox(height: 30),
+
+              InstructionsCard(
+                getParagraphDataForRecipe: manager.getMissingDataForRecipe,
+                instructions: recipe.instructions,
+                cardWidth: cardWidth,
+                instructionsParagraph: recipe.instructionsParagraph,
+              ),
+
+              if (database != null) ...[
+                //Seperation
                 const SizedBox(height: 30),
 
-                EquipmentCard(
+                SimilarRecipesCard(
+                  recipe: recipe,
+                  //id: recipe.id!,
+                  database: database,
                   cardWidth: cardWidth,
-                  instructions: recipe.instructions,
-                  key: Key('${recipe.title} equipment'),
-                ),
-                IngredentsCard(
-                  cardWidth: cardWidth,
-                  ingredients: recipe.ingredients,
-                  key: Key('${recipe.title} ingredents'),
-                ),
-
-                // Seperation
-                const SizedBox(height: 30),
-
-                InstructionsCard(
-                  getParagraphDataForRecipe: manager.getMissingDataForRecipe,
-                  instructions: recipe.instructions,
-                  cardWidth: cardWidth,
-                  instructionsParagraph: recipe.instructionsParagraph,
-                ),
-
-                if (database != null) ...[
-                  //Seperation
-                  const SizedBox(height: 30),
-
-                  SimilarRecipesCard(
-                    recipe: recipe,
-                    //id: recipe.id!,
-                    database: database,
-                    cardWidth: cardWidth,
-                    //similarRecipesList: recipe.similarRecipes,
-                    //searchForSimilarRecipes: manager.searchSimilarRecipes,
-                  ),
-                ],
-                const SizedBox(height: 20)
-              ] else ...[
-                SizedBox(height: 100),
-                Transform.scale(
-                  scale: 3.5,
-                  child: CircularProgressIndicator(
-                    strokeCap: StrokeCap.round,
-                  ),
+                  //similarRecipesList: recipe.similarRecipes,
+                  //searchForSimilarRecipes: manager.searchSimilarRecipes,
                 ),
               ],
+              const SizedBox(height: 20)
+            ] else ...[
+              SizedBox(height: 100),
+              Transform.scale(
+                scale: 3.5,
+                child: CircularProgressIndicator(
+                  strokeCap: StrokeCap.round,
+                ),
+              ),
             ],
-          ),
+          ],
         ),
       ),
     );

@@ -70,8 +70,8 @@ class InfiniteScrollPaginationState extends State<InfiniteScrollPagination> {
         },
         child: PagedMasonryGridView.count(
           crossAxisCount: 2,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
           builderDelegate: PagedChildBuilderDelegate<Recipe>(
             animateTransitions: true,
             transitionDuration: Duration(milliseconds: 600),
