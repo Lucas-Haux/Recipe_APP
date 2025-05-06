@@ -103,7 +103,7 @@ class RecipesSearch {
       String queryParameters = 'apiKey=$appKey&'
           //'${query.isNotEmpty ? 'titleMatch="${Uri.encodeComponent(query.trim())}"&' : ''}'
           'query="${Uri.encodeComponent(query.trim())}"&'
-          //'titleMatch=${Uri.encodeComponent(query.trim())}&'
+          'titleMatch=${(searchPramatersRepository.matchTitle) ? Uri.encodeComponent(query.trim()) : ''}&'
           'type=$mealTypes&'
           // TODO this doenst acutally require all the cuisines, it requires the recipe to have one of the list. Need to change the UI and Enums to say include instead of required
 
