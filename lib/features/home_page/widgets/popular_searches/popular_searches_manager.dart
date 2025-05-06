@@ -58,15 +58,19 @@ Map<String, SearchParameters> popularSearchesData = {
     meals: {MealType.beverage: AndOrType.and},
     intolerances: {IntoleranceType.dairy: RequireExclude.exclude},
   ),
-  'One-Pot Comfort Food': SearchParameters(
-    query: 'One-Pot',
-    equipment: {EquipmentType.pot: AndOrType.and},
-    meals: {MealType.mainCourse: AndOrType.and, MealType.lunch: AndOrType.and},
-  ),
-  'Vegan Cupcakes': SearchParameters(
-    query: 'Cupcakes',
+  'Vegan Soups': SearchParameters(
+    query: 'Soup',
     diets: {DietType.vegan: AndOrType.and},
-    meals: {MealType.dessert: AndOrType.and},
+    meals: {MealType.soup: AndOrType.and},
+    matchTitle: true,
+  ),
+  'Nut-Free Snacks': SearchParameters(
+    query: 'Snack',
+    meals: {MealType.snack: AndOrType.and},
+    intolerances: {
+      IntoleranceType.peanut: RequireExclude.exclude,
+      IntoleranceType.treeNut: RequireExclude.exclude
+    },
   ),
   'High-Protein Breakfast': SearchParameters(
     query: 'Breakfast',
@@ -78,7 +82,7 @@ Map<String, SearchParameters> popularSearchesData = {
 Map<String, String> popularSearchesImages = {
   'Quick 30-Minute Dinners': 'assets/images/quick_30-min_dinners.jpg',
   'Dairy-Free Smoothies': 'assets/images/dairy-free_smoothies.jpg',
-  'One-Pot Comfort Food': 'assets/images/one-pot_comfort_food.jpg',
-  'Vegan Cupcakes': 'assets/images/vegan_cupcakes.jpg',
+  'Vegan Soups': 'assets/images/vegan_soups.jpg',
+  'Nut-Free Snacks': 'assets/images/vegan_cupcakes.jpg',
   'High-Protein Breakfast': 'assets/images/high-protein_breakfast.jpg',
 };
