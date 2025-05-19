@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SettingsAndTokensButtons extends StatelessWidget {
-  const SettingsAndTokensButtons({super.key});
+class SettingsAndPremiumButtons extends StatelessWidget {
+  const SettingsAndPremiumButtons({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,18 +14,22 @@ class SettingsAndTokensButtons extends StatelessWidget {
           icon: Icons.settings_rounded,
           gradientColorOne: Colors.grey,
           gradientColorTwo: Colors.blueGrey,
+          gradientBegin: Alignment.topLeft,
+          gradientEnd: Alignment.bottomRight,
           onTap: () => Navigator.pushNamed(context, '/settingsPage'),
         ),
 
         const Spacer(),
 
-        // Tokens Button
+        // Premium Button
         _Button(
-          label: 'Tokens',
-          icon: Icons.generating_tokens_rounded,
-          gradientColorOne: Colors.yellow,
-          gradientColorTwo: Colors.orange,
-          onTap: () {},
+          label: 'Premium',
+          icon: Icons.diamond_rounded,
+          gradientColorOne: Color.fromARGB(255, 156, 134, 244),
+          gradientColorTwo: Color.fromARGB(255, 226, 134, 244),
+          gradientBegin: Alignment.topRight,
+          gradientEnd: Alignment.bottomLeft,
+          onTap: () => Navigator.pushNamed(context, '/premiumPage'),
         )
       ],
     );
@@ -33,17 +37,21 @@ class SettingsAndTokensButtons extends StatelessWidget {
 }
 
 class _Button extends StatelessWidget {
+  final String label;
+  final IconData icon;
   final Color gradientColorOne;
   final Color gradientColorTwo;
-  final IconData icon;
-  final String label;
+  final Alignment gradientBegin;
+  final Alignment gradientEnd;
   final Function() onTap;
 
   const _Button({
+    required this.label,
+    required this.icon,
     required this.gradientColorOne,
     required this.gradientColorTwo,
-    required this.icon,
-    required this.label,
+    required this.gradientBegin,
+    required this.gradientEnd,
     required this.onTap,
   });
 

@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'home_manager.dart';
 import 'package:recipe_box/shared/themes/dimens.dart';
 import 'package:recipe_box/shared/ui/recipe_search_bar.dart';
-import 'widgets/settings_and_tokens_buttons.dart';
+import 'widgets/settings_and_premium_buttons.dart';
 import 'package:recipe_box/features/home_page/widgets/favorites/favorites_card.dart';
 import 'package:recipe_box/features/home_page/widgets/popular_searches/popular_searches_card.dart';
 
@@ -63,7 +63,7 @@ class HomeScreen extends ConsumerWidget {
 
             const Spacer(),
             // Settings and tokens Buttons
-            SettingsAndTokensButtons(),
+            SettingsAndPremiumButtons(),
           ],
         ),
       ),

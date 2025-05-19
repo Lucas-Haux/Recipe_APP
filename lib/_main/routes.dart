@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_box/features/settings_page/settings_screen.dart';
 
 import 'package:recipe_box/shared/models/recipe.dart';
 import 'package:recipe_box/shared/databases/recipe_favorites/recipe_favorites_database.dart';
@@ -11,6 +10,8 @@ import 'package:recipe_box/features/home_page/home_screen.dart';
 import 'package:recipe_box/features/recipe_display_page/recipe_display_screen.dart';
 import 'package:recipe_box/features/recipe_search_page/recipe_search_screen.dart';
 import 'package:recipe_box/features/search_results_page/search_results_screen.dart';
+import 'package:recipe_box/features/settings_page/settings_screen.dart';
+import 'package:recipe_box/features/premium_page/premium_screen.dart';
 
 PageRouteBuilder<dynamic> routes(RouteSettings settings) {
   return PageRouteBuilder(
@@ -49,6 +50,9 @@ PageRouteBuilder<dynamic> routes(RouteSettings settings) {
 
         case '/settingsPage':
           return const SettingsScreen();
+
+        case '/premiumPage':
+          return const PremiumScreen();
 
         case '/searchPage':
           return const RecipeSearchScreen();
