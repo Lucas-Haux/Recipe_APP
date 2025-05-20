@@ -6,13 +6,25 @@ part 'premium_manager.g.dart';
 @riverpod
 class PremiumManager extends _$PremiumManager {
   @override
-  Future<Offerings> build() async {
+  AsyncValue<Offering> build() {
+    getPackages();
+    return AsyncLoading();
+  }
+
+  Future<void> getPackages() async {
     try {
       Offerings? offerings = await Purchases.getOfferings();
+      //List<Package>? packages = offerings.current?.availablePackages;
 
-      return offerings;
-    } catch (e) {
-      throw 'cant get offering $e';
+      //state = AsyncValue.data(packages!);
+      state = AsyncValue.data(offerings.current!);
+    } catch (e, stackTrace) {
+      state = AsyncError('Couldnt Get Packages From The PlayStore', stackTrace);
     }
+    await Future.delayed(Duration(seconds: 10));
   }
 }
+
+final customerInfoProvider = FutureProvider<CustomerInfo>((ref) async {
+  return await Purchases.getCustomerInfo();
+});

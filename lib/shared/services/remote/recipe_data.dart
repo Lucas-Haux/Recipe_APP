@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 class RecipeData {
   Future<dynamic> fetchFullRecipe(int recipeId) async {
     try {
-      const String appKey = '096cc91305b04684ab47dfebc84bc59e';
+      const String appKey = '05f5c84cb98f42329f13b049c9f05f5a';
 
       const String queryParameters = 'apiKey=$appKey&'
           'includeNutrition=true&'
