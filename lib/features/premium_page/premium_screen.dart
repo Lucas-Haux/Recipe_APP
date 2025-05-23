@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inset_shadow/flutter_inset_shadow.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_box/features/premium_page/premium_manager.dart';
-import 'package:recipe_box/features/premium_page/widgets/premium_app_bar.dart';
+import 'package:recipe_box/features/premium_page/widgets/premium_app_bar/premium_app_bar.dart';
 import 'package:recipe_box/features/premium_page/widgets/product_card.dart';
-import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 class PremiumScreen extends ConsumerWidget {

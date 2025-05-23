@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
@@ -25,6 +26,27 @@ class PremiumManager extends _$PremiumManager {
   }
 }
 
-final customerInfoProvider = FutureProvider<CustomerInfo>((ref) async {
-  return await Purchases.getCustomerInfo();
+final customerInfoNotifierProvider =
+    StateNotifierProvider<CustomerInfoNotifier, AsyncValue<CustomerInfo>>(
+        (ref) {
+  return CustomerInfoNotifier();
 });
+
+class CustomerInfoNotifier extends StateNotifier<AsyncValue<CustomerInfo>> {
+  CustomerInfoNotifier() : super(const AsyncValue.loading()) {
+    _init();
+  }
+
+  void _init() async {
+    try {
+      final info = await Purchases.getCustomerInfo();
+      state = AsyncValue.data(info);
+
+      Purchases.addCustomerInfoUpdateListener((customerInfo) {
+        state = AsyncValue.data(customerInfo);
+      });
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+}
