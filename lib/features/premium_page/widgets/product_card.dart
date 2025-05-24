@@ -2,21 +2,13 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:recipe_box/shared/themes/colors.dart';
 
 final advantages = ["Ad Free", "Nutritional Data", "Similar Recipes View"];
 final advantagesIcons = [
   Symbols.ad_off_rounded,
   Symbols.nutrition_rounded,
   Symbols.find_in_page_rounded,
-];
-
-final defaultColors = [
-  Color.fromARGB(255, 156, 134, 244),
-  Color.fromARGB(255, 226, 134, 244),
-];
-final limitedTimeColors = [
-  Colors.green.shade400.harmonizeWith(Color.fromARGB(255, 156, 134, 244)),
-  Colors.green.shade800.harmonizeWith(Color.fromARGB(255, 226, 134, 244)),
 ];
 
 class ProductCard extends StatelessWidget {
@@ -37,7 +29,9 @@ class ProductCard extends StatelessWidget {
     //print("${metaData["id"]} & $limitedTime");
 
     final Gradient cardGradient = LinearGradient(
-      colors: limitedTime ? limitedTimeColors : defaultColors,
+      colors: limitedTime
+          ? [PremiumColors.dealLightGreen, PremiumColors.dealDarkGreen]
+          : [PremiumColors.darkPurple, PremiumColors.lightPurple],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     );
@@ -124,8 +118,6 @@ class ProductCard extends StatelessWidget {
             ),
           ),
 
-          //SizedBox(height: 5),
-
           // Advantages List
           Expanded(
             child: Center(
@@ -168,7 +160,6 @@ class ProductCard extends StatelessWidget {
                 style: FilledButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
-                  //foregroundColor: Color.fromARGB(255, 261, 134, 244),
                   minimumSize: Size(400, 50),
                 ),
                 child: Text(

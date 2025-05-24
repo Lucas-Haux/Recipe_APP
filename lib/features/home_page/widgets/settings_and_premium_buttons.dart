@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_box/shared/themes/colors.dart';
 
 class SettingsAndPremiumButtons extends StatelessWidget {
   const SettingsAndPremiumButtons({super.key});
@@ -25,8 +26,8 @@ class SettingsAndPremiumButtons extends StatelessWidget {
         _Button(
           label: 'Premium',
           icon: Icons.diamond_rounded,
-          gradientColorOne: Color.fromARGB(255, 156, 134, 244),
-          gradientColorTwo: Color.fromARGB(255, 226, 134, 244),
+          gradientColorOne: PremiumColors.lightPurple,
+          gradientColorTwo: PremiumColors.darkPurple,
           gradientBegin: Alignment.topRight,
           gradientEnd: Alignment.bottomLeft,
           onTap: () => Navigator.pushNamed(context, '/premiumPage'),

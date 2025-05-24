@@ -2,6 +2,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:flutter/material.dart';
 
+// Not Used
 class AppColors {
   static const ColorScheme _fallbackColorScheme = ColorScheme(
     brightness: Brightness.dark,
@@ -46,4 +47,13 @@ class AppColors {
     return materialYouColors?.toColorScheme(brightness: Brightness.dark) ??
         _fallbackColorScheme;
   }
+}
+
+class PremiumColors {
+  static Color darkPurple = const Color.fromARGB(255, 156, 134, 244);
+  static Color lightPurple = const Color.fromARGB(255, 226, 134, 244);
+
+  static Color dealDarkGreen = Colors.green.shade400.harmonizeWith(darkPurple);
+
+  static Color dealLightGreen = Colors.green.shade800.harmonizeWith(darkPurple);
 }

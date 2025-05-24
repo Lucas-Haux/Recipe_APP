@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
+import 'package:recipe_box/shared/themes/colors.dart';
 
 class SubscriptionStatusDisplay extends StatelessWidget {
   final bool premiumActive;
@@ -9,13 +10,9 @@ class SubscriptionStatusDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(6),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Color.fromARGB(255, 156, 134, 244),
-            Color.fromARGB(255, 226, 134, 244),
-          ],
+          colors: [PremiumColors.darkPurple, PremiumColors.lightPurple],
         ),
         borderRadius: BorderRadius.circular(12),
       ),
@@ -26,7 +23,7 @@ class SubscriptionStatusDisplay extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.all(5), // Actual Padding
           child: RichText(
             text: TextSpan(
               children: [
@@ -43,7 +40,7 @@ class SubscriptionStatusDisplay extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 24,
-                    color: premiumActive ? Colors.green : Colors.red,
+                    color: premiumActive ? Colors.green : Colors.red.shade600,
                   ),
                 ),
               ],
