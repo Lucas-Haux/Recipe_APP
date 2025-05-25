@@ -29,7 +29,7 @@ class EquipmentCard extends StatelessWidget {
               Text(
                 'Equipment',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Colors.white.withAlpha(200),
                     ),
               ),
               const Divider(),

@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:recipe_box/shared/themes/dimens.dart';
@@ -23,7 +24,7 @@ class IngredentsCard extends StatelessWidget {
             Text(
               'Ingredients',
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: Colors.white.withAlpha(200),
                   ),
             ),
             const Divider(),
