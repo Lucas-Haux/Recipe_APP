@@ -249,7 +249,7 @@ class _IngredientRowState extends State<IngredientRow> {
         // Remove IngredientRow
         IconButton.outlined(
           onPressed: () => widget.removeIngredient(widget.initialText),
-          icon: const Icon(Icons.remove, color: Colors.redAccent),
+          icon: Icon(Icons.remove_rounded, color: Colors.redAccent),
         ),
       ],
     );
