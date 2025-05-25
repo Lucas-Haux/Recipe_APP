@@ -152,6 +152,7 @@ class _RecipeSearchScreenState extends ConsumerState<RecipeSearchScreen> {
                   title: 'Equipment',
                   givenEnums: searchParameters.equipment,
                   updateState: manager.updateSearchParameters,
+                  searchBar: true,
                 ),
 
                 // Intolerances

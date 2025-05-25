@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_box/features/recipe_search_page/widgets/clear_filters_indicator.dart';
 
 import 'package:recipe_box/shared/enums/chip_parameters_modes.dart';
 import 'package:recipe_box/shared/enums/recipe_parameters.dart';
 import 'package:recipe_box/shared/functions/capitalize_string.dart';
+
+import 'package:recipe_box/features/recipe_search_page/widgets/clear_filters_indicator.dart';
 
 enum ChipMode { requireExclude, and, or, orAnd }
 
@@ -11,10 +12,10 @@ class ExpandableChipsCard<RecipeParameter extends DisplayableEnum,
     ParameterValue extends ChipParametersMode> extends StatefulWidget {
   final ChipMode chipMode;
   final String title;
-  // shouldnt need this any more
   final Map<RecipeParameter, ChipParametersMode> givenEnums;
   final void Function(Map<String, dynamic>) updateState;
   final AndOrType? defualtAndOr;
+  final bool searchBar;
 
   const ExpandableChipsCard({
     required this.chipMode,
@@ -22,6 +23,7 @@ class ExpandableChipsCard<RecipeParameter extends DisplayableEnum,
     required this.givenEnums,
     required this.updateState,
     this.defualtAndOr,
+    this.searchBar = false,
     super.key,
   });
 
@@ -37,24 +39,51 @@ class ExpandableChipsState<RecipeParameter extends DisplayableEnum,
   RequireExclude selectedRequireExcludeMode = RequireExclude.require;
   AndOrType selectedAndOr = AndOrType.and;
 
+  late List<RecipeParameter> enumValues;
+  late TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    // initial full list
+    enumValues = widget.givenEnums.keys.toList();
+    // one controller per lifetime
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearch(String query) {
+    setState(() {
+      if (query.trim().isEmpty) {
+        enumValues = widget.givenEnums.keys.toList();
+      } else {
+        enumValues = widget.givenEnums.keys
+            .where((value) => value.displayName.contains(query.toLowerCase()))
+            .toList();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<RecipeParameter> enumValues = widget.givenEnums.keys.toList();
-
     ButtonStyle segmentedButtonStyle = ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith<Color>(
         (Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
             return Theme.of(context).colorScheme.primaryContainer;
           }
-          return Theme.of(context).colorScheme.onSecondary; // Default color
+          return Theme.of(context).colorScheme.onSecondary;
         },
       ),
     );
 
     bool isModified() {
       final values = widget.givenEnums.values.toSet();
-
       if (values.contains(RequireExclude.require) ||
           values.contains(RequireExclude.exclude) ||
           values.contains(AndOrType.and) ||
@@ -175,6 +204,30 @@ class ExpandableChipsState<RecipeParameter extends DisplayableEnum,
               },
               style: segmentedButtonStyle,
             ),
+
+          // searchbar for equipment enums
+          if (widget.searchBar == true) ...[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: SearchBar(
+                controller: _searchController,
+                onChanged: (query) => _onSearch(query),
+                onTapOutside: (e) =>
+                    FocusManager.instance.primaryFocus?.unfocus(),
+                leading: Icon(Icons.search_rounded, weight: 550, size: 40),
+                padding: WidgetStatePropertyAll(
+                    EdgeInsets.symmetric(horizontal: 15)),
+                side: WidgetStatePropertyAll(
+                    BorderSide(color: Theme.of(context).colorScheme.secondary)),
+                hintText: 'Search Equipment',
+                elevation: WidgetStatePropertyAll(0),
+                textStyle: WidgetStatePropertyAll(TextStyle(fontSize: 25)),
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.words,
+              ),
+            ),
+            SizedBox(height: 10),
+          ],
 
           // ChoiceChips
           Padding(
