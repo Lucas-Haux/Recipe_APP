@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:recipe_box/features/home_page/widgets/popular_searches/popular_searches_manager.dart';
 import 'package:recipe_box/shared/enums/chip_parameters_modes.dart';
 import 'package:recipe_box/shared/enums/recipe_parameters.dart';
 import 'package:recipe_box/shared/models/search_parameters.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OverlayWidget extends ConsumerWidget {
@@ -41,7 +41,7 @@ class OverlayWidget extends ConsumerWidget {
               children: [
                 // Edit Filters Button
                 _TopRightButton(
-                  icon: Icons.edit_note,
+                  icon: Symbols.edit_note_rounded,
                   text: "Edit Filters",
                   color1: Colors.blue.shade400,
                   color2: Colors.blue.shade500,
@@ -54,7 +54,7 @@ class OverlayWidget extends ConsumerWidget {
                 ),
                 // Search Button
                 _TopRightButton(
-                  icon: Icons.search,
+                  icon: Symbols.search_rounded,
                   color1: Colors.blue.shade600,
                   color2: Colors.blue.shade700,
                   text: "Search",
@@ -221,7 +221,7 @@ class _TopRightButton extends StatelessWidget {
         child: Row(
           spacing: 5,
           children: [
-            Icon(icon),
+            Icon(icon, weight: 600),
             Text(
               text,
               style: Theme.of(context)

@@ -22,12 +22,15 @@ class BackSearchHomeBar extends StatelessWidget {
 
           if (backButton) ...[
             // Back Button
-            IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: Icon(
-                Icons.arrow_back,
-                size: 30,
-                color: Theme.of(context).colorScheme.secondary,
+            Hero(
+              tag: const Key('BackButton'),
+              child: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(
+                  Icons.arrow_back_rounded,
+                  size: 39,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
             ),
             const Spacer(),
@@ -53,8 +56,8 @@ class BackSearchHomeBar extends StatelessWidget {
               child: IconButton(
                 onPressed: () => Navigator.pushNamed(context, '/'),
                 icon: Icon(
-                  Icons.home,
-                  size: 30,
+                  Icons.home_rounded,
+                  size: 38,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
               ),

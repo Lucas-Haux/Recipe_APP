@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class FloatingActionButtons extends StatelessWidget {
   final Function(Map<String, dynamic>) updateQuery;
@@ -23,7 +24,7 @@ class FloatingActionButtons extends StatelessWidget {
           ),
           child: FloatingActionButton.small(
             backgroundColor: Theme.of(context).colorScheme.onPrimary,
-            child: const Icon(Icons.home),
+            child: const Icon(Icons.home_rounded),
             onPressed: () {
               Navigator.pushNamed(context, '/');
             },
@@ -39,7 +40,7 @@ class FloatingActionButtons extends StatelessWidget {
 
             Navigator.pushNamed(context, '/searchPage/searchResults');
           },
-          icon: const Icon(Icons.search),
+          icon: const Icon(Symbols.search_rounded, weight: 800),
           extendedPadding: const EdgeInsets.only(left: 10, right: 15),
           label: const Text('Search'),
         ),

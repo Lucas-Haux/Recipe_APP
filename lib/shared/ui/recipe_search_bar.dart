@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'package:material_symbols_icons/symbols.dart';
 
 class RecipeSearchBar extends StatelessWidget {
   final bool searchPage;
@@ -42,7 +43,8 @@ class RecipeSearchBar extends StatelessWidget {
             width: 58,
             height: 58,
             child: Icon(
-              Icons.search_sharp,
+              Symbols.search_rounded,
+              weight: 550,
               size: 40,
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:lottie/lottie.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import 'package:recipe_box/shared/models/recipe.dart';
 import 'package:recipe_box/shared/ui/basic_recipe_display_card.dart';
@@ -32,7 +33,7 @@ class FavoritesCard extends StatelessWidget {
             Color(0XFF8b0000).withAlpha(100),
             Colors.transparent,
           ],
-          stops: [0.30, 0.9],
+          stops: [0.30, 0.999],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -75,24 +76,21 @@ class FavoritesCard extends StatelessWidget {
 
                 // Forword button
                 if (favoritesList!.isNotEmpty && favoritesList != null)
-                  RotatedBox(
-                    quarterTurns: 3,
-                    child: IconButton(
-                      onPressed: () {
-                        if (favoritesList != null &&
-                            favoritesList!.isNotEmpty) {
-                          Navigator.pushNamed(
-                            context,
-                            '/favorites',
-                            arguments: favoritesList,
-                          );
-                        }
-                      },
-                      icon: Icon(
-                        Icons.expand_more_rounded,
-                        color: primaryColor,
-                        size: 35,
-                      ),
+                  IconButton(
+                    onPressed: () {
+                      if (favoritesList != null && favoritesList!.isNotEmpty) {
+                        Navigator.pushNamed(
+                          context,
+                          '/favorites',
+                          arguments: favoritesList,
+                        );
+                      }
+                    },
+                    icon: Icon(
+                      Symbols.chevron_right_rounded,
+                      color: primaryColor,
+                      weight: 400,
+                      size: 45,
                     ),
                   ),
               ],
